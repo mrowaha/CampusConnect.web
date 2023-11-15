@@ -24,7 +24,6 @@ const ImageContainer = styled('div')<DomainImageStyles>(({theme, background, bor
   justifyContent : "center",
   alignItems : "center",
   width : "100%",
-  height : "20%",
   [theme.breakpoints.down("md")] : {
     // width : "80%",
   },
@@ -38,14 +37,11 @@ const ImageContainer = styled('div')<DomainImageStyles>(({theme, background, bor
   }
 }));
 
-/** @ts-ignore */
+// /** @ts-ignore */
 const StyledImage = styled(Image)(({theme}) => ({
-  objectFit : "contain",
-  width : "100% !important",
-  position : "relative !important",
-  height : "unset !important",
+  width : "100%",
+  height : "100%"
 }))
-
 
 export function DomainImage(props : DomainImageProps) {
 
@@ -56,10 +52,12 @@ export function DomainImage(props : DomainImageProps) {
       background={props.background}
       border={props.border}
     >
-      <StyledImage 
-        fill={true}
-        src={props.src}
+      <StyledImage
         alt={props.alt}
+        src={props.src}
+        width={0}
+        height={0}
+        sizes="100vw"
         onLoadingComplete={() => setImgLoaded(true)}
         sx={{
           opacity: imgLoaded ? 1 : 0,
