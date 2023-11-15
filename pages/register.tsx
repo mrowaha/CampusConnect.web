@@ -4,6 +4,7 @@ import * as React from "react";
 
 import {
   Stack, 
+  Grid,
   useTheme,
   Button,
   ButtonGroup,
@@ -13,15 +14,14 @@ import {
 import {styled} from "@mui/system";
 
 import { useSnackbar } from "@/store/snackbar";
-import {authAtom, AUTH_TOKEN} from "@/auth";
 
 import {FilledInputField, DomainImage} from "@/components/shared";
-import { BACKEND_URL, LOGIN_BILKENTEER } from "@/routes";
+import { BACKEND_URL, REGISTER_BILKENTEER } from "@/routes";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { flushSync } from "react-dom";
 
-const LoginStack = styled(Stack)(({theme}) => ({
+const RegisterStack = styled(Stack)(({theme}) => ({
   background : theme.palette.secondary.main,
   width : "fit-content",
   position : "absolute",
@@ -34,44 +34,51 @@ const LoginStack = styled(Stack)(({theme}) => ({
 }))
 
 
-export default function LoginPage() {
+export default function RegisterPage() {
+
+  /** a successful registration request will ignore the generated JWT
+   * and instead redirect to login page
+   */
 
   const router = useRouter();
   const theme = useTheme();
-  const [_, setAuthToken] = useAtom(authAtom);
+  const [firstname, setFirstname] = React.useState<string>("");
+  const [lastname, setLastname] = React.useState<string>("");
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword]  = React.useState<string>("");
-  const [loggingIn, setLoggingIn] = React.useState<boolean>(false);
+  const [registering, setRegistering] = React.useState<boolean>(false);
 
   const snackbar = useSnackbar();
 
   React.useEffect(() => {
     setEmail("");
     setPassword("");
-    setLoggingIn(false);
-    // snackbar("success", "Welcome to Campus Connect");
+    setFirstname("");
+    setLastname("");
+    setRegistering(false);
   }, [])
 
-  const handleLogin = async () => {
-    flushSync(() => setLoggingIn(true));
+  const handleRegister = async () => {
+    flushSync(() => setRegistering(true));
     try {
-      const res = await fetch(`${BACKEND_URL}${LOGIN_BILKENTEER}`, {
-        method : "POST", 
+      const res = await fetch(`${BACKEND_URL}${REGISTER_BILKENTEER}`, {
+        method : "POST",
         headers : {
           "Content-Type" : "application/json"
         },
         body : JSON.stringify({
+          firstName : firstname,
+          lastName : lastname,
           email : email,
           password : password
         })
       })
-  
+      
       const data = await res.json();
       if ("accessToken" in data) {
-        localStorage.setItem(AUTH_TOKEN, data["accessToken"]);
-        setAuthToken(data["accessToken"]);
-        router.replace("/protected");
-        return;
+        // do not store this accessToken, redirect to login
+        snackbar("success", "Account Created");
+        router.replace("/login");
       } else if ("error" in data) {
         throw new Error(data["error"]);
       } else {
@@ -84,14 +91,14 @@ export default function LoginPage() {
         snackbar("error", "Unknown error occured");
       }
     } finally {
-      setLoggingIn(false);
+      setRegistering(false);
     }
   } 
 
   return (
     <>
       {
-        loggingIn && 
+        registering && 
         <div
           style={{
             position : "absolute",
@@ -110,15 +117,47 @@ export default function LoginPage() {
           />
         </div>
       }
-      <LoginStack
+      <RegisterStack
         gap={2}
       >
         <DomainImage 
           src="/app-logo.png"
           alt="campus connect logo"
         />
+        <Grid container gap={0.5} justifyContent="space-between">
+          <Grid item xs={5.75}>
+            <FilledInputField
+            disabled={registering}
+            placeholder="FirstName"
+            label="First Name"
+            fullWidth
+            value={firstname}
+            onChange={(e) => setFirstname(e.target.value)}
+            multiline={false}
+            size="small"
+            background="white"
+            hoverbackground={theme.palette.secondary.light}
+            focusedbackground={theme.palette.secondary.light}
+          />
+          </Grid>
+          <Grid item xs={5.75}>
+            <FilledInputField
+            disabled={registering}
+            placeholder="LastName"
+            label="Last Name"
+            fullWidth
+            value={lastname}
+            onChange={(e) => setLastname(e.target.value)}
+            multiline={false}
+            size="small"
+            background="white"
+            hoverbackground={theme.palette.secondary.light}
+            focusedbackground={theme.palette.secondary.light}
+          />
+          </Grid>
+        </Grid>
         <FilledInputField
-          disabled={loggingIn}
+          disabled={registering}
           placeholder="Email"
           label="Email"
           fullWidth
@@ -131,7 +170,7 @@ export default function LoginPage() {
           focusedbackground={theme.palette.secondary.light}
         />
         <FilledInputField 
-          disabled={loggingIn}
+          disabled={registering}
           placeholder="Password"
           label="Password"
           fullWidth
@@ -144,47 +183,21 @@ export default function LoginPage() {
           focusedbackground={theme.palette.secondary.light}
         />
 
-        <Button 
-          disabled={loggingIn}
-          size="small"
-          variant="text"
-          sx={{
-            textTransform : "none",
-            width : "fit-content"
-          }}
-        >
-        Forgot your password?
-        </Button>
-
-        <ButtonGroup
-          disabled={loggingIn}
-          size="small"
-          fullWidth
+        <Button
           variant="contained"
-        >
-          <Button
-            onClick={handleLogin}
-            sx={{
-              textTransform : "none"
-            }}>
-            Login As Bilkenteer
-          </Button>
-          <Button
-            color="secondary"
-            sx={{
-              textTransform : "none",
-            }}
-          >
-            Login As Moderator
-          </Button>
-        </ButtonGroup>
+          onClick={handleRegister}
+          sx={{
+            textTransform : "none"
+          }}>
+          Register As Bilkenteer
+        </Button>
         <div style={{width : "100%", height : "1px", backgroundColor : theme.palette.background.default}} />
         <Typography variant="h6" color="primary">
-          Do you not have an account yet?
+          Already have an account?
         </Typography>
-        <Link href={"/register"}>
+        <Link href={"/login"}>
           <Button
-            disabled={loggingIn}
+            disabled={registering}
             size="small"
             variant="outlined"
             sx={{
@@ -192,10 +205,10 @@ export default function LoginPage() {
               width : "fit-content"
             }}
           >
-            Create Bilkenteer Account 
+            Log In 
           </Button>
         </Link>
-      </LoginStack>
+      </RegisterStack>
     </>
   )
 }
