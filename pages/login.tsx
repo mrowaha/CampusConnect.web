@@ -16,7 +16,7 @@ import { useSnackbar } from "@/store/snackbar";
 import {authAtom, AUTH_TOKEN} from "@/auth";
 
 import {FilledInputField, DomainImage} from "@/components/shared";
-import { BACKEND_URL, LOGIN_BILKENTEER } from "@/routes";
+import { BACKEND_URL, LOGIN_BILKENTEER, LOGIN_MODERATOR } from "@/routes";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { flushSync } from "react-dom";
@@ -52,10 +52,11 @@ export default function LoginPage() {
     // snackbar("success", "Welcome to Campus Connect");
   }, [])
 
-  const handleLogin = async () => {
+  const handleLogin = async (loginType : "bilkenteer" | "moderator") => {
     flushSync(() => setLoggingIn(true));
+    const loginUrl = loginType === "bilkenteer" ? `${BACKEND_URL}${LOGIN_BILKENTEER}` : `${BACKEND_URL}${LOGIN_MODERATOR}`;
     try {
-      const res = await fetch(`${BACKEND_URL}${LOGIN_BILKENTEER}`, {
+      const res = await fetch(loginUrl, {
         method : "POST", 
         headers : {
           "Content-Type" : "application/json"
@@ -163,13 +164,14 @@ export default function LoginPage() {
           variant="contained"
         >
           <Button
-            onClick={handleLogin}
+            onClick={() => handleLogin("bilkenteer")}
             sx={{
               textTransform : "none"
             }}>
             Login As Bilkenteer
           </Button>
           <Button
+            onClick={() => handleLogin("moderator")}
             color="secondary"
             sx={{
               textTransform : "none",

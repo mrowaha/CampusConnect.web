@@ -30,7 +30,8 @@ const FilledTextField = styled(TextField)<FilledInputFieldStyles>((props) => ({
   },
   "& .MuiFilledInput-root.Mui-focused": {
     backgroundColor: props.focusedbackground || "#fff"
-  }
+  },
+  width : "100%",
 }))
 
 
