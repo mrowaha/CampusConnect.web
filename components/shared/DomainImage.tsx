@@ -2,7 +2,6 @@ import Image from "next/image";
 import React from "react";
 
 import {
-  Box,
   CircularProgress
 } from "@mui/material";
 import {styled} from "@mui/material";
@@ -19,26 +18,8 @@ export interface DomainImageProps extends DomainImageStyles {
   progressThickness? : number;
 }
 
-const ImageContainer = styled('div')<DomainImageStyles>(({theme, background, border}) => ({
-  display : "flex",
-  justifyContent : "center",
-  alignItems : "center",
-  width : "100%",
-  [theme.breakpoints.down("md")] : {
-    // width : "80%",
-  },
-  [theme.breakpoints.down("sm")] : {
-    // width : "80%"
-  },
-  background : background || "inherit",
-  border : border || "inherit",
-  "> div" : {
-    position: "unset !important"
-  }
-}));
-
 // /** @ts-ignore */
-const StyledImage = styled(Image)(({theme}) => ({
+const StyledImage = styled(Image)(() => ({
   width : "100%",
   height : "100%"
 }))
@@ -48,10 +29,7 @@ export function DomainImage(props : DomainImageProps) {
   const [imgLoaded, setImgLoaded]  =  React.useState<boolean>(false);
 
   return (
-    <ImageContainer
-      background={props.background}
-      border={props.border}
-    >
+    <>
       <StyledImage
         alt={props.alt}
         src={props.src}
@@ -73,6 +51,6 @@ export function DomainImage(props : DomainImageProps) {
           color="secondary"
         />
       }
-    </ImageContainer>
+    </>
   )
 }
