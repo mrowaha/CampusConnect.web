@@ -1,12 +1,13 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
+  "name": "campusconnect.web-turborepo",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "dev:admin" : "turbo dev --filter admin-frontend",
+    "dev:app" : "turbo dev --filter frontend",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
@@ -24,6 +25,14 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.0.2",
-    "typescript": "^5"
-  }
+    "typescript": "^5",
+    "prettier": "^3.1.0",
+    "turbo": "latest"
+  },
+  "engines": {
+    "node": "16.17.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
 }

@@ -11,7 +11,7 @@ export default function ProtectedPage() {
 
   return (
     <ProtectedRoute>
-      <h1 style={{color : "black"}}>Hello</h1>
+      <h1 style={{color : "black"}}>Hello Protected</h1>
     </ProtectedRoute>
   )
 }
