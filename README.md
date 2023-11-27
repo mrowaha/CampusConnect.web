@@ -1,7 +1,10 @@
-# CampusConnect.web Turborepo
-
+# Campus Connect web app monorepo
 This monorepo contains frontend and admin-frontend packages.
 
+## Packages
+* root_dir : ./packages
+* admin-frontend
+* frontend
 
 ## Usage
 
