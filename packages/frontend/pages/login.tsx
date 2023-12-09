@@ -73,8 +73,8 @@ export default function LoginPage() {
         setAuthToken(data["accessToken"]);
         router.replace("/protected");
         return;
-      } else if ("error" in data) {
-        throw new Error(data["error"]);
+      } else if ("errors" in data) {
+        throw new Error(data["errors"][0]);
       } else {
         throw new Error("Internal Server Error");
       }
