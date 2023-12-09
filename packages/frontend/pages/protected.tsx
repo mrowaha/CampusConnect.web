@@ -1,17 +1,14 @@
-/**
- * This Page is currently for Protected Route Demo Only
- * Wrap all Protected Pages with ProtectedRoute
- */
-
-
-import ProtectedRoute from "@/auth";
-
-
-export default function ProtectedPage() {
+export default function SomePage() {
 
   return (
-    <ProtectedRoute>
-      <h1 style={{color : "black"}}>Hello Protected</h1>
-    </ProtectedRoute>
+    <h1 style={{color : "black"}}>Hello</h1>
   )
+}
+
+export async function getStaticProps() {
+  return {
+    props : {
+      protected : true
+    }
+  }
 }

@@ -75,21 +75,17 @@ export default function RegisterPage() {
       })
       
       const data = await res.json();
-      if ("accessToken" in data) {
+      if(data.hasOwnProperty("token")) {
         // do not store this accessToken, redirect to login
         snackbar("success", "Account Created");
         router.replace("/login");
-      } else if ("error" in data) {
-        throw new Error(data["error"]);
+      } else if ("errors" in data) {
+        throw new Error(data["errors"][0]);
       } else {
         throw new Error("Internal Server Error");
       }
     } catch (err : unknown) {
-      if (err instanceof Error) {
-        snackbar("error", err.message);
-      } else {
-        snackbar("error", "Unknown error occured");
-      }
+      snackbar("error", (err as Error).message);
     } finally {
       setRegistering(false);
     }

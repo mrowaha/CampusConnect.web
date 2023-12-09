@@ -1,5 +1,5 @@
 import * as React from "react";
-import {createTheme, ThemeProvider} from "@mui/material/styles";
+import {createTheme, ThemeOptions, ThemeProvider} from "@mui/material/styles";
 import { red } from "@mui/material/colors";
 
 const theme = createTheme({
@@ -16,9 +16,9 @@ const theme = createTheme({
     },
     background: {
       default: "#F2EFF8"
-    },
+    },   
     mode : "light",
-  },
+  }
 });
 
 export function MuiThemeProvider(props : any) {

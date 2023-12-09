@@ -10,8 +10,11 @@ import {
   Grid,
   Button,
   Divider,
-  useTheme
+  useTheme,
+  Box
 } from "@mui/material";
+import {styled} from "@mui/system";
+
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import LoginIcon from '@mui/icons-material/Login';
 
@@ -29,6 +32,12 @@ import { LostAndFoundIcon, SignupIcon } from "@/icons";
 interface LayoutProps {
   children : React.ReactNode
 }
+
+const PageContainer = styled("div")(({theme}) => ({
+  backgroundColor : theme.palette.background.default,
+  flexGrow : 1,
+  position : "relative",
+}))
 
 
 export default function Layout(props : LayoutProps) {
@@ -114,7 +123,9 @@ export default function Layout(props : LayoutProps) {
           </Grid>
         </Grid>
       </AppBar>
-      {props.children}
+      <PageContainer>
+        {props.children}
+      </PageContainer>
     </>
   )
 

@@ -28,6 +28,7 @@ export function useImageUpload<R, E>(
   React.useEffect(() => {
     if (auth) {
       const token = localStorage.getItem(AUTH_TOKEN);
+      console.log(token);
       setInnerHeader(() => {
         if (header) {
           return {

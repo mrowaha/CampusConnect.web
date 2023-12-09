@@ -13,7 +13,7 @@ import {
 import {styled} from "@mui/system";
 
 import { useSnackbar } from "@/store/snackbar";
-import {authAtom, AUTH_TOKEN} from "@/auth";
+import { AUTH_TOKEN, authAtom, currentUserAtom } from "@/auth";
 
 import {FilledInputField, DomainImage} from "@/components/shared";
 import { BACKEND_URL, LOGIN_BILKENTEER, LOGIN_MODERATOR } from "@/routes";
@@ -38,7 +38,11 @@ export default function LoginPage() {
 
   const router = useRouter();
   const theme = useTheme();
-  const [_, setAuthToken] = useAtom(authAtom);
+
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const [token, setToken] = useAtom(authAtom);
+
+
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword]  = React.useState<string>("");
   const [loggingIn, setLoggingIn] = React.useState<boolean>(false);
@@ -49,7 +53,6 @@ export default function LoginPage() {
     setEmail("");
     setPassword("");
     setLoggingIn(false);
-    // snackbar("success", "Welcome to Campus Connect");
   }, [])
 
   const handleLogin = async (loginType : "bilkenteer" | "moderator") => {
@@ -68,22 +71,21 @@ export default function LoginPage() {
       })
   
       const data = await res.json();
-      if ("accessToken" in data) {
-        localStorage.setItem(AUTH_TOKEN, data["accessToken"]);
-        setAuthToken(data["accessToken"]);
-        router.replace("/protected");
+      if (data.hasOwnProperty("token")) {
+        localStorage.setItem(AUTH_TOKEN, data["token"]["accessToken"]);
+        setCurrentUser(() => {
+          const user = {...data};
+          delete user["token"];
+          return user;
+        })
+        setToken(data["token"]["accessToken"]);
+        router.replace("/profile");
         return;
       } else if ("errors" in data) {
         throw new Error(data["errors"][0]);
-      } else {
-        throw new Error("Internal Server Error");
       }
-    } catch (err : unknown) {
-      if (err instanceof Error) {
-        snackbar("error", err.message);
-      } else {
-        snackbar("error", "Unknown error occured");
-      }
+    } catch (err) {
+        snackbar("error", (err as Error).message);
     } finally {
       setLoggingIn(false);
     }
@@ -201,3 +203,4 @@ export default function LoginPage() {
     </>
   )
 }
+
