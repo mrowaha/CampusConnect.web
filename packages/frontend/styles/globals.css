@@ -12,18 +12,10 @@ body {
   background-color: white;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 #__next {
-  min-height : 100vh;
+  height : 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 a {

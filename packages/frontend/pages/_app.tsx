@@ -5,6 +5,7 @@ import { Provider as StoreProvider } from 'jotai';
 
 import { MuiThemeProvider } from '@/theme'
 import Layout from "@/layout";
+import ProtectedRoute from '@/auth';
 
 export default function App({ Component, pageProps }: AppProps) {
 
@@ -13,7 +14,13 @@ export default function App({ Component, pageProps }: AppProps) {
     <StoreProvider> 
       <MuiThemeProvider>
         <Layout>
-          <Component  {...pageProps} />
+          { 
+            pageProps.protected ?
+            <ProtectedRoute>
+              <Component  {...pageProps} />        
+            </ProtectedRoute>
+            : <Component  {...pageProps} />        
+          } 
         </Layout>
       </MuiThemeProvider> 
     </StoreProvider>

@@ -16,12 +16,14 @@ export interface DomainImageProps extends DomainImageStyles {
   alt : string;
   progressSize? : number;
   progressThickness? : number;
+  circle? : boolean;
 }
 
 // /** @ts-ignore */
-const StyledImage = styled(Image)(() => ({
+const StyledImage = styled(Image)<{circle? : boolean}>((props) => ({
   width : "100%",
-  height : "100%"
+  height : "100%",
+  borderRadius : props.circle ? "50%" : "none"
 }))
 
 export function DomainImage(props : DomainImageProps) {
@@ -37,12 +39,7 @@ export function DomainImage(props : DomainImageProps) {
         height={0}
         sizes="100vw"
         onLoadingComplete={() => setImgLoaded(true)}
-        sx={{
-          opacity: imgLoaded ? 1 : 0,
-          transitionDuration: "2000ms",
-          transitionProperty: "opacity",
-          transitionTimingFunction: "ease-out",
-        }}
+        circle={props.circle}
       />
       {!imgLoaded &&
         <CircularProgress 
