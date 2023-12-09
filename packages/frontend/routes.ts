@@ -7,3 +7,5 @@ export const PROTECTED_BILKENTEER = "/bilkenteer/protected";
 export const LOGIN_MODERATOR = "/auth/moderator/login";
 export const REGISTER_MODERATOR = "/auth/moderator/register";
 export const PROTECTED_MDOERATOR = "/moderator/protected";
+
+//export const USER_SETTINGS = "/auth/bilkenteer/settings";
