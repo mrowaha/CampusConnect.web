@@ -41,7 +41,7 @@ import { DomainImage } from '@/components/shared';
         <IconButton 
             size="small" 
             onClick={handleAddToFavorites}
-            sx={{ fontSize: '1em', position : "absolute", right : 0, top : 0, zIndex: 999 }}
+            sx={{ fontSize: '1em', position : "absolute", right : 2, top : 2, zIndex: 999, backgroundColor: theme.palette.secondary.light }}
         >
             {isFavorite ? <FavoriteIcon style={{fill: theme.palette.primary.main}}/> : <FavoriteBorderIcon style={{fill: theme.palette.secondary.main}} />}
         </IconButton>
@@ -55,7 +55,7 @@ import { DomainImage } from '@/components/shared';
         <CardContent>
             <div style={{overflow: "hidden", textOverflow: "ellipsis", width: '100%', display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 2}}> 
                 <Typography noWrap variant="h6" color="primary" fontWeight="bold" gutterBottom >
-                    {product.name}segfsefgefnewiwntint
+                    {product.name}
                 </Typography>
             </div>  
             {/* Dynamic rendering of chips based on product tags */}

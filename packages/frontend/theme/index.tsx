@@ -15,7 +15,7 @@ const theme = createTheme({
       main: red[200]
     },
     background: {
-      default: "#F2EFF8"
+      default: "#FFFFFF"
     },   
     mode : "light",
   }
