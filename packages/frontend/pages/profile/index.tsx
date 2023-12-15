@@ -19,11 +19,11 @@ type ProfilePictureUploadResponse = {
   fileName : string;
 }
 
-const ProfilePageContainer = styled(Stack)(({theme}) => ({
+export const ProfilePageContainer = styled(Stack)(({theme}) => ({
   padding : "2rem",
   inset : 0,
   position : "absolute"
-}))
+}));
 
 export default function ProfilePage() {
 
