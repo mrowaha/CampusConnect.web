@@ -28,6 +28,7 @@ import {
 import { FilledInputField } from "@/components/shared";
 import { NotificationPreference } from "@/components/settings/NotificationPreference";
 import { LanguagePreference } from "@/components/settings/LanguagePreference";
+import { PageTitle } from "@/components/shared/PageTitle";
 
 const Settings = () => {
     const router = useRouter();
@@ -109,19 +110,7 @@ const Settings = () => {
     <>
       <Box>
         <Paper sx={{ padding: "1rem 2rem" }}>
-        <Typography variant="h4" sx={{
-        color: '#000',
-        fontFamily: 'Cairo',
-        fontSize: '2.5rem',
-        fontStyle: 'normal',
-        fontWeight: 700,
-        lineHeight: '1.375rem',
-        paddingTop: 2,
-        paddingBottom: 5,
-        textAlign: 'center',
-        }}>
-        Settings
-        </Typography>
+        <PageTitle pageTitle= "Settings" />
           <Grid container justifyContent="center">
             <Grid item xs={12} sm={8} md={6}>
               
@@ -222,19 +211,7 @@ const Settings = () => {
                 }}
             />
             <>
-            <Typography variant="h4"  sx={{
-                color: '#000',
-                fontFamily: 'Cairo',
-                fontSize: ' 2.5 rem',
-                fontStyle: 'normal',
-                fontWeight: 700,
-                lineHeight: '1.375rem',
-                paddingTop: 5,
-                paddingBottom: 2,
-                textAlign: 'center',
-            }}>
-                Notifications
-            </Typography>
+            <PageTitle pageTitle= "Notifications"/>
             <Box>
             <form onSubmit={handleNotificationsSubmit}>
                 {/* Left grid */}

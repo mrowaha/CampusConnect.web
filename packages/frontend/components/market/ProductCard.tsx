@@ -37,7 +37,16 @@ import { DomainImage } from '@/components/shared';
         };
     return (
       <Paper>
-      <Card sx={{position : "relative", isolation : "isolate", paddingTop: "0.75rem"}}>
+        <Card sx={{
+            position : "relative", 
+            isolation : "isolate", 
+            paddingTop: "0.75rem",
+            "&:hover" : {
+                backgroundColor: theme.palette.secondary.light,
+                cursor: "pointer"
+            }
+            }}
+        >
         <IconButton 
             size="small" 
             onClick={handleAddToFavorites}

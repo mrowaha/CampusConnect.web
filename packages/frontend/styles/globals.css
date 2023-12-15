@@ -28,3 +28,19 @@ a {
     color-scheme: dark;
   }
 }
+
+*::-webkit-scrollbar {
+  width: 5px;
+}
+
+*::-webkit-scrollbar-track {
+background: #F2F0FC;
+}
+
+*::-webkit-scrollbar-thumb {
+background: #7C35E3;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+background: #DAD1FF;
+}

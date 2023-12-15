@@ -1,38 +1,39 @@
 import React from 'react';
-import { Card, Box, Paper, CardContent, CardMedia, Typography, Button, Grid, Chip, Container, useTheme } from '@mui/material';
+import { Paper, Typography, Button, Grid, Chip, Container, useTheme } from '@mui/material';
 import { ProductCard, TagCard, TrendingChip}  from "@/components/market";
 import { DomainImage } from '@/components/shared';
+import { PageTitle } from '@/components/shared/PageTitle';
+import { PlatformCard } from '@/components/market/PlatformCard';
 
 export default function MarketPage(){
   // platform name -> MarketPlace and lost and found Forum
   const theme = useTheme();
-  const trendingTags = React.useMemo(() => ([
-    { 
-      id: 1,
-      name: 'Recent', 
-      isSelected : true , 
-  },
-    { 
-      id: 1,
-      name: 'Rentable',  
-      isSelected : false , 
-  },
-]), []);
+  
+  const [currTrendingTag, setCurrTrendingTag] = React.useState(0);
+
+  React.useEffect(() => {
+    setCurrTrendingTag(0);
+  }, [])
+
+  const trendingTags = React.useMemo(() => (
+    ["Recent", "Rentable"]), []);
+
+  const handleTrendingTagSwitch = (index : number) => {
+    setCurrTrendingTag(index);
+  }
+
 
   const platforms = React.useMemo(() => ([
     { 
-      id: 1,
-      name: 'Basys 3 Board', 
+      name: 'Market Place', 
       imageUrl: '/market-img.svg',  
-      isSelected : true , 
-  },
+    },
     { 
-      id: 2,
-      name: 'Basys 3 Board', 
+      name: 'Lost & Found Forum', 
       imageUrl: '/forum-img.svg',  
-      isSelected : false , 
-  },
-]), []);
+    },
+  ]), []);
+
     // platform name -> MarketPlace and lost and found Forum
     const tags = React.useMemo(() => ([
       { 
@@ -74,36 +75,15 @@ export default function MarketPage(){
   return (
     <> 
     <Container>
-        <Typography variant="h4" color="primary" 
-          sx={{
-            width: 'fit-content',
-            margin: "0 auto",
-            fontSize: '2.5rem',
-            fontStyle: 'normal',
-            fontWeight: 700,
-            lineHeight: '1.375rem',
-            paddingTop: 2,
-            paddingBottom: 5,
-            textAlign: 'center',
-            textTransform : "uppercase",
-            letterSpacing: 10
-          }}
-        >
-          Home
-        </Typography>
-        {/* Platform LISTINGS */}
-        <Grid container spacing={2} justifyContent="space-evenly" alignItems="center">
-          {platforms.map((platform) => (
-            <Grid item key={platform.id} xs={12} sm={6} md={4} lg={5} >
-              <Paper sx={{height : "250px"}}>
-                <DomainImage 
-                  src={platform.imageUrl}
-                  alt={platform.name}
-                />
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
+      <PageTitle pageTitle = "Home" />
+      {/* Platform LISTINGS */}
+      <Grid container spacing={2} justifyContent="space-evenly" alignItems="center">
+      {platforms.map((platform) => (
+              <Grid item key={platform.name} xs={12} sm={6} md={4} lg={5}>
+                <PlatformCard platform ={platform} />
+              </Grid>
+            ))}
+</Grid>
         {/** Grid starts here till chips */}
         <Grid container >
         <Grid item sx={{ paddingTop: '16px' }}>
@@ -136,9 +116,14 @@ export default function MarketPage(){
         </Grid>
         <Grid item xs={12} sm={8} md={6} sx={{ padding: '16px' }}>
           <Grid container spacing={2}>
-            {trendingTags.map((tag) => (
-              <Grid item key={tag.id} xs={12} sm={6} md={4} lg={2}>
-                <TrendingChip tagChip={tag} />
+            {trendingTags.map((tagname, index) => (
+              <Grid item key={index} xs={12} sm={6} md={4} lg={2}>
+                <TrendingChip 
+                  index={index}
+                  tagChip={tagname}
+                  isSelected={currTrendingTag === index}
+                  onSelect={handleTrendingTagSwitch} 
+                />
               </Grid>
             ))}
           </Grid>
@@ -156,6 +141,14 @@ export default function MarketPage(){
             </Grid>
           ))}
         </Grid>
+
+        {/* vertical margin */}
+        <div 
+          style={{
+            width: "100%",
+            height : 100
+          }}
+        />
     </Container>
     </>
   );

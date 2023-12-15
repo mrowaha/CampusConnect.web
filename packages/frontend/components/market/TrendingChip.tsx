@@ -6,24 +6,33 @@ import {
     Chip, Paper, useTheme,
 } from '@mui/material' ;
 
-export const TrendingChip = ({ tagChip }) => {
-    const router = useRouter();
+interface TrendingChipProps {
+  tagChip: string;
+  isSelected: boolean;
+  index: number;
+  onSelect: (index : number) => void;
+}
+
+export const TrendingChip = (props: TrendingChipProps) => {
     const theme = useTheme();
-    const [isSelected, setIsSelected] = React.useState(tagChip.isSelected);
     
     const handleIsSelected = (event : any) => {
-        setIsSelected(!isSelected);
-        
-      };
+      props.onSelect(props.index);
+    };
     
 return (
-    <Paper>
-    <Button variant="outlined" onClick={handleIsSelected} style={{
-          backgroundColor: isSelected ? theme.palette.primary.main : 'transparent',
-          color: isSelected ? '#ffffff' : theme.palette.primary.main,
-        }}>
-     {tagChip.name}
-    </Button>
-    </Paper>
+    <Button
+        size="medium"
+        variant="outlined"
+        onClick={handleIsSelected}
+        sx={{
+          borderRadius: 20,
+          whiteSpace: 'nowrap', // Prevents text from wrapping
+          backgroundColor: props.isSelected ? theme.palette.primary.main : 'transparent',
+          color: props.isSelected ? '#ffffff' : theme.palette.primary.main,
+        }}
+      >
+        {props.tagChip}
+      </Button>
 );
 };
