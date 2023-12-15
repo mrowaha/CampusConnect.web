@@ -185,10 +185,10 @@ const Settings = () => {
                     <TextField
                         size="small"
                         fullWidth
-                        type="text"  // Change type to "text" for storing an address
-                        label="Address"  // Change label to "Address"
-                        name="address"  // Change name to "address"
-                        value={formData.address}  // Update value and onChange to use formData.address
+                        type="text"  
+                        label="Address" 
+                        name="address"  
+                        value={formData.address}  
                         onChange={handleFormChange}
                         
                     />
@@ -218,7 +218,7 @@ const Settings = () => {
             <Divider
                 variant="fullWidth"
                 style={{
-                    height: '8px', // Adjust the height as needed for a thicker divider
+                    height: '8px', 
                 }}
             />
             <>

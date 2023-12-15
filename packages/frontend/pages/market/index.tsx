@@ -44,7 +44,7 @@ export default function MarketPage(){
     <Paper> 
     <Container>
         <Typography variant="h4" sx={{
-          color: '#000',
+          color : "primary",
           fontFamily: 'Cairo',
           fontSize: '2.5rem',
           fontStyle: 'normal',
@@ -56,11 +56,7 @@ export default function MarketPage(){
         }}>
           Home
         </Typography>
-
-
-
-
-        {/* PRODUCT LISTINGS */}
+        {/* Platform LISTINGS */}
         <Container>
           <Grid container spacing={2} justifyContent="center" alignItems="center">
             {Platforms.map((platform) => (
@@ -70,6 +66,12 @@ export default function MarketPage(){
             ))}
           </Grid>
         </Container>
+
+        <Typography noWrap variant="h5" color="primary" fontWeight="bold" gutterBottom >
+          What Would You Like To Find?
+        </Typography>
+
+        {/* PRODUCT LISTINGS */}
         <Grid container spacing={3}>
           {products.map((product) => (
             <Grid item key={product.id} xs={12} sm={6} md={4} lg={3}>
