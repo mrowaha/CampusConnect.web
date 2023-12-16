@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { Container, Grid, Stack, Button, Box, Avatar, TextField, ListItemText, ListItem, ListItemAvatar, useTheme } from "@mui/material";
-import { AddCircleOutlineOutlined as AddCircleOutlineIcon } from "@mui/icons-material";
-import { Post } from "@/components/forum";
 import { PageTitle } from "@/components/shared";
-import SendIcon from '@mui/icons-material/Send';
 import MessageComponent from "@/components/inbox/MessageComponent";
 import MessageThreadComponent from "@/components/inbox/MessageThreadComponent";
 import { IconSend } from "@tabler/icons-react";
@@ -12,11 +9,6 @@ import { BACKEND_URL, GET_MESSAGE_THREADS_BY_USER_ID, MARK_MESSAGES_AS_SEEN, SEN
 import { useSnackbar } from "@/store/snackbar";
 import { useAtom } from "jotai";
 import {currentUserAtom} from "@/auth";
-
-// const loggedInUser = {
-  //   id : "cbb2b18f-a7c4-49de-8a0c-2c0836d960f5"
-  //   // id: "12363402-04ab-4819-8619-20ea0556507f"s
-// }
 
 interface Message {
   id: string;
@@ -47,8 +39,7 @@ export default function Inbox() {
   const theme = useTheme();
   const snackbar = useSnackbar();
   const [messageThreadList, setMessageThreadList] = useState([]); // State to hold the messageThreadList
-  const [currentMessages, setCurrentMessages] = useState([]); // State to hold the messageThreadList
-  const [currentChatUser, setCurrentChatUser] = useState({avatar : "/user-avatar.svg", name: "",id: "1", otherUserId:"2" });
+  const [currentMessageThread, setCurrentMessageThread] = useState({avatar : "/blank-profile-picture.webp", name: "",id: "1", otherUserId:"2", message: [] });
 
   // State to hold the new message text
   const [newMessage, setNewMessage] = React.useState("");
@@ -57,21 +48,35 @@ export default function Inbox() {
 
     // Define a function to fetch message threads
     const fetchMessageThreads = (print) => {
-      console.log("Websocket");
-      console.log("user", loggedInUser?.firstName);
-      getMessageThreads(loggedInUser.uuid, print, undefined);
+      getMessageThreads(loggedInUser.uuid, print);
     };
   
     // Initially, call the function
     fetchMessageThreads(true);
   
-    const intervalId = setInterval(() => fetchMessageThreads(false), 5000);
+    const intervalId = setInterval(() => fetchMessageThreads(false), 4000);
   
     // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, []);
 
-  const getMessageThreads = async (userId: string, showSnack: boolean, currentThreadId:any) => {
+  useEffect(() => {
+      if (messageThreadList.length > 0) {
+              
+          if (currentMessageThread.id === "1"){
+            console.log("Yelo", messageThreadList[0].name)
+            setCurrentMessageThread(messageThreadList[0]) 
+            markAsSeen(messageThreadList[0].message)
+          }
+          else{
+            const current = messageThreadList.find(messageThread => messageThread.id === currentMessageThread.id);
+            setCurrentMessageThread(current) 
+          }
+
+      }
+  }, [messageThreadList]);
+
+  const getMessageThreads = async (userId: string, showSnack: boolean) => {
 
     try {
       const res = await fetch(`${BACKEND_URL}${GET_MESSAGE_THREADS_BY_USER_ID}${userId}`, {
@@ -86,40 +91,16 @@ export default function Inbox() {
       const messageThreads = mapDataToMessageThreads(data);
       setMessageThreadList(messageThreads)
       
-      if (messageThreads.length > 0) {
-          
-          if (currentChatUser.id === "1"){
-            console.log("Set first thread as default", currentChatUser)
-            await updateCurrentMessages(messageThreads[0].message, showSnack, messageThreads[0])
-          }
-          else{
-
-            const current = messageThreads.find(messageThread => messageThread.id === currentChatUser.id);
-            console.log("Dont change me", current.name)
-
-            // console.log("messageThreads[0].message", messageThreads[0].message)
-            // console.log("current.messag", current.message)
-            await updateCurrentMessages(current.message, showSnack, current)
-          }
-        // }
-
-      }
-      
       if (showSnack){
         snackbar("success", "Fetched message threads successfully");
       }
 
     } catch (err: unknown) {
-      snackbar("error getMessageThreads", (err as Error).message);
+      snackbar("error", (err as Error).message);
     }
   } 
 
-  const updateCurrentMessages = async (list, showSnack, selectedThreadUser) => {
-
-    console.log("selectedThreadUser",selectedThreadUser)
-    setCurrentChatUser(selectedThreadUser)
-
-    console.log("currentChatUser", currentChatUser)
+  const markAsSeen = async (list) => {
 
     //Mark as seen
     try {
@@ -131,14 +112,9 @@ export default function Inbox() {
         body : JSON.stringify(list)
       })
 
-      if (showSnack){
-        snackbar("success", "Chat Loaded Successfully");
-      }
     } catch (err: unknown) {
       snackbar("error", (err as Error).message);
     }
-
-    setCurrentMessages(list)    
   };
 
   // Function to map the received data
@@ -146,8 +122,8 @@ export default function Inbox() {
     return data.map(thread => ({
       id: thread.id,
       otherUserId: thread.initiatingUser.userId === loggedInUser.uuid ? thread.receivingUser.userId : thread.initiatingUser.userId,
-      name: `${thread.initiatingUser.firstName} ${thread.initiatingUser.lastName}`,
-      avatar: thread.initiatingUser.profilePicture || '/user-avatar.svg',
+      name: thread.initiatingUser.userId === loggedInUser.uuid ? `${thread.receivingUser.firstName} ${thread.receivingUser.lastName}` : `${thread.initiatingUser.firstName} ${thread.initiatingUser.lastName}`,
+      avatar: '/blank-profile-picture.webp',
       unreadCount: thread.messages.filter(message => message.receiverId === loggedInUser.uuid && !message.seen).length,
       message: thread.messages
         .map(message => ({
@@ -174,22 +150,21 @@ export default function Inbox() {
           body : JSON.stringify({
             content : newMessage,
             senderId : loggedInUser.uuid,
-            receiverId : currentChatUser.otherUserId
+            receiverId : currentMessageThread.otherUserId
           })
         })
 
-        getMessageThreads(loggedInUser.uuid, false, currentChatUser.id)
-        
-        snackbar("success", "Message Sent Successfully");
+        setNewMessage('');
+        snackbar("success", "Message Sent Successfully 9");
+
+        getMessageThreads(loggedInUser.uuid, false)
 
       } catch (err: unknown) {
         snackbar("error", (err as Error).message);
       }
 
-      setNewMessage('');
-
+      
     }
-
   };
 
   const onSelectThread = async (selectedThreadUser) => {
@@ -198,8 +173,10 @@ export default function Inbox() {
 
     // Check if the thread was found
     if (selectedThread) {
-      await updateCurrentMessages(selectedThread.message, true, selectedThreadUser);
-      console.log("messages are ", selectedThread.message );
+
+      setCurrentMessageThread(selectedThreadUser) 
+      markAsSeen(selectedThreadUser.message)
+
     } else {
       console.warn(`Thread with ID "${selectedThreadUser.id}" not found!`);
     }
@@ -227,35 +204,38 @@ export default function Inbox() {
     {/* Page Title */}
       <PageTitle pageTitle={"Inbox"} />
 
-      <Grid container spacing={2} >
+      <Grid container spacing={2} style={{ marginTop: "5px"}}>
 
           {/* Right MessageThreads Grid */}
-          <Grid item xs={4} style={{ height: "90vh", overflowY: "auto", border: `2px solid ${theme.palette.primary.light}`, borderRadius: '10px' }}>
+          <Grid item xs={4} style={{ 
+                height: "75vh", 
+                overflowY: "auto", 
+                borderRight: `2px solid ${theme.palette.primary.light}`
+            }}>
                 <MessageThreadComponent users={messageThreadList} onSelectThread={onSelectThread }/>
           </Grid>
 
           {/* Messages Grid */}
-          <Grid item xs={8} style={{ height: "90vh", border: `2px solid ${theme.palette.primary.light}`, borderRadius: '10px', padding:"10px"}}>
-
-
+          <Grid item xs={8} style={{ height: "90vh", borderRadius: '10px', padding:"10px"}}>
+ 
             {/* Top User Name*/}
             
-            <Box sx={outerthreadHeader}>
+            <Box sx={outerthreadHeader} style={{ maxHeight: '10%' }}>
             <Box sx={threadHeader}>
             <ListItem button >
               <ListItemAvatar>
-                <Avatar alt={currentChatUser.name} src={currentChatUser.avatar} />
+                <Avatar alt={currentMessageThread.name} src={currentMessageThread.avatar} />
               </ListItemAvatar>
-              <ListItemText primary={currentChatUser.name} />
+              <ListItemText primary={currentMessageThread.name} />
             </ListItem>
             </Box>
             </Box>
 
-            <Grid style={{ height: "70vh", overflowY: "auto", width: "100%" }}>
-              {(currentMessages != null && currentMessages.length > 0 && (
+            <Grid style={{ height: '70%', overflowY: "auto", width: "100%" }}>
+              {(currentMessageThread.message != null && currentMessageThread.message.length > 0 && (
                 <Grid container style={{ overflowY: "scroll", maxHeight: "100%", width: "100%" }}>
                   <Stack style={{ width: "100%" }}>
-                    {currentMessages.map((message) => (
+                    {currentMessageThread.message.map((message) => (
                       <MessageComponent
                         content={message.content}
                         time={message.sentTime}
@@ -271,7 +251,7 @@ export default function Inbox() {
             
 
             {/* Message input area */}
-            <Box sx={{ marginTop: 2, display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ maxHeight: '20%', marginTop: 2, display: 'flex', alignItems: 'center' }}>
               <TextField
                 fullWidth
                 size="small"
