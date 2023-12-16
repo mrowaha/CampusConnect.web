@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { Tooltip, useTheme, Box, List, ListItem, ListItemAvatar, Avatar, ListItemText, Badge, TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
-interface User {
+interface MessageThread {
   name: string;
   avatar: string;
-  isModeration: boolean;
   unreadCount: number;
   id: string;
 }
@@ -14,14 +13,10 @@ interface SidebarProps {
   users: User[];
 }
 
-const MessageThreadComponent: React.FC<SidebarProps> = ({ users }) => {
-  const [searchTerm, setSearchTerm] = useState(''); // State to hold the search term
-  // const [currentUserList, setCurrentUserList] = useState([]); // State to hold the search term
-
-  // React.useEffect(() => {
-  //   setCurrentUserList(users);
-  // }, [])
-
+const MessageThreadComponent: React.FC<SidebarProps> = ({ users, onSelectThread }) => {
+  const [searchTerm, setSearchTerm] = useState(''); // State to hold the search 
+  
+  const theme = useTheme();
 
   const filteredUsers = users.filter(user => 
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -36,7 +31,7 @@ const MessageThreadComponent: React.FC<SidebarProps> = ({ users }) => {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon />
+              <SearchIcon color={theme.palette.primary.light}/>
             </InputAdornment>
           ),
         }}
@@ -44,7 +39,7 @@ const MessageThreadComponent: React.FC<SidebarProps> = ({ users }) => {
 
      <List>
         {filteredUsers.map((user) => ( // Use filteredUsers here
-          <ListItem button key={user.id} style={{ marginTop: 5 }}>
+          <ListItem button key={user.id} style={{ marginTop: 5 }} onClick={() => onSelectThread(user)}>
             <ListItemAvatar>
               <Avatar alt={user.name} src={user.avatar} />
             </ListItemAvatar>
@@ -57,7 +52,6 @@ const MessageThreadComponent: React.FC<SidebarProps> = ({ users }) => {
           </ListItem>
         ))}
       </List>
-   
     </Box>
   );
 };

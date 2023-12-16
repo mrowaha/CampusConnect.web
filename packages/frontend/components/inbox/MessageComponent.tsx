@@ -14,7 +14,7 @@ const MessageComponent: React.FC<MessageProps> = ({ content, time, seen, isSende
 
     const messageBoxStyle = {
         display: 'flex',
-        justifyContent: isSender ? 'flex-end' : 'flex-start',
+        justifyContent: isSender ? 'flex-end' : 'flex-start'
       };
     
       const messageStyle = {
