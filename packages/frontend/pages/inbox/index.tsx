@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Container, Grid, Stack, Button, Box, Avatar, TextField, ListItemText, ListItem, ListItemAvatar, useTheme } from "@mui/material";
+import { Container, Grid, Stack, Button, Box, Fab, Avatar, ListItemText, ListItem, ListItemAvatar, useTheme, TextField, Tooltip } from "@mui/material";
 import { PageTitle } from "@/components/shared";
 import MessageComponent from "@/components/inbox/MessageComponent";
 import MessageThreadComponent from "@/components/inbox/MessageThreadComponent";
@@ -9,6 +9,7 @@ import { BACKEND_URL, GET_MESSAGE_THREADS_BY_USER_ID, MARK_MESSAGES_AS_SEEN, SEN
 import { useSnackbar } from "@/store/snackbar";
 import { useAtom } from "jotai";
 import {currentUserAtom} from "@/auth";
+import { useRouter } from 'next/router';
 
 interface Message {
   id: string;
@@ -34,15 +35,29 @@ interface User {
 
 export default function Inbox() {
 
+  const router = useRouter();
+  const { uuid, name } = router.query; // Get params from URL
+
+  useEffect(() => {
+    if (uuid && name) {
+      const temp = { uuid, name };
+      setChatWithUser(temp);
+    }
+  }, [uuid, name]);
+
   const [loggedInUser, setLoggedInUser] = useAtom(currentUserAtom);
 
   const theme = useTheme();
   const snackbar = useSnackbar();
   const [messageThreadList, setMessageThreadList] = useState([]); // State to hold the messageThreadList
-  const [currentMessageThread, setCurrentMessageThread] = useState({avatar : "", name: "No Existing Chat Found", id: "1", otherUserId:"2", message: [] });
+  const [chatWithUser, setChatWithUser] = useState(undefined); // State to hold the messageThreadList
+  // const [chatWithUser, setChatWithUser] = useState({uuid : "77ad7db6-bdf0-40bb-a459-0f46caf56dd2", name: "Ege"}); // State to hold the messageThreadList
+  // const [chatWithUser, setChatWithUser] = useState({uuid : "12363402-04ab-4819-8619-20ea0556507f", name: "Deniz"}); // State to hold the messageThreadList
+  const [currentMessageThread, setCurrentMessageThread] = useState({avatar : "/blank-profile-picture.webp", name: "No Existing Chat Found", id: "1", otherUserId:"2", message: [] });
 
   // State to hold the new message text
   const [newMessage, setNewMessage] = React.useState("");
+  
 
   useEffect(() => {
 
@@ -54,7 +69,7 @@ export default function Inbox() {
     // Initially, call the function
     fetchMessageThreads(true);
   
-    const intervalId = setInterval(() => fetchMessageThreads(false), 4000);
+    const intervalId = setInterval(() => fetchMessageThreads(false), 7000);
   
     // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
@@ -64,13 +79,44 @@ export default function Inbox() {
       if (messageThreadList.length > 0) {
               
           if (currentMessageThread.id === "1"){
-            console.log("Yelo", messageThreadList[0].name)
-            setCurrentMessageThread(messageThreadList[0]) 
-            markAsSeen(messageThreadList[0].message)
+
+            //came to inbox via some profile
+            if (chatWithUser != undefined){    
+
+                const availableThread = messageThreadList.find((thread) => thread.otherUserId === chatWithUser.uuid);
+
+                if (availableThread !== undefined){   
+                  setCurrentMessageThread(availableThread) 
+                  markAsSeen(availableThread.message)
+                }
+                else{ 
+                  const emptyThread = {avatar : "/blank-profile-picture.webp", name: chatWithUser.name, id: "2", otherUserId:chatWithUser.uuid, message: [] }
+                  setCurrentMessageThread(emptyThread) 
+                }
+            }
+            else{
+              setCurrentMessageThread(messageThreadList[0]) 
+              markAsSeen(messageThreadList[0].message)
+
+            }
           }
           else{
-            const current = messageThreadList.find(messageThread => messageThread.id === currentMessageThread.id);
-            setCurrentMessageThread(current) 
+            const current = messageThreadList.find(messageThread => messageThread.id === currentMessageThread.id || messageThread.name === currentMessageThread.name);
+
+            if (current == undefined && currentMessageThread.id == "2"){
+              const currentAgain = messageThreadList.find(messageThread => messageThread.name.includes(currentMessageThread.name));
+
+              if (currentAgain == undefined){
+                const emptyThread = {avatar : "/blank-profile-picture.webp", name: chatWithUser.name, id: "2", otherUserId:chatWithUser.uuid, message: [] }
+                setCurrentMessageThread(emptyThread) 
+              }
+              else{
+                setCurrentMessageThread(currentAgain) 
+              }
+            }
+            else{
+              setCurrentMessageThread(current) 
+            }
           }
 
       }
@@ -90,7 +136,7 @@ export default function Inbox() {
       const data: MessageThreadData[] = await res.json();
       const messageThreads = mapDataToMessageThreads(data);
       setMessageThreadList(messageThreads)
-      
+
       if (showSnack){
         snackbar("success", "Fetched message threads successfully");
       }
@@ -200,6 +246,7 @@ export default function Inbox() {
   };
 
   return (
+    <>
     <Container style={{padding:"10px"}}>
     {/* Page Title */}
       <PageTitle pageTitle={"Inbox"} />
@@ -216,18 +263,22 @@ export default function Inbox() {
           </Grid>
 
           {/* Messages Grid */}
+
+          {currentMessageThread && (
           <Grid item xs={8} style={{ height: "90vh", borderRadius: '10px', padding:"10px"}}>
  
             {/* Top User Name*/}
             
             <Box sx={outerthreadHeader} style={{ maxHeight: '10%' }}>
             <Box sx={threadHeader}>
-            <ListItem button >
-              <ListItemAvatar>
-                <Avatar alt={currentMessageThread.name} src={currentMessageThread.avatar} />
-              </ListItemAvatar>
-              <ListItemText primary={currentMessageThread.name} />
-            </ListItem>
+                
+                    <ListItem button>
+                        <ListItemAvatar>
+                            <Avatar alt={currentMessageThread.name} src={currentMessageThread.avatar} />
+                        </ListItemAvatar>
+                        <ListItemText primary={currentMessageThread.name} />
+                    </ListItem>
+               
             </Box>
             </Box>
 
@@ -274,10 +325,12 @@ export default function Inbox() {
             </Box>)
             )}
           </Grid>
+           )}
       </Grid>
 
 
     </Container>
+    </>
   );
 }
 

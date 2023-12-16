@@ -11,6 +11,9 @@ export default function Document() {
           />
       </Head>
       <body>
+      <div 
+          id="fab-div"
+        />
         <Main />
         <NextScript />
       </body>
