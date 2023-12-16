@@ -1,16 +1,20 @@
+import Link from "next/link";
 import * as React from "react";
 
 import {
   Stack,
-  Divider
+  Divider,
+  Modal,
+  Button
 } from "@mui/material";
 import {styled} from "@mui/system";
 
-import { currentUserAtom } from "@/auth";
+import { authAtom, currentUserAtom, User } from "@/auth";
 import { useAtom } from "jotai";
 
-import { InfoContainer } from "@/components/profile";
+import { InfoContainer, ProfilePictureUploadModal } from "@/components/profile";
 import { PROFILE_PICTURE, BACKEND_URL } from "@/routes";
+import { useSnackbar } from "@/store/snackbar";
 
 type ProfilePictureUploadResponse = {
   contentType : "image/jpg" | "image/jpeg" | "image/png";
@@ -27,68 +31,102 @@ export const ProfilePageContainer = styled(Stack)(({theme}) => ({
 
 export default function ProfilePage() {
 
+  const snackbar = useSnackbar();
   const [currentUser] = useAtom(currentUserAtom);
+  const [token] = useAtom(authAtom);
 
   const [profileImgSrc, setProfileImgSrc] = React.useState<string>("/blank-profile-picture.webp");
 
+  const [showUploadProfilePic, setShowUploadProfilePic] = React.useState<boolean>(false);
+
+  const fetchProfilePicture = async (currentUser : User) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}${PROFILE_PICTURE}?userid=${currentUser.uuid}&role=${currentUser.role}`);
+
+      if (!response.ok) {
+        console.error('Error fetching profile picture:', response.statusText);
+        return;
+      }
+      const blob = await response.blob();
+      if (blob.size == 0) return;
+      const blobUrl = URL.createObjectURL(blob);
+      setProfileImgSrc(blobUrl);
+    } catch (error) {
+      console.error('Error fetching profile picture:', error);
+    }
+  }
+
+  const handleProfilePictureUpload = async (imageBlob : Blob) => {
+    if (imageBlob) {
+      console.log(token);
+      console.log(imageBlob);
+      const formData = new FormData();
+      formData.append("file", imageBlob);
+      const res = await fetch(`${BACKEND_URL}${PROFILE_PICTURE}`, {
+        method: "POST",
+        headers : {
+          "Authorization" : `Bearer ${token}`
+        },
+        body: formData,
+      })
+      const data = await res.json();
+      console.log(data);
+      fetchProfilePicture(currentUser!);
+      setShowUploadProfilePic(false);      
+    }    
+  }
+
   React.useEffect(() => {
     if (currentUser) {
-      const fetchProfilePicture = async () => {
-        try {
-          const response = await fetch(`${BACKEND_URL}${PROFILE_PICTURE}`, {
-            method : "GET",
-            body : JSON.stringify({
-              uuid : currentUser.uuid,
-              role : currentUser.role
-            })
-          });
-
-          if (!response.ok) {
-            // Handle error
-            console.error('Error fetching profile picture:', response.statusText);
-            return;
-          }
-
-          // Read the response as a blob
-          const blob = await response.blob();
-
-          // Create a Blob URL
-          const blobUrl = URL.createObjectURL(blob);
-          setProfileImgSrc(blobUrl);
-        } catch (error) {
-          console.error('Error fetching profile picture:', error);
-        }
-      }
-
-      fetchProfilePicture();
+      fetchProfilePicture(currentUser);
     }
   }, [currentUser])
 
   
   return (
-    <ProfilePageContainer direction="row">
-      {
-        currentUser &&
-          <InfoContainer
-          imgAlt="logged in user profile picture"
-          imgSrc={profileImgSrc}
-          pictureStyles={{width : "70%"}}
-          uuid={currentUser.uuid}
-          firstName={currentUser.firstName}
-          lastName={currentUser.lastName}
-          role={currentUser.role}
-          email={currentUser.email}
-          trustScore={currentUser.trustScore}
-          settings={{ 
-            redirect : true,
-            url : "hello"
-          }}
-          />
-      }
-      <Divider 
-        orientation="vertical"
+    <>
+      <ProfilePictureUploadModal 
+        title="Select Your Profile Picture"
+        open={showUploadProfilePic}
+        closeModal={() => setShowUploadProfilePic(false)}
+        onUploadImage={handleProfilePictureUpload}
       />
-    </ProfilePageContainer>
+      <ProfilePageContainer direction="row">
+        {
+          currentUser &&
+            <InfoContainer
+              imgAlt="logged in user profile picture"
+              imgSrc={profileImgSrc}
+              pictureStyles={{width : "70%"}}
+              updatable={true}
+              onProfilePictureUpdate={() => setShowUploadProfilePic(true)}
+              uuid={currentUser.uuid}
+              firstName={currentUser.firstName}
+              lastName={currentUser.lastName}
+              role={currentUser.role}
+              email={currentUser.email}
+              trustScore={currentUser.trustScore}
+            >
+              <Link
+                href={`/profile/settings`}
+              >
+                <Button
+                variant="outlined"
+                sx={{
+                  textTransform : "none"
+                }}
+                >
+                  Profile Settings
+                </Button>
+              </Link>        
+            </InfoContainer>
+        }
+        <Divider 
+          orientation="vertical"
+        />
+      </ProfilePageContainer>
+    </>
+
   )
 }
 
@@ -100,12 +138,6 @@ export async function getStaticProps() {
   }
 }
 
-// const [imgBlob, handleImageSelect, uploadImage, response, error] = useImageUpload<ProfilePictureUploadResponse, any>(
-//   true,
-//   "POST", 
-//   null,
-//   `/s3/profile-picture`
-// );
 
 // React.useEffect(() => {
 //   console.log(response);

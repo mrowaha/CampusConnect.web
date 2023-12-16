@@ -1,4 +1,3 @@
-import Link from "next/link";
 import * as React from "react";
 
 import {
@@ -26,10 +25,7 @@ const InfoBox = styled(Box)(({theme}) => ({
 
 interface InfoContainerProps extends Omit<ProfilePictureProps, "style">, User {
   pictureStyles? : React.CSSProperties;
-  settings? : {
-    redirect : boolean;
-    url : string
-  }
+  children: React.ReactNode;
 }
 
 export function InfoContainer(props : InfoContainerProps) {
@@ -42,6 +38,8 @@ export function InfoContainer(props : InfoContainerProps) {
         imgAlt={props.imgAlt}
         imgSrc={props.imgSrc}
         style={props.pictureStyles}
+        updatable={props.updatable}
+        onProfilePictureUpdate={props.onProfilePictureUpdate}
       />
       <Typography
         variant="h5"
@@ -72,23 +70,9 @@ export function InfoContainer(props : InfoContainerProps) {
       >
         {props.email}
       </Button>
-      
-      {
-        props.settings && props.settings.redirect &&
-        <Link
-          href={props.settings.url}
-        >
-          <Button
-          variant="outlined"
-          sx={{
-            textTransform : "none"
-          }}
-          >
-            Profile Settings
-          </Button>
-        </Link>        
-      }
 
+      {props.children}
+      
     </InfoBox>
   )
 }
