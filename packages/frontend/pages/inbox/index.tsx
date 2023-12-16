@@ -13,10 +13,10 @@ import { useSnackbar } from "@/store/snackbar";
 import { useAtom } from "jotai";
 import {currentUserAtom} from "@/auth";
 
-const loggedInUser = {
-  id : "cbb2b18f-a7c4-49de-8a0c-2c0836d960f5"
-  // id: "12363402-04ab-4819-8619-20ea0556507f"
-}
+// const loggedInUser = {
+  //   id : "cbb2b18f-a7c4-49de-8a0c-2c0836d960f5"
+  //   // id: "12363402-04ab-4819-8619-20ea0556507f"s
+// }
 
 interface Message {
   id: string;
@@ -42,10 +42,7 @@ interface User {
 
 export default function Inbox() {
 
-  
-  const [ss, setCurrentUser] = useAtom(currentUserAtom);
-
-  
+  const [loggedInUser, setLoggedInUser] = useAtom(currentUserAtom);
 
   const theme = useTheme();
   const snackbar = useSnackbar();
@@ -57,21 +54,22 @@ export default function Inbox() {
   const [newMessage, setNewMessage] = React.useState("");
 
   useEffect(() => {
+
     // Define a function to fetch message threads
     const fetchMessageThreads = (print) => {
       console.log("Websocket");
-      console.log("user", ss);
-      getMessageThreads(loggedInUser.id, print, undefined);
+      console.log("user", loggedInUser?.firstName);
+      getMessageThreads(loggedInUser.uuid, print, undefined);
     };
   
     // Initially, call the function
     fetchMessageThreads(true);
   
-    const intervalId = setInterval(() => fetchMessageThreads(false), 3000);
+    const intervalId = setInterval(() => fetchMessageThreads(false), 5000);
   
     // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, [loggedInUser.id]);
+  }, []);
 
   const getMessageThreads = async (userId: string, showSnack: boolean, currentThreadId:any) => {
 
@@ -83,19 +81,27 @@ export default function Inbox() {
         },
       });
     
+      //Message Thread Data saved and processed
       const data: MessageThreadData[] = await res.json();
       const messageThreads = mapDataToMessageThreads(data);
       setMessageThreadList(messageThreads)
       
       if (messageThreads.length > 0) {
+          
+          if (currentChatUser.id === "1"){
+            console.log("Set first thread as default", currentChatUser)
+            await updateCurrentMessages(messageThreads[0].message, showSnack, messageThreads[0])
+          }
+          else{
 
-        if (currentThreadId != undefined){
-          const current = messageThreads.find(messageThread => messageThread.id === currentThreadId);
-          updateCurrentMessages(current.message, showSnack, current)
-        }
-        else{
-          updateCurrentMessages(messageThreads[0].message, showSnack, messageThreads[0])
-        }
+            const current = messageThreads.find(messageThread => messageThread.id === currentChatUser.id);
+            console.log("Dont change me", current.name)
+
+            // console.log("messageThreads[0].message", messageThreads[0].message)
+            // console.log("current.messag", current.message)
+            await updateCurrentMessages(current.message, showSnack, current)
+          }
+        // }
 
       }
       
@@ -104,17 +110,20 @@ export default function Inbox() {
       }
 
     } catch (err: unknown) {
-      snackbar("error", (err as Error).message);
+      snackbar("error getMessageThreads", (err as Error).message);
     }
   } 
 
   const updateCurrentMessages = async (list, showSnack, selectedThreadUser) => {
 
+    console.log("selectedThreadUser",selectedThreadUser)
     setCurrentChatUser(selectedThreadUser)
+
+    console.log("currentChatUser", currentChatUser)
 
     //Mark as seen
     try {
-      const res = await fetch(`${BACKEND_URL}${MARK_MESSAGES_AS_SEEN}${loggedInUser.id}`, {
+      const res = await fetch(`${BACKEND_URL}${MARK_MESSAGES_AS_SEEN}${loggedInUser.uuid}`, {
         method : "PUT",
         headers : {
           "Content-Type" : "application/json"
@@ -129,24 +138,24 @@ export default function Inbox() {
       snackbar("error", (err as Error).message);
     }
 
-    setCurrentMessages(list)
+    setCurrentMessages(list)    
   };
 
   // Function to map the received data
   const mapDataToMessageThreads = (data: MessageThreadData[]) => {
     return data.map(thread => ({
       id: thread.id,
-      otherUserId: thread.initiatingUser.userId === loggedInUser.id ? thread.receivingUser.userId : thread.initiatingUser.userId,
+      otherUserId: thread.initiatingUser.userId === loggedInUser.uuid ? thread.receivingUser.userId : thread.initiatingUser.userId,
       name: `${thread.initiatingUser.firstName} ${thread.initiatingUser.lastName}`,
       avatar: thread.initiatingUser.profilePicture || '/user-avatar.svg',
-      unreadCount: thread.messages.filter(message => message.receiverId === loggedInUser.id && !message.seen).length,
+      unreadCount: thread.messages.filter(message => message.receiverId === loggedInUser.uuid && !message.seen).length,
       message: thread.messages
         .map(message => ({
           id:message.id,
           content: message.content,
-          sentTime: new Date(...message.timeStamp).toLocaleTimeString(),
+          sentTime: `${message.timeStamp[3].toString().padStart(2, '0')}:${message.timeStamp[4].toString().padStart(2, '0')}:${message.timeStamp[5].toString().padStart(2, '0')}`,
           seen: message.seen,
-          isSender: message.senderId === loggedInUser.id,
+          isSender: message.senderId === loggedInUser.uuid,
         }))
     }));
   };
@@ -164,12 +173,12 @@ export default function Inbox() {
           },
           body : JSON.stringify({
             content : newMessage,
-            senderId : loggedInUser.id,
+            senderId : loggedInUser.uuid,
             receiverId : currentChatUser.otherUserId
           })
         })
 
-        getMessageThreads(loggedInUser.id, false, currentChatUser.id)
+        getMessageThreads(loggedInUser.uuid, false, currentChatUser.id)
         
         snackbar("success", "Message Sent Successfully");
 
@@ -183,13 +192,13 @@ export default function Inbox() {
 
   };
 
-  const onSelectThread = (selectedThreadUser) => {
+  const onSelectThread = async (selectedThreadUser) => {
     // Find the message thread with the matching ID
     const selectedThread = messageThreadList.find((thread) => thread.id === selectedThreadUser.id);
 
     // Check if the thread was found
     if (selectedThread) {
-      updateCurrentMessages(selectedThread.message, true, selectedThreadUser);
+      await updateCurrentMessages(selectedThread.message, true, selectedThreadUser);
       console.log("messages are ", selectedThread.message );
     } else {
       console.warn(`Thread with ID "${selectedThreadUser.id}" not found!`);
@@ -203,7 +212,7 @@ export default function Inbox() {
     flexDirection: 'column',
   };
 
-  //CSS
+  // CSS
   const outerthreadHeader = {
     display: 'flex',
     alignItems: 'center',
@@ -284,6 +293,7 @@ export default function Inbox() {
 
           </Grid>
       </Grid>
+
 
     </Container>
   );
