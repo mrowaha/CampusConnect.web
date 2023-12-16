@@ -67,7 +67,7 @@ export default function ProtectedRoute(props : ProtectedRouteProps) {
           throw new AuthError("Login Required")
         }
         const data = await res.json();
-        if (data.hasOwnProperty("token")) {
+        if (data.hasOwnProperty("uuid")) {
           setCurrentUser(() => {
             const user = {...data};
             delete user["token"];
