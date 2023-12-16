@@ -4,13 +4,12 @@ import { Container, Grid, Stack, Button, Box, Fab, Avatar, ListItemText, ListIte
 import { PageTitle } from "@/components/shared";
 import MessageComponent from "@/components/inbox/MessageComponent";
 import MessageThreadComponent from "@/components/inbox/MessageThreadComponent";
-import { IconSend, IconInbox } from "@tabler/icons-react";
+import { IconSend } from "@tabler/icons-react";
 import { BACKEND_URL, GET_MESSAGE_THREADS_BY_USER_ID, MARK_MESSAGES_AS_SEEN, SEND_MESSAGE } from "@/routes";
 import { useSnackbar } from "@/store/snackbar";
 import { useAtom } from "jotai";
 import {currentUserAtom} from "@/auth";
 import { useRouter } from 'next/router';
-import {createPortal} from "react-dom";
 
 interface Message {
   id: string;
@@ -248,24 +247,6 @@ export default function Inbox() {
 
   return (
     <>
-        {
-      createPortal(
-        <Fab 
-          color="primary"
-          sx={{
-            position : "absolute",
-            right : 25,
-            bottom : 25
-          }}
-          onClick={() => router.replace("/profile")}
-        >
-          <Tooltip title="Inbox" arrow>
-            <IconInbox color='white'/>
-          </Tooltip>
-        </Fab>,
-        document.getElementById("fab-div") as HTMLElement
-      )
-    }
     <Container style={{padding:"10px"}}>
     {/* Page Title */}
       <PageTitle pageTitle={"Inbox"} />
