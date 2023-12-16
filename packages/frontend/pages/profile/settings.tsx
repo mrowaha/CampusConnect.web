@@ -10,6 +10,7 @@ import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { flushSync } from "react-dom";
 import { AUTH_TOKEN, authAtom, currentUserAtom } from "@/auth";
+import { InfoContainer } from "@/components/profile/InfoContainer"
 import {
   Box,
   useTheme,
@@ -259,11 +260,5 @@ const Settings = () => {
 
 export default Settings;
 
-// export async function getStaticProps() {
-//     return {
-//       props : {
-//         protected : true
-//       }
-//     }
-//   }
+
   

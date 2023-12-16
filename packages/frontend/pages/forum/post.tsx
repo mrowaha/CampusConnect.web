@@ -108,7 +108,7 @@ export default function post() {
             Found
           </Button>
         </Stack>
-        {/** Edit Button -- available only if user owns the post*/}
+        {/* * Edit Button -- available only if user owns the post
           {PostContents.ownPost && 
             <Stack direction="row"   marginLeft={60}>  
             <Button
@@ -123,7 +123,7 @@ export default function post() {
               Edit Post
             </Button>
             </Stack> 
-          }
+          } */}
 
       </Stack>
 
