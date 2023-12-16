@@ -30,6 +30,13 @@ export const PageTitle = ({  pageTitle }) => {
         >
         { pageTitle}
         </Typography>
+        {/* horizontal margin */}
+    <div 
+          style={{
+            width: "100%",
+            height : 50
+          }}
+        />
         </>
     );
 };

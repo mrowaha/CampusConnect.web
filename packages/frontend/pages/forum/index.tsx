@@ -1,11 +1,8 @@
 import React from "react";
 
 import { Container, Grid, Stack, Button, IconButton, Typography, styled, useTheme } from "@mui/material";
-import { AddCircleOutlineOutlined as AddCircleOutlineIcon } from "@mui/icons-material";
 import { Post } from "@/components/forum";
 import { PageTitle } from "@/components/shared";
-import { AddIcon } from "@/icons";
-import { TrendingChip } from "@/components/market";
 
 
 export default function ForumPage() {
@@ -29,10 +26,7 @@ export default function ForumPage() {
         setLostSelected(!isLostSelected);
       };
     
-      const handleAddPost = () => {
-        // Implement  Add Post 
-        console.log("Add Post clicked");
-      };
+      
   const PostContents = React.useMemo(() => [
     {
       id: 1,
@@ -67,13 +61,7 @@ export default function ForumPage() {
     {/* Page Title */}
     <PageTitle pageTitle={"Forums"} />
 
-    {/* horizontal margin */}
-    <div 
-          style={{
-            width: "100%",
-            height : 50
-          }}
-        />
+    
 
     {/* Forum Buttons and Add Post Button */}
     <Stack direction="row" alignItems="center" justifyContent = "center" marginLeft={2}>
@@ -126,7 +114,7 @@ export default function ForumPage() {
             <Post post={post} />
           </Grid>
         ))}
-      </Grid>
+    </Grid>
   
   
         {/* horizontal margin */}

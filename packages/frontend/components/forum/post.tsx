@@ -18,54 +18,52 @@ export const Post = ({post}) => {
         userName: post.userName,
         title: post.title,
         body: post.body,
-      };
-      const boxStyle = {
-        
     };
+      
     return (
 
         <PostStack direction="column">
             <Grid container>
-            <Grid item  xs={9}>
-            <Grid container>
-                {/* User Image */}
-                <Grid item xs={1}>
-                    <div style={{height : 50}}>
-                        <DomainImage src={post.userImageUrl} alt={post.usersName} />
-                    </div>   
+                <Grid item  xs={9}>
+                    <Grid container>
+                        {/* User Image */}
+                        <Grid item xs={1}>
+                            <div style={{height : 50}}>
+                                <DomainImage src={post.userImageUrl} alt={post.usersName} />
+                            </div>   
+                        </Grid>
+                
+                        {/* User Name */}
+                        <Grid item  xs={11} sx={{alignItems : "center", display : "flex"}}>
+                            <Typography
+                                variant="h6"
+                                fontWeight="bold"
+                                marginLeft={1} 
+                                color={theme.palette.primary.main}
+                                sx={{ cursor: 'pointer'}} // Use relative sizing
+                            >
+                                {post.userName}
+                            </Typography>
+                        </Grid>
+                        {/* post Content */}
+                        <Grid item xs={12} sx={{ marginTop: 1 }}>
+                            <Divider    />
+                                <PostTextBox content={postContent} isFullPost={ false} />
+                            <Divider  />
+                        </Grid>
+                    </Grid>
                 </Grid>
-        
-                {/* User Name */}
-                <Grid item  xs={11} sx={{alignItems : "center", display : "flex"}}>
-                <Typography
-                    variant="h6"
-                    fontWeight="bold"
-                    marginLeft={1} 
-                    color={theme.palette.primary.main}
-                    sx={{ cursor: 'pointer'}} // Use relative sizing
-                >
-                    {post.userName}
-                </Typography>
+                
+                {/**Outer Grid2 --- image grid */}
+                <Grid item xs={3} sx={{alignItems : "center", }}> 
+                    <div style={{height : 150}}>
+                        <DomainImage src={post.productImageUrl} alt={post.title} />
+                    </div> 
                 </Grid>
-                {/* post Content */}
-                <Grid item xs={12} sx={{marginTop : 1}}>
-                    <Divider />
-                    <PostTextBox content={postContent} />
-                    <Divider />
-                </Grid>
-            </Grid>
-            </Grid>
-            
-            {/**Outer Grid2 --- image grid */}
-            <Grid item xs={3} sx={{alignItems : "center", }}> 
-                <div style={{height : 150}}>
-                    <DomainImage src={post.productImageUrl} alt={post.title} />
-                </div> 
-            </Grid>
             {/**Outer Grid ends here */}
             </Grid>
             {/**Comment Bar */}
-            <CommentBar totalComments={post.totalComments} />
+            <CommentBar  />
         </PostStack>
 
       );
