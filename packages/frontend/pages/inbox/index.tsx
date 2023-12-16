@@ -155,7 +155,7 @@ export default function Inbox() {
         })
 
         setNewMessage('');
-        snackbar("success", "Message Sent Successfully 9");
+        snackbar("success", "Message Sent Successfully");
 
         getMessageThreads(loggedInUser.uuid, false)
 
