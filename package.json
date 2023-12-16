@@ -3,9 +3,9 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
+    "dev": "dotenv -- turbo dev",
     "dev:admin": "dotenv -- turbo dev --filter admin-frontend",
-    "dev:app": "turbo dev --filter frontend",
+    "dev:app": "dotenv -- turbo dev --filter frontend",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
@@ -43,7 +43,15 @@
   "pipeline": {
     "dev:admin": {
       "outputs": ["dist/**", ".next/**"],
-      "env": ["NEXT_PUBLIC_ADMIN_APIKEY"]
+      "env": ["NEXT_PUBLIC_ADMIN_APIKEY", "NEXT_PUBLIC_API_URL"]
+    },
+    "dev:app": {
+      "outputs": ["dist/**", ".next/**"],
+      "env": ["NEXT_PUBLIC_ADMIN_APIKEY", "NEXT_PUBLIC_API_URL"]
+    },
+    "dev": {
+      "outputs": ["dist/**", ".next/**"],
+      "env": ["NEXT_PUBLIC_ADMIN_APIKEY", "NEXT_PUBLIC_API_URL"]
     }
   }
 }
