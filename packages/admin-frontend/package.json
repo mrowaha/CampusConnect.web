@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "tsconfig" : "*"
+    "notistack": "^3.0.1",
+    "tsconfig": "*"
   }
 }
