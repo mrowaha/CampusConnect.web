@@ -5,6 +5,14 @@ import {
 
 export const PageTitle = ({  pageTitle }) => {
     return  (
+      <>
+        {/* horizontal margin */}
+    <div 
+    style={{
+      width: "100%",
+      height : 50
+    }}
+  />
         <Typography variant="h4" color="primary" 
           sx={{
             width: 'fit-content',
@@ -22,5 +30,6 @@ export const PageTitle = ({  pageTitle }) => {
         >
         { pageTitle}
         </Typography>
+        </>
     );
 };

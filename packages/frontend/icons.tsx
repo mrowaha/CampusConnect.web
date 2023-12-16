@@ -73,3 +73,74 @@ export const AddIcon = (
     </SvgIcon>
   )
 }
+
+// CommentIcon component
+export const CommentIcon = ({ filled }: { filled: boolean }) => {
+  const theme = useTheme();
+  const iconSize = 25; // Adjust the size as needed
+
+  return (
+    <svg width={iconSize} height={iconSize} viewBox="0 0 41 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g filter="url(#filter0_d_1765_106187)">
+      <path d="M7.78426 2.98463H32.9973V18.3964H9.62796L7.78426 19.899V2.98463ZM7.78426 0.416C6.05086 0.416 4.64839 1.57188 4.64839 2.98463L4.63263 26.1023L10.9359 20.965H32.9973C34.7307 20.965 36.1489 19.8091 36.1489 18.3964V2.98463C36.1489 1.57188 34.7307 0.416 32.9973 0.416H7.78426ZM10.9359 13.2591H23.5424V15.8278H10.9359V13.2591ZM10.9359 9.4062H29.8457V11.9748H10.9359V9.4062ZM10.9359 5.55326H29.8457V8.12188H10.9359V5.55326Z" fill="#7C35E3"/>
+      </g>
+      <defs>
+      <filter id="filter0_d_1765_106187" x="0.632629" y="0.416" width="39.5163" height="33.6863" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="2"/>
+      <feComposite in2="hardAlpha" operator="out"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1765_106187"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1765_106187" result="shape"/>
+      </filter>
+      </defs>
+    </svg>
+  );
+}
+
+// ShareIcon component
+export const ShareIcon = ({ filled }: { filled: boolean }) => {
+  const theme = useTheme();
+  const iconSize = 25; // Adjust the size as needed
+
+  return (
+    <svg width={iconSize} height={iconSize} viewBox="0 -10 41 41" xmlns="http://www.w3.org/2000/svg">
+       <g filter="url(#filter0_i_1450_13499)">
+      <path d="M28.5103 0.546504L28.5117 0.54599C28.6461 0.496718 28.7918 0.486792 28.9317 0.517396C29.0695 0.547547 29.1959 0.615783 29.2966 0.714175C29.3925 0.816256 29.458 0.943092 29.4854 1.08032L29.9722 0.982839L29.4854 1.08032C29.5133 1.21962 29.501 1.36398 29.4499 1.49659L29.4498 1.49655L29.4466 1.5054L19.435 29.004L19.4346 29.005C19.3831 29.1474 19.2895 29.2711 19.166 29.3595C19.044 29.447 18.8984 29.4959 18.7481 29.5C18.5992 29.4992 18.4538 29.4542 18.3306 29.3708C18.2059 29.2865 18.1096 29.1668 18.054 29.0273L18.0537 29.0265L15.4152 22.4459C14.479 20.1109 15.0264 17.4426 16.8063 15.6648L20.727 11.7488C21.4099 11.0668 21.4099 9.96018 20.727 9.27816C20.0446 8.59654 18.9388 8.59742 18.2574 9.2801L14.3557 13.1893C12.5848 14.9637 9.92686 15.512 7.5983 14.5834L0.992849 11.949L0.992877 11.9489L0.984763 11.9458C0.84211 11.8918 0.719396 11.7957 0.632848 11.6705C0.546307 11.5452 0.5 11.3968 0.5 11.2447C0.5 11.0927 0.546307 10.9442 0.632848 10.8189C0.718828 10.6945 0.840504 10.5989 0.981963 10.5447L28.5103 0.546504Z" fill="#7C35E3" stroke="#7C35E3"/>
+      </g>
+      <defs>
+      <filter id="filter0_i_1450_13499" x="0" y="0" width="30" height="34" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="4"/>
+      <feGaussianBlur stdDeviation="2"/>
+      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+      <feBlend mode="normal" in2="shape" result="effect1_innerShadow_1450_13499"/>
+      </filter>
+      </defs>
+    </svg>
+  );
+}
+
+// ReportIcon component
+export const ReportIcon = ({ filled }: { filled: boolean }) => {
+  const theme = useTheme();
+  const iconSize = 35; // Adjust the size as needed
+
+  return (
+    <svg width={iconSize} height={iconSize} viewBox="0 -5 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+       <path fill-rule="evenodd" clip-rule="evenodd" d="M2.34375 1.5625H22.6562L23.4375 2.34375V17.9688L22.6562 18.75H12.0422L7.58438 23.2094L6.25 22.6562V18.75H2.34375L1.5625 17.9688V2.34375L2.34375 1.5625ZM11.7188 17.1875H21.875V3.125H3.125V17.1875H7.03125L7.8125 17.9688V20.7703L11.1656 17.4156L11.7188 17.1875ZM11.7188 4.6875H13.2812V12.5H11.7188V4.6875ZM11.7188 15.625H13.2812V14.0625H11.7188V15.625Z" fill="#7C35E3" />
+    </svg>
+  );
+}
+
+
+
+
+
+
+

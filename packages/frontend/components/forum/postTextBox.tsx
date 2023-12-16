@@ -18,6 +18,12 @@ export const PostTextBox = ({content}) => {
                 {content.body}
                 </Typography>
             </Stack>
+            <Stack spacing={2}>
+                {/** view all commments text, not a link for now */}
+                <Typography variant="body2" fontWeight= "light" color={theme.palette.primary.main} >
+                View all Comments...  
+                </Typography>
+            </Stack>
         </Box>
     );
 };

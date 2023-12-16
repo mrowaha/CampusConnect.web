@@ -47,6 +47,7 @@ export const Post = ({post}) => {
                     {post.userName}
                 </Typography>
                 </Grid>
+                {/* post Content */}
                 <Grid item xs={12} sx={{marginTop : 1}}>
                     <Divider />
                     <PostTextBox content={postContent} />
@@ -54,6 +55,7 @@ export const Post = ({post}) => {
                 </Grid>
             </Grid>
             </Grid>
+            
             {/**Outer Grid2 --- image grid */}
             <Grid item xs={3} sx={{alignItems : "center", }}> 
                 <div style={{height : 150}}>
@@ -62,8 +64,8 @@ export const Post = ({post}) => {
             </Grid>
             {/**Outer Grid ends here */}
             </Grid>
-    
-            <CommentBar />
+            {/**Comment Bar */}
+            <CommentBar totalComments={post.totalComments} />
         </PostStack>
 
       );

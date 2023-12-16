@@ -142,7 +142,7 @@ export default function MarketPage(){
           ))}
         </Grid>
 
-        {/* vertical margin */}
+        {/* horizontal margin */}
         <div 
           style={{
             width: "100%",

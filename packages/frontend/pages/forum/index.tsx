@@ -39,6 +39,7 @@ export default function ForumPage() {
       userName: "Abbey",
       userImageUrl: "/user-avatar.svg",
       productImageUrl: "/product2-img.svg",
+      totalComments : 3 , // never used 
       title: "Lost Iphone Lorem ipsum dolor sit amet, consectetur adipiscing eli ullamcorper, eu fringilla quam r",
       body:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
@@ -51,6 +52,7 @@ export default function ForumPage() {
       userName: "Sara",
       userImageUrl: "/user2-avatar.svg",
       productImageUrl: "/product2-img.svg",
+      totalComments : 5 , 
       title: "Lost Iphone Lorem ipsum dolor sit amet, consectetur adipiscing eli ullamcorper, eu fringilla quam r",
       body:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
@@ -64,6 +66,14 @@ export default function ForumPage() {
     <Container>
     {/* Page Title */}
     <PageTitle pageTitle={"Forums"} />
+
+    {/* horizontal margin */}
+    <div 
+          style={{
+            width: "100%",
+            height : 50
+          }}
+        />
 
     {/* Forum Buttons and Add Post Button */}
     <Stack direction="row" alignItems="center" justifyContent = "center" marginLeft={2}>
@@ -117,6 +127,15 @@ export default function ForumPage() {
           </Grid>
         ))}
       </Grid>
-  </Container>
+  
+  
+        {/* horizontal margin */}
+        <div 
+          style={{
+            width: "100%",
+            height : 100
+          }}
+        />
+    </Container>
   );
 }
