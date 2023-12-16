@@ -3,9 +3,9 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "dev": "turbo dev",
-    "dev:admin": "turbo dev --filter admin-frontend",
-    "dev:app": "turbo dev --filter frontend",
+    "dev": "dotenv -- turbo dev",
+    "dev:admin": "dotenv -- turbo dev --filter admin-frontend",
+    "dev:app": "dotenv -- turbo dev --filter frontend",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
@@ -26,6 +26,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "dotenv-cli": "^7.3.0",
     "eslint": "^8",
     "eslint-config-next": "14.0.2",
     "prettier": "^3.1.0",
@@ -37,5 +38,22 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "globalDotEnv": [
+    ".env"
+  ],
+  "pipeline": {
+    "dev:admin": {
+      "outputs": ["dist/**", ".next/**"],
+      "env": ["NEXT_PUBLIC_ADMIN_APIKEY", "NEXT_PUBLIC_API_URL"]
+    },
+    "dev:app": {
+      "outputs": ["dist/**", ".next/**"],
+      "env": ["NEXT_PUBLIC_ADMIN_APIKEY", "NEXT_PUBLIC_API_URL"]
+    },
+    "dev": {
+      "outputs": ["dist/**", ".next/**"],
+      "env": ["NEXT_PUBLIC_ADMIN_APIKEY", "NEXT_PUBLIC_API_URL"]
+    }
+  }
 }

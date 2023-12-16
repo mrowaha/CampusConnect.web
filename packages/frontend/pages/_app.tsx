@@ -6,9 +6,11 @@ import { Provider as StoreProvider } from 'jotai';
 import { MuiThemeProvider } from '@/theme'
 import Layout from "@/layout";
 import ProtectedRoute from '@/auth';
+import { BACKEND_URL } from '@/routes';
 
 export default function App({ Component, pageProps }: AppProps) {
 
+  console.log(BACKEND_URL);
 
   return (
     <StoreProvider> 

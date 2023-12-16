@@ -1,4 +1,4 @@
-export const BACKEND_URL = process.env.REACT_APP_API_URL || "http://localhost:8080";
+export const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const VALIDATE_TOKEN = "/auth";
 
