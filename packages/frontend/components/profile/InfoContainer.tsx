@@ -19,7 +19,9 @@ const InfoBox = styled(Box)(({theme}) => ({
   alignItems : "center",
   height : "100%",
   width : 350,
-  gap : 10
+  gap : 10,
+  padding : "1rem",
+  backgroundColor : theme.palette.secondary.light
 }))
 
 

@@ -4,25 +4,28 @@ import type { AppProps } from 'next/app'
 import { Provider as StoreProvider } from 'jotai';
 
 import { MuiThemeProvider } from '@/theme'
-import Layout from "@/layout";
+import Layout from "@/layouts";
 import ProtectedRoute from '@/auth';
-import { BACKEND_URL } from '@/routes';
+
+
+export type PageLayoutType = "profile";
 
 export default function App({ Component, pageProps }: AppProps) {
 
-  console.log(BACKEND_URL);
+  // @ts-ignore
+  const getLayout = Component.getLayout || ((page) => page);
 
   return (
     <StoreProvider> 
       <MuiThemeProvider>
         <Layout>
-          { 
-            pageProps.protected ?
-            <ProtectedRoute>
-              <Component  {...pageProps} />        
-            </ProtectedRoute>
-            : <Component  {...pageProps} />        
-          } 
+            { 
+              pageProps.protected ?
+              <ProtectedRoute>
+                {getLayout(<Component  {...pageProps} />)}        
+              </ProtectedRoute>
+              : getLayout(<Component  {...pageProps} />)        
+            } 
         </Layout>
       </MuiThemeProvider> 
     </StoreProvider>
