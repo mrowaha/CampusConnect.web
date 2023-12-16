@@ -8,7 +8,7 @@ const NoSSRFullPost = dynamic(() => import("@/components/forum/FullPost"),
 {ssr: false});
 
 
-export default function forumPostPage() {
+export default function post() {
     const [isLostSelected, setLostSelected] = React.useState<boolean>(true); // by default in lost forum
     const [isFoundSelected, setFoundSelected] = React.useState(false);
     const [isEditSelected, setEditSelected] = React.useState(false);
