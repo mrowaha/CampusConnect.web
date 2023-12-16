@@ -39,7 +39,7 @@ export default function Inbox() {
   const theme = useTheme();
   const snackbar = useSnackbar();
   const [messageThreadList, setMessageThreadList] = useState([]); // State to hold the messageThreadList
-  const [currentMessageThread, setCurrentMessageThread] = useState({avatar : "/blank-profile-picture.webp", name: "",id: "1", otherUserId:"2", message: [] });
+  const [currentMessageThread, setCurrentMessageThread] = useState({avatar : "", name: "No Existing Chat Found", id: "1", otherUserId:"2", message: [] });
 
   // State to hold the new message text
   const [newMessage, setNewMessage] = React.useState("");
@@ -251,7 +251,9 @@ export default function Inbox() {
             
 
             {/* Message input area */}
-            <Box sx={{ maxHeight: '20%', marginTop: 2, display: 'flex', alignItems: 'center' }}>
+            {(currentMessageThread.id !== "1" &&
+
+            (<Box sx={{ maxHeight: '20%', marginTop: 2, display: 'flex', alignItems: 'center' }}>
               <TextField
                 fullWidth
                 size="small"
@@ -269,8 +271,8 @@ export default function Inbox() {
               >
                 Send
               </Button>
-            </Box>
-
+            </Box>)
+            )}
           </Grid>
       </Grid>
 
