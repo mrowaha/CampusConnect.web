@@ -38,7 +38,11 @@ export default function ProductPostPage() {
   const theme = useTheme();
   const snackbar = useSnackbar();
   const handleOnSave = React.useCallback(() => snackbar("success", "saved"), []);
-  const handleOnCancel = React.useCallback(() => snackbar("warning", "cancelled"), []);
+  const handleOnCancel = React.useCallback(() => {
+    snackbar("warning", "cancelled");
+    router.back(); 
+  }, []);
+  
   const handleOnDelete = React.useCallback(() => snackbar("error", "deleted"), []);
   const actionButtons = React.useMemo(() => {
     const buttons : ActionButtonProps[] = [];

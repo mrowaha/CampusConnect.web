@@ -128,9 +128,12 @@ export default function Layout(props : LayoutProps) {
               <IconButton size="small">
                 <NotificationsIcon style={{fill : theme.palette.primary.main}} />
               </IconButton>
-              <Avatar 
-                src={profileImgSrc}
-              />
+              <Link href={"/profile"}>
+                <Avatar 
+                  src={profileImgSrc}
+                />
+              </Link>
+              
             </Grid>
             :
             <Grid item xs={2} sx={{display : "flex", justifyContent : "right", gap : 1 }}>
