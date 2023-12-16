@@ -10,6 +10,8 @@ import MessageThreadComponent from "@/components/inbox/MessageThreadComponent";
 import { IconSend } from "@tabler/icons-react";
 import { BACKEND_URL, GET_MESSAGE_THREADS_BY_USER_ID, MARK_MESSAGES_AS_SEEN, SEND_MESSAGE } from "@/routes";
 import { useSnackbar } from "@/store/snackbar";
+import { useAtom } from "jotai";
+import {currentUserAtom} from "@/auth";
 
 const loggedInUser = {
   id : "cbb2b18f-a7c4-49de-8a0c-2c0836d960f5"
@@ -40,6 +42,11 @@ interface User {
 
 export default function Inbox() {
 
+  
+  const [ss, setCurrentUser] = useAtom(currentUserAtom);
+
+  
+
   const theme = useTheme();
   const snackbar = useSnackbar();
   const [messageThreadList, setMessageThreadList] = useState([]); // State to hold the messageThreadList
@@ -48,24 +55,25 @@ export default function Inbox() {
 
   // State to hold the new message text
   const [newMessage, setNewMessage] = React.useState("");
-  
 
   useEffect(() => {
     // Define a function to fetch message threads
-    const fetchMessageThreads = () => {
-      getMessageThreads(loggedInUser.id, true);
+    const fetchMessageThreads = (print) => {
+      console.log("Websocket");
+      console.log("user", ss);
+      getMessageThreads(loggedInUser.id, print, undefined);
     };
-
+  
     // Initially, call the function
-    fetchMessageThreads();
-
-    const intervalId = setInterval(fetchMessageThreads(false), 8000);
-
+    fetchMessageThreads(true);
+  
+    const intervalId = setInterval(() => fetchMessageThreads(false), 3000);
+  
     // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
   }, [loggedInUser.id]);
 
-  const getMessageThreads = async (userId: string, showSnack: boolean, currentThreadId:String) => {
+  const getMessageThreads = async (userId: string, showSnack: boolean, currentThreadId:any) => {
 
     try {
       const res = await fetch(`${BACKEND_URL}${GET_MESSAGE_THREADS_BY_USER_ID}${userId}`, {
@@ -279,4 +287,12 @@ export default function Inbox() {
 
     </Container>
   );
+}
+
+export async function getStaticProps() {
+  return {
+    props : {
+      protected : true
+    }
+  }
 }
