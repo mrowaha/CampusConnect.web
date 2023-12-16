@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Link from "next/link";
 import * as React from "react";
 
 import { useAtom } from "jotai";
@@ -9,14 +9,15 @@ import {
   AppBar,
   Grid,
   Button,
-  Divider,
   useTheme,
-  Box
+  Avatar,
+  IconButton
 } from "@mui/material";
 import {styled} from "@mui/system";
-
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import LoginIcon from '@mui/icons-material/Login';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 import {
   snackbarAtom,
@@ -28,6 +29,11 @@ import { Searchbar } from "@/components/layout";
 import { DomainImage } from "@/components/shared";
 
 import { LostAndFoundIcon, SignupIcon } from "@/icons";
+import { currentUserAtom } from "@/auth";
+
+import { BACKEND_URL, PROFILE_PICTURE } from "@/routes";
+import type { User } from "@/auth";
+import useProfilePicture from "@/hooks/useProfilePicture";
 
 interface LayoutProps {
   children : React.ReactNode
@@ -37,16 +43,20 @@ const PageContainer = styled("div")(({theme}) => ({
   backgroundColor : theme.palette.background.default,
   flexGrow : 1,
   position : "relative",
-  marginTop : 10
+  paddingTop : 10
 }))
 
 
 export default function Layout(props : LayoutProps) {
   
   const theme = useTheme();
+
+  const [currentUser] = useAtom(currentUserAtom);
+  const [profileImgSrc, refetch] = useProfilePicture();
+
   const [snackbarStatus, setSnackbarStatus] = useAtom(snackbarAtom);
-  const [severity, __] = useAtom(snackbarSeverity);
-  const [message, ___] = useAtom(snackbarMessage);
+  const [severity] = useAtom(snackbarSeverity);
+  const [message] = useAtom(snackbarMessage);
 
   const snackbar = useSnackbar();
 
@@ -104,24 +114,44 @@ export default function Layout(props : LayoutProps) {
               Lost & Found
             </Button>
           </Grid>
-          <Grid item xs={2} sx={{display : "flex", justifyContent : "right", gap : 1 }}>
-            <Button
-              size="small"
-              variant="contained"
-              startIcon={<SignupIcon stroke="#fff"/>}
-              sx={{textTransform : "none"}}
-            >
-              Sign Up
-            </Button>
-            <Button
-              size="small"
-              variant="contained"
-              startIcon={<LoginIcon style={{ fill : "#fff" }}/>}
-              sx={{textTransform : "none"}}
-            >
-              Login
-            </Button>
-          </Grid>
+          {
+            currentUser !== null ?
+            <Grid item xs={2} sx={{display : "flex", justifyContent : "right", alignItems: "center", gap : 1}}>
+              <Link href={'/product/post'}>
+                <Button size="small" variant="contained" sx={{textTransform : "none", height : "fit-content"}}
+                  startIcon={<AddCircleOutlineIcon  style={{fill : "#fff"}}/>}
+                >
+                  List An Item
+                </Button>
+              </Link>
+              
+              <IconButton size="small">
+                <NotificationsIcon style={{fill : theme.palette.primary.main}} />
+              </IconButton>
+              <Avatar 
+                src={profileImgSrc}
+              />
+            </Grid>
+            :
+            <Grid item xs={2} sx={{display : "flex", justifyContent : "right", gap : 1 }}>
+              <Button
+                size="small"
+                variant="contained"
+                startIcon={<SignupIcon stroke="#fff"/>}
+                sx={{textTransform : "none"}}
+              >
+                Sign Up
+              </Button>
+              <Button
+                size="small"
+                variant="contained"
+                startIcon={<LoginIcon style={{ fill : "#fff" }}/>}
+                sx={{textTransform : "none"}}
+              >
+                Login
+              </Button>
+            </Grid>
+          }
         </Grid>
       </AppBar>
       <PageContainer>

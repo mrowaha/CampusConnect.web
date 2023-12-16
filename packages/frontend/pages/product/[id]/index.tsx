@@ -6,3 +6,11 @@ export default function ProductPage() {
     <h1>Product Page</h1>
   )
 }
+
+export async function getStaticProps() {
+  return {
+    props : {
+      protected : true
+    }
+  }
+}

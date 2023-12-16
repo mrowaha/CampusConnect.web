@@ -190,3 +190,12 @@ export default function ProductPostPage() {
 
   )
 }
+
+
+export async function getStaticProps() {
+  return {
+    props : {
+      protected : true
+    }
+  }
+}
