@@ -14,6 +14,8 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.19",
     "@mui/material": "^5.14.18",
+    "@tabler/icons": "^2.44.0",
+    "@tabler/icons-react": "^2.44.0",
     "jotai": "^2.5.1",
     "next": "13.4.19",
     "react": "18.2.0",
