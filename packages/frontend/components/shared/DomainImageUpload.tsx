@@ -17,16 +17,21 @@ import { DomainImage } from ".";
 interface DropBoxStyleProps {
   backgroundColor? : string;
   borderColor? : string;
+  padding? : string;
+  position? : "relative" | "static";
 };
 
-const DropBox = styled(Box)<DropBoxStyleProps>(({theme, backgroundColor, borderColor}) => ({
+const DropBox = styled(Box)<DropBoxStyleProps>(({theme, backgroundColor, borderColor, padding, position}) => ({
+  width : 150,
+  aspectRatio : "1 / 1",
+  position : position  || "static",
   backgroundColor : backgroundColor || theme.palette.primary.light,
   border : `3px dashed ${borderColor || theme.palette.secondary.main}`,
   display : "flex",
   flexDirection : "column",
   justifyContent : "center",
   alignItems : "center",
-  padding : "1rem",
+  padding : padding || "1rem",
   borderRadius : "5px",
   "& > label" : {
     backgroundColor : theme.palette.primary.main,
@@ -43,6 +48,7 @@ const DropBox = styled(Box)<DropBoxStyleProps>(({theme, backgroundColor, borderC
 
 export interface DomainImageUploadProps extends DropBoxStyleProps {
   imageBlob: Blob | null;
+  imageSrc: string | null;
   onImageSelect: (filelist : FileList | null) => void;
 }
 
@@ -55,6 +61,7 @@ export function DomainImageUpload (props : DomainImageUploadProps) {
         <DropBox
           backgroundColor={props.backgroundColor}
           borderColor={props.borderColor}
+          position="static"
         >
           <SvgIcon
             sx={{
@@ -82,8 +89,6 @@ export function DomainImageUpload (props : DomainImageUploadProps) {
             type="file"
             onChange={(event : React.ChangeEvent<HTMLInputElement>) => {
               /** @ts-ignore */
-              console.log(event.target.files[0]);
-              /** @ts-ignore */
               props.onImageSelect(event.target.files);
             }}
           />
@@ -92,16 +97,28 @@ export function DomainImageUpload (props : DomainImageUploadProps) {
           </label>
         </DropBox>
       </Grid>
-      {props.imageBlob && 
-        <Grid item xs={4}>
-        <DomainImage 
-          alt="not found"
-          src={URL.createObjectURL(props.imageBlob)}
-        />
-        <Badge
-          badgeContent={
+      <Grid item xs={4}>
+      {props.imageSrc ? 
+        <DropBox
+          backgroundColor="none"
+          borderColor="none"
+          padding="0rem"
+          position="relative"
+        >  
+          <DomainImage 
+            alt="not found"
+            src={props.imageSrc}
+          />
+          <IconButton
+            onClick={() => props.onImageSelect(null)}
+            sx={{
+              position : "absolute",
+              left: 0,
+              top: 0
+            }}
+            size="small"
+          >
             <SvgIcon
-              onClick={() => props.onImageSelect(null)}
               fontSize="small"
               sx={{
                 "&:hover" : {
@@ -113,13 +130,13 @@ export function DomainImageUpload (props : DomainImageUploadProps) {
               <path fill-rule="evenodd" clip-rule="evenodd" d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM8.96963 8.96965C9.26252 8.67676 9.73739 8.67676 10.0303 8.96965L12 10.9393L13.9696 8.96967C14.2625 8.67678 14.7374 8.67678 15.0303 8.96967C15.3232 9.26256 15.3232 9.73744 15.0303 10.0303L13.0606 12L15.0303 13.9696C15.3232 14.2625 15.3232 14.7374 15.0303 15.0303C14.7374 15.3232 14.2625 15.3232 13.9696 15.0303L12 13.0607L10.0303 15.0303C9.73742 15.3232 9.26254 15.3232 8.96965 15.0303C8.67676 14.7374 8.67676 14.2625 8.96965 13.9697L10.9393 12L8.96963 10.0303C8.67673 9.73742 8.67673 9.26254 8.96963 8.96965Z" fill={theme.palette.error.main}/>
               </svg>
             </SvgIcon>
-          }
-          sx={{
-            position : "absolute",
-          }}
-        />
-        </Grid>  
+          </IconButton>
+        </DropBox>
+         : 
+        <></>
       }
+
+      </Grid>
     </Grid>
   )
 };
