@@ -79,7 +79,7 @@ export default function LoginPage() {
           return user;
         })
         setToken(data["token"]["accessToken"]);
-        router.replace("/profile");
+        router.replace("/inbox/12363402-04ab-4819-8619-20ea0556507f/deniz");
         return;
       } else if ("errors" in data) {
         throw new Error(data["errors"][0]);
