@@ -82,7 +82,7 @@ import { DomainImage } from '@/components/shared';
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: "space-between" }}>
             <Button variant="contained" color="primary" size="small" onClick={handleAddToCart} fullWidth>
-                {isAdded ? 'Add to cart' : 'Remove'}
+                View Product
             </Button>
             <Button variant="text" disabled size="small" sx={{ fontSize: '1em' }}>
             ${product.price}
