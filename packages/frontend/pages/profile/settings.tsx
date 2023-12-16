@@ -260,5 +260,11 @@ const Settings = () => {
 
 export default Settings;
 
-
+// export async function getStaticProps() {
+//     return {
+//       props : {
+//         protected : true
+//       }
+//     }
+//   }
   
