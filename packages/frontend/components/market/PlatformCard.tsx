@@ -9,6 +9,7 @@ export const PlatformCard = ({ platform }) => {
   const [isPlatformSelected, setPlatformSelected] = React.useState(platform.isSelected);
 
   const handlePlatformSelect = () => {
+    // implement this
     setPlatformSelected(!isPlatformSelected);
   };
 

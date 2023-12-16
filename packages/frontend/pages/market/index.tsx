@@ -1,5 +1,5 @@
 import React from 'react';
-import { Paper, Typography, Button, Grid, Chip, Container, useTheme } from '@mui/material';
+import { Typography, Button, Grid, Chip, Container, useTheme } from '@mui/material';
 import { ProductCard, TagCard, TrendingChip}  from "@/components/market";
 import { DomainImage } from '@/components/shared';
 import { PageTitle } from '@/components/shared/PageTitle';

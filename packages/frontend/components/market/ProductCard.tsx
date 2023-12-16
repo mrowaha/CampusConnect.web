@@ -22,16 +22,16 @@ import { DomainImage } from '@/components/shared';
         const router = useRouter();
         const theme = useTheme();
         const [isFavorite, setIsFavorite] = React.useState(product.isFavorite);
-        const [isAdded, setIsAdded] = React.useState(product.isAdded);
+        const [isSelected, setIsSelected] = React.useState<boolean>(false);
         
         
-        const handleAddToCart = (event : any) => {
-            // Toggle the added to cart status
-            setIsAdded(!isAdded);
+        const handleViewProduct = (event : any) => {
+            // implement this
+            setIsSelected(!isSelected);
             
           };
         const handleAddToFavorites = (event : any) => {
-          // Toggle the favorite status
+          // Toggle the favorite status and imlement add to fav logics
           setIsFavorite(!isFavorite);
           
         };
@@ -55,14 +55,17 @@ import { DomainImage } from '@/components/shared';
             {isFavorite ? <FavoriteIcon style={{fill: theme.palette.primary.main}}/> : <FavoriteBorderIcon style={{fill: theme.palette.secondary.main}} />}
         </IconButton>
 
-        <CardMedia sx={{height : 200}}>
+        <CardMedia component="div"
+            onClick={handleViewProduct} // Replace with your actual click handler
+            sx={{ height: 200 }}
+        >
             <DomainImage 
                 src={product.imageUrl}
                 alt={product.name}
             />
         </CardMedia>
         <CardContent>
-            <div style={{overflow: "hidden", textOverflow: "ellipsis", width: '100%', display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 2}}> 
+            <div onClick={handleViewProduct} style={{overflow: "hidden", textOverflow: "ellipsis", width: '100%', display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 2}}> 
                 <Typography noWrap variant="h6" color="primary" fontWeight="bold" gutterBottom >
                     {product.name}
                 </Typography>
@@ -81,7 +84,7 @@ import { DomainImage } from '@/components/shared';
             }      
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: "space-between" }}>
-            <Button variant="contained" color="primary" size="small" onClick={handleAddToCart} fullWidth>
+            <Button variant="contained" color="primary" size="small" onClick={handleViewProduct} fullWidth>
                 View Product
             </Button>
             <Button variant="text" disabled size="small" sx={{ fontSize: '1em' }}>
