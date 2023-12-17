@@ -8,7 +8,7 @@ import { BACKEND_URL } from "@/routes";
 import { useSnackbar } from "@/store/snackbar";
 
 interface TagAutoCompleteProps {
-  onTagsUpdate : () => void | Promise<void>;
+  onTagsUpdate : (selected : string[]) => void | Promise<void>;
   debounce: number;
 }
 
@@ -30,7 +30,6 @@ export function TagAutoComplete(props : TagAutoCompleteProps) {
           return;
         }
         const data = await res.json();
-        console.log(data);
         setTags(() => {
           // @ts-ignore
           return Object.entries(data).map(([key, value]) => value.name );
@@ -39,24 +38,19 @@ export function TagAutoComplete(props : TagAutoCompleteProps) {
 
       }
     }
-
     fetchAvailableTags();
   }, []);
 
   const debounceRef = React.useRef<number | null>(null);
 
-  React.useEffect(() => {
-    if (assignedTags === null) return;
-    if (props.debounce !== 0) {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      debounceRef.current = window.setTimeout(props.onTagsUpdate, props.debounce);
-    } else {
-      props.onTagsUpdate();
-    }
-  }, [assignedTags]);
-
   const handleOnChange = (_ : any , newValues : string[]) => {
     setAssignedTags(newValues);
+    if (props.debounce !== 0) {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = window.setTimeout(props.onTagsUpdate, props.debounce, newValues);
+    } else {
+      props.onTagsUpdate(newValues);
+    }
   };
 
   return (

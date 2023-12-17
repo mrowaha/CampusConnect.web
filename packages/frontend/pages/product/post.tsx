@@ -144,7 +144,7 @@ export default function ProductPostPage() {
         <Grid item xs={6}>
             <TagAutoComplete 
               debounce={0}
-              onTagsUpdate={() => {}}
+              onTagsUpdate={() => console.log("hello")}
             />
         </Grid>
         <Grid item xs={2}>
