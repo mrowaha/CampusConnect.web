@@ -125,9 +125,7 @@ export function InfoContainer(props : InfoContainerProps) {
               score={props.seller.trustScore as  0 | 1 | 2 | 3 | 4 | 5}
             />
           }
-          </>      
-        }
-        <ButtonGroup size="small" sx={{width: "100%"}} variant="contained" color="primary">
+          <ButtonGroup size="small" sx={{width: "100%"}} variant="contained" color="primary">
           {
             React.Children.toArray(
               props.actions?.map((action) => (
@@ -138,6 +136,9 @@ export function InfoContainer(props : InfoContainerProps) {
             )
           }
         </ButtonGroup>
+          </>      
+        }
+
       </div>
     </Stack>
   )

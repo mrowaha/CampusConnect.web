@@ -7,7 +7,7 @@ import {
   Grid,
   Stack,
   Typography,
-  useTheme, Paper, Box
+  useTheme, Paper, Box, CircularProgress
 } from "@mui/material";
 import { TagCard } from "@/components/market";
 import MessageIcon from '@mui/icons-material/Message';
@@ -17,17 +17,17 @@ import { ActionButtonProps, InfoContainer as ProductInfo } from "@/components/pr
 import { useCurrentUserWithValidation } from "@/auth";
 import { useSnackbar } from "@/store/snackbar";
 import loginRedirectAtom from "@/store/loginredirect";
-const NoSSRDomainImageCaurosel = dynamic(() => import("@/components/shared/DomainImageCaurosel").then((exports) => exports.DomainImageCaurosel)
-, {
-  ssr : false
-})
+import useProductPictures from "@/hooks/useProductPictures";
+import { ImageSlider } from "@/components/forum";
 
 export default function ProductPage() {
 
+  console.log("hell")
   const router = useRouter();
   const theme = useTheme();
   const snackbar = useSnackbar();
   const currentUser = useCurrentUserWithValidation();
+  const [imgUrls, status, fetchImages] = useProductPictures();
   const [_, setLoginRedirect] = useAtom(loginRedirectAtom);
 
   const handlePlaceBid = React.useCallback(() => {
@@ -69,41 +69,36 @@ export default function ProductPage() {
 
   const tags = React.useMemo(() => ([
     { 
-      id: 1,
       name: 'Kitchenware', 
       imageUrl: '/kitchenware.png',  
       isSelected : true , 
       link : '/search?tags=Kitchenware' , 
     },
     { 
-      id: 1,
       name: 'Electronics', 
       imageUrl: '/electronics.png',  
       isSelected : false , 
       link : '/search?tags=Electronics' , 
     },
     { 
-    id: 1,
     name: 'TextBooks', 
     imageUrl: '/textbook.png',  
     isSelected : true , 
     link : '/search?tags=TextBooks' , 
     },
     { 
-      id: 1,
     name: 'Instruments', 
     imageUrl: '/instruments.png',  
     isSelected : false , 
     link : '/search?tags=Instruments' , 
-    },{ 
-    id: 1,
+    },
+    { 
     name: 'Games', 
     imageUrl: '/games.png',  
     isSelected : true ,  
     link : '/search?tags=Games' , 
     },
     { 
-      id: 1,
     name: 'Furniture', 
     imageUrl: '/furniture.png',  
     isSelected : false , 
@@ -111,22 +106,25 @@ export default function ProductPage() {
     }
   ]), []);
 
+
+  React.useEffect(() => {
+    fetchImages("1ea6c6d0-1442-423a-b037-da09f3cb0f35");
+  }, []);
+
   return (
     <Container>
       <Stack direction="column" gap={2}>
         <Grid container gap={1}>
           <Grid item xs={5} sx={{padding : "1rem", backgroundColor: theme.palette.secondary.light}}>
-            <NoSSRDomainImageCaurosel 
-              sources={
-                ["/blank-profile-picture.webp",
-                "/blank-profile-picture.webp",
-                "/blank-profile-picture.webp",
-                "/blank-profile-picture.webp",
-                "/blank-profile-picture.webp"]
-              }
-            />
+            {
+              {
+                "loading": <CircularProgress />,
+                "success": <ImageSlider images={imgUrls} />,
+                "error":  <Typography>Failed To Load Images</Typography>
+              }[status]
+            }
           </Grid>
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <ProductInfo 
               name="Some Product"
               seller={{
@@ -165,16 +163,16 @@ export default function ProductPage() {
               actions={postActions}
               onWishlist={handleWishlist}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
         
-        <Typography style={{margin:"10px"}} color="primary" variant="h5">
+        {/* <Typography style={{margin:"10px"}} color="primary" variant="h5">
         Keep Exploring
         </Typography>
         <Container>
         <Grid container spacing={2}>
             {tags.map((tag) => (
-              <Grid item key={tag.id} xs={12} sm={6} md={4} lg={2}>
+              <Grid item key={tag.name} xs={12} sm={6} md={4} lg={2}>
             <Paper
               elevation={0} // Normal state elevation
               sx={{
@@ -204,8 +202,8 @@ export default function ProductPage() {
             </Paper>
           </Grid>
             ))}
-          </Grid>
-        </Container>
+          </Grid> */}
+        {/* </Container> */}
         <div 
           style={{
             width: "100%",

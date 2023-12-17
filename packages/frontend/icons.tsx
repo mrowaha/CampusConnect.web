@@ -27,10 +27,10 @@ export const SignupIcon = (props : SignupIconProps) => {
         <g id="Complete">
           <g id="user-add">
             <g>
-              <path d="M17,21V19a4,4,0,0,0-4-4H5a4,4,0,0,0-4,4v2" fill="none" stroke={props.stroke} stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-              <circle cx="9" cy="7" r="4" fill="none" stroke={props.stroke} stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-              <line x1="17" y1="11" x2="23" y2="11" fill="none" stroke={props.stroke} stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
-              <line x1="20" y1="8" x2="20" y2="14" fill="none" stroke={props.stroke} stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+              <path d="M17,21V19a4,4,0,0,0-4-4H5a4,4,0,0,0-4,4v2" fill="none" stroke={props.stroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+              <circle cx="9" cy="7" r="4" fill="none" stroke={props.stroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+              <line x1="17" y1="11" x2="23" y2="11" fill="none" stroke={props.stroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
+              <line x1="20" y1="8" x2="20" y2="14" fill="none" stroke={props.stroke} strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"/>
             </g>
           </g>
         </g>
@@ -85,8 +85,8 @@ export const CommentIcon = ({ filled }: { filled: boolean }) => {
       <path d="M7.78426 2.98463H32.9973V18.3964H9.62796L7.78426 19.899V2.98463ZM7.78426 0.416C6.05086 0.416 4.64839 1.57188 4.64839 2.98463L4.63263 26.1023L10.9359 20.965H32.9973C34.7307 20.965 36.1489 19.8091 36.1489 18.3964V2.98463C36.1489 1.57188 34.7307 0.416 32.9973 0.416H7.78426ZM10.9359 13.2591H23.5424V15.8278H10.9359V13.2591ZM10.9359 9.4062H29.8457V11.9748H10.9359V9.4062ZM10.9359 5.55326H29.8457V8.12188H10.9359V5.55326Z" fill="#7C35E3"/>
       </g>
       <defs>
-      <filter id="filter0_d_1765_106187" x="0.632629" y="0.416" width="39.5163" height="33.6863" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <filter id="filter0_d_1765_106187" x="0.632629" y="0.416" width="39.5163" height="33.6863" filterUnits="userSpaceOnUse" colorInterpolation-filters="sRGB">
+      <feFlood floodOpacity="0" result="BackgroundImageFix"/>
       <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
       <feOffset dy="4"/>
       <feGaussianBlur stdDeviation="2"/>
