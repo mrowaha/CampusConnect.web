@@ -9,21 +9,37 @@ import{
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 //import ReportIcon from '@mui/icons-material/Report';
 import { CommentIcon, EnterCommentIcon, ReportIcon, ShareIcon } from "@/icons";
+import ReportDialog from '../shared/ReportDialog';
 
 
-export const CommentBar = ({}) => {
+export const CommentBar = ({onReportSubmit  }) => {
   const theme = useTheme();
+   // report post 
+  const [reportDialogOpen, setReportDialogOpen] = React.useState<boolean>(false);
+
+  const handleReportButtonClick = () => {
+    setReportDialogOpen(true);
+  };
+
+  const handleReportDialogClose = () => {
+    setReportDialogOpen(false);
+  };
+  const handleReportSubmit = (reportData) => {
+   // Call the parent callback with the report data
+   onReportSubmit(reportData);
+
+   // Close the dialog
+   handleReportDialogClose();
+  };
   const handleComment = () => {
       // Implement comment functionality
   };
 
   const handleShare = () => {
-      // Implement share functionality
+   
   };
 
-  const handleReport = () => {
-      // Implement report functionality
-  };
+  
 
   return (
     <Box 
@@ -55,9 +71,14 @@ export const CommentBar = ({}) => {
             </IconButton>
           </Grid>
           <Grid item>
-            <IconButton onClick={handleReport} sx={{ color: theme.palette.primary.main }}>
+            <IconButton onClick={handleReportButtonClick} sx={{ color: theme.palette.primary.main }}>
               <ReportIcon filled={ true} />
             </IconButton>
+            <ReportDialog
+              open={reportDialogOpen}
+              onClose={handleReportDialogClose}
+              onReportSubmit={handleReportSubmit}
+            />
           </Grid>
         </Grid>
       </Grid>

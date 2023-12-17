@@ -12,13 +12,17 @@ const PostStack = styled(Stack)(({theme}) => ({
     padding: "1rem"
 }))
 
-const FullPost = ({post}) => {
+const FullPost = ({post , onReportSubmit}) => {
     const theme = useTheme();
     
     const handleUserSelect = () => {
         // implement user select
         
     };
+
+    const handleReportSubmit = (reportData) => {
+        onReportSubmit(reportData) ;
+      };
     
     const postContent = {
         userName: post.userName,
@@ -84,7 +88,7 @@ const FullPost = ({post}) => {
 
                 {/* CommentBar */}
                 <Grid item xs={12} sx={{marginTop : 1}}>
-                    <CommentBar  />
+                    <CommentBar  onReportSubmit ={handleReportSubmit} />
                 </Grid>
 
                 <Grid item xs={12} sx={{marginTop : 1}}>

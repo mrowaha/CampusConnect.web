@@ -58,10 +58,6 @@ export const CreatePost = ({}) => {
         setImgBlob(imgBlob);
     }
     
-    const handleUserSelect = () => {
-        // implement user select
-        
-    };
     
     const handleTitleChange = () => {
         // implement user select
@@ -108,10 +104,7 @@ export const CreatePost = ({}) => {
                 <DomainImageUpload 
                     onImageFinal={handleImageFinal}
                     justifyContent="left"
-                />
-
-
-                {/* post Content */}      
+                />    
 
             </Grid>
         </PostStack>

@@ -12,7 +12,7 @@ export default function post() {
     const [isLostSelected, setLostSelected] = React.useState<boolean>(true); // by default in lost forum
     const [isFoundSelected, setFoundSelected] = React.useState(false);
     const [isEditSelected, setEditSelected] = React.useState(false);
-    
+ 
     const theme = useTheme();
     const handleEditPost = () => {
       setEditSelected(!isEditSelected);
@@ -27,6 +27,12 @@ export default function post() {
       const handleFoundForum = () => {
         setFoundSelected(!isFoundSelected);
         setLostSelected(!isLostSelected);
+      };
+      const handleReportSubmit = (reportData) => {
+        // handle report for user here
+        console.log("Report title is:" , reportData.reportTitle) ;
+        console.log("Report Description is:" , reportData.reportDescription) ;
+
       };
     
       const postImages = [
@@ -131,7 +137,7 @@ export default function post() {
       <Grid container spacing={3} sx={{ width: "70%", margin: "0 auto" }}>
         <Grid item key={PostContents.id} xs={12}>
           {/* <FullPost post={PostContents} /> */}
-          <NoSSRFullPost post={PostContents} />
+          <NoSSRFullPost post={PostContents} onReportSubmit ={handleReportSubmit}/>
         </Grid>
       </Grid>
 
