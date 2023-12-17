@@ -334,9 +334,9 @@ export default function Search() {
                 {productList.length > 0 ? (
                     <Grid container spacing={3}>
                     {productList.map((product) => (
-                        <Grid item key={product.id} xs={12} sm={6} md={4} lg={3} sx={{ mb: 2 }}>
+                        <Grid item key={product.id} xs={2} sm={6} md={4} lg={3}>
                         <ProductCard product={product} />
-                        </Grid>
+                         </Grid> 
                     ))}
                     </Grid>
                 ) : (

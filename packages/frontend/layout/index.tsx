@@ -64,7 +64,7 @@ export default function Layout(props : LayoutProps) {
 
       // Define a function to fetch message threads
       const fetchNotificationCount = () => {
-        console.log("currentUser", currentUser)
+        // console.log("currentUser", currentUser)
         if (currentUser != null){
           getNotifiCount(currentUser.uuid);
         }
@@ -148,7 +148,12 @@ export default function Layout(props : LayoutProps) {
   };
 
   const handleSearch = () => {
+    if (router.asPath.includes("forum")){
+      router.replace(`/forum?keywords=${searchValue}`);
+    }
+    else{
       router.replace(`/search?keywords=${searchValue}`);
+    }
   };
 
   const pathsToShowCategoryBar = [

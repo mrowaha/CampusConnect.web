@@ -15,7 +15,7 @@ export const PostTextBox = ({content}) => {
 
             <Stack spacing={2}>
                 <Typography variant="body2" fontWeight="light" >
-                {content.body}
+                {content.description}
                 </Typography>
             </Stack>
         </Box>

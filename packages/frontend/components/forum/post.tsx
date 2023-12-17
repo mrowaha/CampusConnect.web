@@ -15,9 +15,9 @@ export const Post = ({post}) => {
     const theme = useTheme();
 
     const postContent = {
-        userName: post.userName,
+        userName: "Berkay Alp",
         title: post.title,
-        body: post.body,
+        description: post.description,
       };
       const boxStyle = {
         
@@ -31,7 +31,7 @@ export const Post = ({post}) => {
                 {/* User Image */}
                 <Grid item xs={1}>
                     <div style={{height : 50}}>
-                        <DomainImage src={post.userImageUrl} alt={post.usersName} />
+                        <DomainImage src={"/user2-avatar.svg"} alt={post.usersName} />
                     </div>   
                 </Grid>
         
@@ -44,20 +44,21 @@ export const Post = ({post}) => {
                     color={theme.palette.primary.main}
                     sx={{ cursor: 'pointer'}} // Use relative sizing
                 >
-                    {post.userName}
+                    {/* {post.userName} */}
+                    Berkay Alp
                 </Typography>
                 </Grid>
                 <Grid item xs={12} sx={{marginTop : 1}}>
                     <Divider />
                     <PostTextBox content={postContent} />
-                    <Divider />
+                    <Divider /> 
                 </Grid>
             </Grid>
             </Grid>
             {/**Outer Grid2 --- image grid */}
             <Grid item xs={3} sx={{alignItems : "center", }}> 
                 <div style={{height : 150}}>
-                    <DomainImage src={post.productImageUrl} alt={post.title} />
+                    <DomainImage src={'/product1-img.svg'} alt={post.title} />
                 </div> 
             </Grid>
             {/**Outer Grid ends here */}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 
 import { Container, Grid, Stack, Button, IconButton, Typography, styled, useTheme } from "@mui/material";
 import { AddCircleOutlineOutlined as AddCircleOutlineIcon } from "@mui/icons-material";
@@ -6,12 +6,62 @@ import { Post } from "@/components/forum";
 import { PageTitle } from "@/components/shared";
 import { AddIcon } from "@/icons";
 import { TrendingChip } from "@/components/market";
+import { useRouter } from 'next/router';
+import { BACKEND_URL, FOUND_FORUM_SEARCH, LOST_FORUM_SEARCH } from "@/routes";
+import { useSnackbar } from '@/store/snackbar';
 
 
 export default function ForumPage() {
     const [isLostSelected, setLostSelected] = React.useState<boolean>(true); // by default in lost forum
     const [isFoundSelected, setFoundSelected] = React.useState(false);
     const [isCreateSelected, setCreateSelected] = React.useState(false);
+    const [forumType, setForumType] = React.useState(null);
+    const [keywords, setKeywords] = React.useState('');
+    const router = useRouter();
+    const [forumPosts, setForumPosts] = React.useState([]);
+    
+    const snackbar = useSnackbar();
+    // const { forumType, keywords } = router.query; // Get params from URL
+
+    useEffect(() => {
+      if (forumType != null) {
+        getForumPosts();
+
+      }
+    }, [forumType, keywords]);
+
+    useEffect(() => {
+      if (router.isReady) {
+
+        setForumType(router.query.forumType || 'LOST');
+        setKeywords(router.query.keywords || '');
+
+      }
+    }, [router.isReady, router.query]);
+
+    const getForumPosts = async () => {
+
+      const endpoint = forumType === 'LOST' ? `${BACKEND_URL}${LOST_FORUM_SEARCH}${keywords}`: `${BACKEND_URL}${FOUND_FORUM_SEARCH}${keywords}`
+
+      try {
+        const res = await fetch(endpoint, {
+          method : "GET",
+          headers : {
+            "Content-Type" : "application/json"
+          },
+        });
+      
+        //Message Thread Data saved and processed
+        const data= await res.json();
+        setForumPosts(data)
+        console.log(data)
+  
+        snackbar("success", "Forum Posts Loaded");
+  
+      } catch (err: unknown) {
+        snackbar("error", (err as Error).message);
+      }
+    } 
     
     const theme = useTheme();
     const handleCreatePost = () => {
@@ -22,11 +72,13 @@ export default function ForumPage() {
     const handleLostForum = () => {
         setFoundSelected(!isFoundSelected);
         setLostSelected(!isLostSelected);
+        setForumType("LOST");
       };
     
       const handleFoundForum = () => {
         setFoundSelected(!isFoundSelected);
         setLostSelected(!isLostSelected);
+        setForumType("FOUND");
       };
     
       const handleAddPost = () => {
@@ -110,13 +162,13 @@ export default function ForumPage() {
     </Stack>
 
     {/* Post Listings */}
-    <Grid container spacing={3} sx={{ width: "70%", margin: "0 auto" }}>
-        {PostContents.map((post) => (
+   {( forumPosts.length > 0 && (<Grid container spacing={3} sx={{ width: "70%", margin: "0 auto" }}>
+        {forumPosts.map((post) => (
           <Grid item key={post.id} xs={12}>
             <Post post={post} />
           </Grid>
         ))}
-      </Grid>
+      </Grid>))}
   </Container>
   );
 }
