@@ -19,4 +19,4 @@ export const SEND_MESSAGE = "/messageThread/sendMessage";
 export const GET_TAGS = "/product-tags";
 export const GET_APPROVED_TAGS = "/product-tags/approved";
 export const GET_REQUESTED_TAGS = "/product-tags/requested";
-export const APPROVE_TAG = "/product-tags/approve/?tagName=";
+export const APPROVE_TAG = "/product-tags/approve?tagName=";

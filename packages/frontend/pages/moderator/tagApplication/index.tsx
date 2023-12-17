@@ -15,6 +15,7 @@ import {
     CircularProgress,
 } from "@mui/material";
 import { BACKEND_URL, GET_TAGS, APPROVE_TAG, GET_REQUESTED_TAGS } from "@/routes";
+import { AUTH_TOKEN } from "@/auth";
 
 export interface Tag {
     name: string;
@@ -34,6 +35,7 @@ const TagApplicationsPage: React.FC = () => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem(AUTH_TOKEN)}`
                 },
             });
 
@@ -54,10 +56,13 @@ const TagApplicationsPage: React.FC = () => {
 
     const approveTag = async (tagName: string) => {
         try {
+            console.log(`${BACKEND_URL}${APPROVE_TAG}${tagName}`)
+            let token = localStorage.getItem(AUTH_TOKEN);
             const res = await fetch(`${BACKEND_URL}${APPROVE_TAG}${tagName}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
                 },
             });
 
