@@ -4,7 +4,6 @@ import {
     Container,
 
 } from "@mui/material";
-import TabButtons from '@/components/profile/ProfileTabs';
 import { PageTitle,
          } from '@/components/shared';
 
@@ -18,10 +17,11 @@ import {
 
 } from '@mui/material';
 import { ProductCard } from '@/components/market';
+import ProfilePageLayout from "@/layouts/profile";
 
-       
 
-export default function products() {
+
+export default function ProductsPage() {
     const theme = useTheme();
     const [selectedDropDown, setSelectedDropDown] = React.useState<boolean>('');
 
@@ -66,7 +66,6 @@ export default function products() {
     return (
         <Container >
             <div>
-                <TabButtons />
                 <PageTitle pageTitle = {"Products"}/>
                 {/* Forum Buttons and Add Post Button */}
         <Grid container  alignItems="center">
@@ -148,3 +147,15 @@ export default function products() {
 
     );
 };
+
+ProductsPage.getLayout = (page : React.ReactNode) => {
+  return <ProfilePageLayout>{page}</ProfilePageLayout>
+}
+
+export async function getStaticProps() {
+  return {
+    props : {
+      protected : false
+    }
+  }
+}

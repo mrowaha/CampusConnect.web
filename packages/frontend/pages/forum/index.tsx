@@ -1,9 +1,8 @@
 import React from "react";
 
-import { Container, Grid, Stack, Button, IconButton, Typography, styled, useTheme } from "@mui/material";
-import { Post } from "@/components/forum";
+import { Container, Grid, Stack, Button, useTheme } from "@mui/material";
+import { PostHero } from "@/components/forum";
 import { PageTitle } from "@/components/shared";
-
 
 export default function ForumPage() {
     const [isLostSelected, setLostSelected] = React.useState<boolean>(true); // by default in lost forum
@@ -24,6 +23,8 @@ export default function ForumPage() {
         setFoundSelected(!isFoundSelected);
         setLostSelected(!isLostSelected);
       };
+
+  const handleOnReportSubmit = () => {};
     
       
   const PostContents = React.useMemo(() => [
@@ -108,11 +109,13 @@ export default function ForumPage() {
 
     {/* Post Listings */}
     <Grid container spacing={3} sx={{ width: "70%", margin: "0 auto" }}>
-        {PostContents.map((post) => (
-          <Grid item key={post.id} xs={12}>
-            <Post post={post} />
-          </Grid>
-        ))}
+        {
+          PostContents.map((post) => (
+            <Grid item key={post.id} xs={12}>
+              <PostHero post={post} onSubmit={handleOnReportSubmit} />
+            </Grid>
+          ))
+        }
     </Grid>
   
   

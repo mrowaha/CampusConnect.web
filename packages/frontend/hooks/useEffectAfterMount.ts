@@ -1,14 +1,16 @@
 import * as React from "react";
 
-export function useEffectAfterMount() {
+export function useEffectAfterMount(callback : () => any, arr : any[]) {
   const didMountRef = React.useRef<boolean>(false);
 
   React.useEffect(() => {
     if (didMountRef.current) {
-      // run callback
+      console.log("no loading");
+      return callback();
     } else {
+      console.log("on mount");
       didMountRef.current = true;
     }
-  }, [])
+  }, arr)
 
 }

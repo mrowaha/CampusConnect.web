@@ -4,7 +4,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 
-export default function TabPanel({ children, value, index }) {
+export function TabPanel({ children, value, index }) {
   return (
     <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`}>
       {value === index && (
@@ -14,7 +14,7 @@ export default function TabPanel({ children, value, index }) {
       )}
     </div>
   );
-};
+}
  
 export const TabButtons = () => {
     const [value, setValue] = useState(0);

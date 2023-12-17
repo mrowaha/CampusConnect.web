@@ -44,7 +44,7 @@ export function ProfilePicture(props : ProfilePictureProps) {
         {
           props.updatable && props.onProfilePictureUpdate &&
           <Tooltip
-          title="upload new image"
+          title="Upload New Image"
           >
             <IconButton
               style={{

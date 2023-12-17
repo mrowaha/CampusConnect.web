@@ -15,7 +15,7 @@ import { useAtom } from "jotai";
 import { InfoContainer, ProfilePictureUploadModal } from "@/components/profile";
 import { PROFILE_PICTURE, BACKEND_URL } from "@/routes";
 import { useSnackbar } from "@/store/snackbar";
-import TabButtons from "@/components/profile/ProfileTabs";
+import { TabButtons }from "@/components/profile";
 
 type ProfilePictureUploadResponse = {
   contentType : "image/jpg" | "image/jpeg" | "image/png";

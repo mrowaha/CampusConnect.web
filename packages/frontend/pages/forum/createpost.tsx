@@ -1,13 +1,11 @@
-import dynamic from "next/dynamic";
 import React from "react";
 
 import { Container, Grid, Stack, Button, useTheme } from "@mui/material";
 import { PageTitle } from "@/components/shared";
-import { CreatePost } from "@/components/forum/CreatePost";
-import TabButtons from "@/components/profile/ProfileTabs";
+import { CreatePost } from "@/components/forum";
 
 
-export default function createPost() {
+export default function CreateForumPostPage() {
     const [isLostSelected, setLostSelected] = React.useState<boolean>(true); // by default in lost forum
     const [isFoundSelected, setFoundSelected] = React.useState(false);
     const [isEditSelected, setEditSelected] = React.useState(false);
@@ -48,7 +46,6 @@ export default function createPost() {
 
   return (
     <Container>
-          <TabButtons />
         
       {/* Page Title */}
       <PageTitle pageTitle={"Create Post"} />

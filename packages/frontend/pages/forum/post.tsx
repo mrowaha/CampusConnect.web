@@ -4,11 +4,13 @@ import React from "react";
 import { Container, Grid, Stack, Button, useTheme } from "@mui/material";
 import { PageTitle } from "@/components/shared";
 
-const NoSSRFullPost = dynamic(() => import("@/components/forum/FullPost"), 
-{ssr: false});
+const NoSSRFullPost = dynamic(() => 
+  import("@/components/forum")
+  .then(exports => exports.FullPost)
+,{ssr: false});
 
 
-export default function post() {
+export default function ForumPostPage() {
     const [isLostSelected, setLostSelected] = React.useState<boolean>(true); // by default in lost forum
     const [isFoundSelected, setFoundSelected] = React.useState(false);
     const [isEditSelected, setEditSelected] = React.useState(false);

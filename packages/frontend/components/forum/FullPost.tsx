@@ -12,7 +12,7 @@ const PostStack = styled(Stack)(({theme}) => ({
     padding: "1rem"
 }))
 
-const FullPost = ({post , onReportSubmit}) => {
+export const FullPost = ({post , onReportSubmit}) => {
     const theme = useTheme();
     
     const handleUserSelect = () => {
@@ -120,5 +120,3 @@ const FullPost = ({post , onReportSubmit}) => {
 
       );
 };
-
-export default FullPost;

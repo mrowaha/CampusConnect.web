@@ -5,9 +5,9 @@ import {
   Button,
   Grid,
 } from "@mui/material";
-import {TabButtons} from '@/components/profile/ProfileTabs';
 import { PageTitle } from '@/components/shared';
-import { PostHero } from "@/components/forum";
+import ProfilePageLayout from "@/layouts/profile";
+
 
 function ForumPostsPage() {
   const theme = useTheme();
@@ -59,7 +59,6 @@ function ForumPostsPage() {
   return (
     <Container>
       <div>
-        <TabButtons />
         <PageTitle pageTitle={"Products"} />
         {/* Forum Buttons and Add Post Button */}
         <Grid container alignItems="center">
@@ -123,5 +122,16 @@ function ForumPostsPage() {
   );
 };
 
+ForumPostsPage.getLayout = (page : React.ReactNode) => {
+  return <ProfilePageLayout>{page}</ProfilePageLayout>
+}
+
+export async function getStaticProps() {
+  return {
+    props : {
+      protected : false
+    }
+  }
+}
 
 export default ForumPostsPage;

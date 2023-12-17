@@ -12,7 +12,7 @@ import { CommentIcon, EnterCommentIcon, ReportIcon, ShareIcon } from "@/icons";
 import ReportDialog from '../shared/ReportDialog';
 
 
-export const CommentBar = ({onReportSubmit  }) => {
+export const CommentBar = ({onReportSubmit} : any) => {
   const theme = useTheme();
    // report post 
   const [reportDialogOpen, setReportDialogOpen] = React.useState<boolean>(false);

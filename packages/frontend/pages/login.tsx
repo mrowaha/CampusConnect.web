@@ -9,6 +9,7 @@ import {
   ButtonGroup,
   Typography,
   CircularProgress,
+  Box,
 } from "@mui/material";
 import {styled} from "@mui/system";
 
@@ -20,18 +21,21 @@ import { BACKEND_URL, LOGIN_BILKENTEER, LOGIN_MODERATOR } from "@/routes";
 import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { flushSync } from "react-dom";
+import loginRedirectAtom from "@/store/loginredirect";
 
-const LoginStack = styled(Stack)(({theme}) => ({
-  background : theme.palette.secondary.main,
-  width : "fit-content",
-  position : "absolute",
-  top : "50%",
-  left : "50%",
-  transform : "translate(-50%, -50%)",
-  padding : "1rem",
-  borderRadius : "5px",
-  alignItems : "center"
-}))
+const LoginStack = styled(Stack)(({ theme }) => ({
+  background: theme.palette.background.default,
+  width: "90%", 
+  maxWidth: "600px", 
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  padding: "1.5rem", 
+  borderRadius: "15px",
+  alignItems: "center",
+  border: `1px solid ${theme.palette.primary.main}`,
+}));
 
 
 export default function LoginPage() {
@@ -41,7 +45,7 @@ export default function LoginPage() {
 
   const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
   const [token, setToken] = useAtom(authAtom);
-
+  const [loginRedirect] = useAtom(loginRedirectAtom);
 
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword]  = React.useState<string>("");
@@ -79,7 +83,11 @@ export default function LoginPage() {
           return user;
         })
         setToken(data["token"]["accessToken"]);
-        router.replace("/profile");
+        if (loginRedirect) {
+          router.replace(loginRedirect);
+        } else {
+          router.replace("/profile");
+        }
         return;
       } else if ("errors" in data) {
         throw new Error(data["errors"][0]);

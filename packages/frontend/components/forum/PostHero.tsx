@@ -11,17 +11,9 @@ const PostStack = styled(Stack)(({theme}) => ({
     padding: "1rem"
 }))
 
-export const PostHero = ({post}) => {
+export function PostHero({ post, onSubmit} : {post : any, onSubmit : any}) {
     const theme = useTheme();
-
-    const postContent = {
-        userName: post.userName,
-        title: post.title,
-        body: post.body,
-    };
-      
     return (
-
         <PostStack direction="column">
             <Grid container>
                 <Grid item  xs={9}>
@@ -48,14 +40,14 @@ export const PostHero = ({post}) => {
                         {/* post Content */}
                         <Grid item xs={12} sx={{ marginTop: 1 }}>
                             <Divider    />
-                                <PostTextBox content={postContent} isFullPost={ false} />
+                                <PostTextBox content={post} isFullPost={ false} />
                             <Divider  />
                         </Grid>
                     </Grid>
                 </Grid>
                 
                 {/**Outer Grid2 --- image grid */}
-                <Grid item xs={3} sx={{alignItems : "center", }}> 
+                <Grid item xs={3} sx={{alignItems : "center" }}> 
                     <div style={{height : 150}}>
                         <DomainImage src={post.productImageUrl} alt={post.title} />
                     </div> 
@@ -63,7 +55,7 @@ export const PostHero = ({post}) => {
             {/**Outer Grid ends here */}
             </Grid>
             {/**Comment Bar */}
-            <CommentBar  />
+            <CommentBar onReportSubmit={onSubmit} />
         </PostStack>
 
       );

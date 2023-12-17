@@ -27,7 +27,7 @@ interface DropBoxStyleProps {
 const DropBox = styled(Box)<DropBoxStyleProps>(({theme, backgroundColor, borderColor, padding, position}) => ({
   width : "100%",
   position : position  || "static",
-  backgroundColor : backgroundColor || theme.palette.primary.light,
+  backgroundColor : theme.palette.primary.light,
   border : `3px dashed ${borderColor || theme.palette.secondary.main}`,
   display : "flex",
   flexDirection : "column",
@@ -166,7 +166,7 @@ export function DomainImageUpload (props : DomainImageUploadProps) {
       <Grid container gap={2} justifyContent={props.justifyContent || "left"}> 
         <Grid item xs={6}>
           <DropBox
-            backgroundColor={props.backgroundColor}
+            backgroundColor={theme.palette.primary.light}
             borderColor={props.borderColor}
             position="static"
             sx={{
@@ -189,7 +189,7 @@ export function DomainImageUpload (props : DomainImageUploadProps) {
             </SvgIcon>
             <Typography
               variant="body1"
-              color={props.borderColor || theme.palette.secondary.main}
+              color={props.borderColor || theme.palette.primary.main}
             >
               Upload Image
             </Typography>
