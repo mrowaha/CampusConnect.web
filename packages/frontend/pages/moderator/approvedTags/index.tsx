@@ -1,6 +1,5 @@
 import * as React from "react";
 import { BACKEND_URL, GET_APPROVED_TAGS } from "@/routes";
-import { createPortal } from "react-dom";
 
 import {
     Container,
@@ -20,12 +19,8 @@ import {
     Fab
 } from "@mui/material";
 
-import { DomainImage } from "@/components/shared";
-import { create } from "domain";
-
 
 export default function ModeratorPage() {
-    const theme = useTheme();
 
     const [tags, setTags] = React.useState<any[]>([]);
     const [status, setStatus] = React.useState<"error" | "success" | "loading">("loading");
@@ -92,41 +87,43 @@ export default function ModeratorPage() {
                     <Typography variant="h3">Approved Tags</Typography>
                 </Grid>
                 <Grid item xs={12}>
-                    <TableContainer component={Paper}>
-                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Name</TableCell>
-                                    <TableCell>Status</TableCell>
-                                    <TableCell>Requested By</TableCell>
-                                    <TableCell>Accepted By</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {
-                                    tags.map(tag => (
-                                        <TableRow
-                                            key={tag.name}
-                                            sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                                        >
-                                            <TableCell component="th" scope="row">
-                                                {tag.name}
-                                            </TableCell>
-                                            <TableCell>
-                                                <Chip
-                                                    label={tag.tagStatus}
-                                                    color={tag.tagStatus === "approved" ? "success" : "error"}
-                                                />
-                                            </TableCell>
-                                            <TableCell>{tag.requestedByID}</TableCell>
-                                            <TableCell>{tag.acceptedByID}</TableCell>
-                                        </TableRow>
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                        <TableContainer component={Paper}>
+                            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>Name</TableCell>
+                                        <TableCell>Status</TableCell>
+                                        <TableCell>Requested By</TableCell>
+                                        <TableCell>Accepted By</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {
+                                        tags.map(tag => (
+                                            <TableRow
+                                                key={tag.name}
+                                                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                                            >
+                                                <TableCell component="th" scope="row">
+                                                    {tag.name}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Chip
+                                                        label={tag.tagStatus}
+                                                        color={tag.tagStatus === "APPROVED" ? "success" : "error"}
+                                                    />
+                                                </TableCell>
+                                                <TableCell>{tag.requestedByID}</TableCell>
+                                                <TableCell>{tag.acceptedByID}</TableCell>
+                                            </TableRow>
 
-                                    ))
-                                }
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                                        ))
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </div>
                 </Grid>
             </Grid>
         </Container>
