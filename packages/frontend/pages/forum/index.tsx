@@ -26,7 +26,6 @@ export default function ForumPage() {
     useEffect(() => {
       if (forumType != null) {
         getForumPosts();
-
       }
     }, [forumType, keywords]);
 
