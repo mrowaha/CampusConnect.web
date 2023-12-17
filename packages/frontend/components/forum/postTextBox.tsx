@@ -1,8 +1,8 @@
 import React from "react" ;
 
-import { Box, Stack, Typography, useTheme } from "@mui/material"
+import { Box, Divider, Stack, Typography, useTheme } from "@mui/material"
 
-export const PostTextBox = ({content}) => {
+export const PostTextBox = ({content , isFullPost}) => {
     const theme = useTheme();
            
     return(
@@ -18,6 +18,13 @@ export const PostTextBox = ({content}) => {
                 {content.description}
                 </Typography>
             </Stack>
+            { !isFullPost && <Stack spacing={2}>
+                {/** view all commments text, not a link for now */}
+                <Typography variant="body2" fontWeight= "light" color={theme.palette.primary.main} >
+                View all Comments...  
+                </Typography>
+            </Stack> }
+            {isFullPost && <Divider sx={{ padding: '8px' }} />}
         </Box>
     );
 };

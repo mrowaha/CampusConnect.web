@@ -23,16 +23,15 @@ import { DomainImage } from '@/components/shared';
         const theme = useTheme();
         const [isFavorite, setIsFavorite] = React.useState(product.isFavorite);
         const [isAdded, setIsAdded] = React.useState(product.isAdded);
-        
-        
+
 
         const handleViewProduct = () => {
             router.push(`/product/${product.id}`);
             // Navigation to product details page
         };
-      
+
         const handleAddToFavorites = (event : any) => {
-          // Toggle the favorite status
+          // Toggle the favorite status and imlement add to fav logics
           setIsFavorite(!isFavorite);
           
         };
@@ -56,14 +55,17 @@ import { DomainImage } from '@/components/shared';
             {isFavorite ? <FavoriteIcon style={{fill: theme.palette.primary.main}}/> : <FavoriteBorderIcon style={{fill: theme.palette.secondary.main}} />}
         </IconButton>
 
-        <CardMedia sx={{height : 200}}>
+        <CardMedia component="div"
+            onClick={handleViewProduct} // Replace with your actual click handler
+            sx={{ height: 200 }}
+        >
             <DomainImage 
                 src={product.imageUrl}
                 alt={product.name}
             />
         </CardMedia>
         <CardContent>
-            <div style={{overflow: "hidden", textOverflow: "ellipsis", width: '100%', display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 2}}> 
+            <div onClick={handleViewProduct} style={{overflow: "hidden", textOverflow: "ellipsis", width: '100%', display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 2}}>
                 <Typography noWrap variant="h6" color="primary" fontWeight="bold" gutterBottom >
                     {product.name}
                 </Typography>

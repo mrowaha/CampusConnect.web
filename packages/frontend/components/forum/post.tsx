@@ -3,6 +3,7 @@ import { DomainImage } from '../shared';
 import { Divider, Grid, Paper, Stack, Typography, useTheme } from "@mui/material";
 import { PostTextBox, CommentBar } from ".";
 import {styled} from "@mui/system";
+import { useRouter } from 'next/router';
 
 const PostStack = styled(Stack)(({theme}) => ({
     border: `2px solid ${theme.palette.primary.main}`,
@@ -12,6 +13,7 @@ const PostStack = styled(Stack)(({theme}) => ({
 }))
 
 export const Post = ({post}) => {
+    const router = useRouter();
     const theme = useTheme();
 
     const postContent = {
@@ -19,12 +21,13 @@ export const Post = ({post}) => {
         title: post.title,
         description: post.description,
       };
-      const boxStyle = {
-        
-    };
+
+    const click = () => {
+        router.push("/forum/post")
+    }
     return (
 
-        <PostStack direction="column">
+        <PostStack direction="column" onClick={click}>
             <Grid container>
             <Grid item  xs={9}>
             <Grid container>
@@ -32,15 +35,15 @@ export const Post = ({post}) => {
                 <Grid item xs={1}>
                     <div style={{height : 50}}>
                         <DomainImage src={"/user2-avatar.svg"} alt={post.usersName} />
-                    </div>   
+                    </div>
                 </Grid>
-        
+
                 {/* User Name */}
                 <Grid item  xs={11} sx={{alignItems : "center", display : "flex"}}>
                 <Typography
                     variant="h6"
                     fontWeight="bold"
-                    marginLeft={1} 
+                    marginLeft={1}
                     color={theme.palette.primary.main}
                     sx={{ cursor: 'pointer'}} // Use relative sizing
                 >
@@ -51,20 +54,20 @@ export const Post = ({post}) => {
                 <Grid item xs={12} sx={{marginTop : 1}}>
                     <Divider />
                     <PostTextBox content={postContent} />
-                    <Divider /> 
+                    <Divider />
                 </Grid>
             </Grid>
             </Grid>
             {/**Outer Grid2 --- image grid */}
-            <Grid item xs={3} sx={{alignItems : "center", }}> 
+            <Grid item xs={3} sx={{alignItems : "center", }}>
                 <div style={{height : 150}}>
                     <DomainImage src={'/product1-img.svg'} alt={post.title} />
                 </div> 
             </Grid>
             {/**Outer Grid ends here */}
             </Grid>
-    
-            <CommentBar />
+            {/**Comment Bar */}
+            <CommentBar  />
         </PostStack>
 
       );

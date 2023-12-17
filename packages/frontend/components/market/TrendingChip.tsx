@@ -19,7 +19,7 @@ export const TrendingChip = (props: TrendingChipProps) => {
     const handleIsSelected = (event : any) => {
       props.onSelect(props.index);
     };
-    
+      
 return (
     <Button
         size="medium"

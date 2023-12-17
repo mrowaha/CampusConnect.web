@@ -18,7 +18,7 @@ export default function MarketPage(){
 
   const router = useRouter();
   const [loggedInUser, setLoggedInUser] = useAtom(currentUserAtom);
-  
+
   const [currTrendingTag, setCurrTrendingTag] = React.useState(0);
 
 
@@ -74,12 +74,12 @@ export default function MarketPage(){
     { 
       name: 'Market Place', 
       imageUrl: '/market-img.svg',  
-      link: '/search',  
+      link: '/search',
     },
     { 
       name: 'Lost & Found Forum', 
       imageUrl: '/forum-img.svg',  
-      link: '/forum',  
+      link: '/forum',
     },
   ]), []);
 
@@ -87,44 +87,43 @@ export default function MarketPage(){
     const tags = React.useMemo(() => ([
       { 
         id: 1,
-        name: 'Kitchenware', 
-        imageUrl: '/kitchenware.png',  
+        name: 'Kitchenware',
+        imageUrl: '/kitchenware.png',
         isSelected : true , 
-        link : '/search?tags=Kitchenware' , 
+        link : '/search?tags=Kitchenware' ,
       },
       { 
-        id: 1,
-        name: 'Electronics', 
-        imageUrl: '/electronics.png',  
+        name: ' Electronics', 
+        imageUrl: '/forum-img.svg',  
         isSelected : false , 
-        link : '/search?tags=Electronics' , 
+        link : '/search?tags=Electronics' ,
       },
-      { 
+      {
       id: 1,
-      name: 'TextBooks', 
-      imageUrl: '/textbook.png',  
-      isSelected : true , 
-      link : '/search?tags=TextBooks' , 
+      name: 'TextBooks',
+      imageUrl: '/textbook.png',
+      isSelected : true ,
+      link : '/search?tags=TextBooks' ,
       },
-      { 
+      {
         id: 1,
-      name: 'Instruments', 
-      imageUrl: '/instruments.png',  
-      isSelected : false , 
-      link : '/search?tags=Instruments' , 
-      },{ 
+      name: 'Instruments',
+      imageUrl: '/instruments.png',
+      isSelected : false ,
+      link : '/search?tags=Instruments' ,
+      },{
       id: 1,
-      name: 'Games', 
-      imageUrl: '/games.png',  
-      isSelected : true ,  
-      link : '/search?tags=Games' , 
+      name: 'Games',
+      imageUrl: '/games.png',
+      isSelected : true ,
+      link : '/search?tags=Games' ,
       },
-      { 
+      {
         id: 1,
-      name: 'Furniture', 
-      imageUrl: '/furniture.png',  
-      isSelected : false , 
-      link : '/search?tags=Furniture' , 
+      name: 'Furniture',
+      imageUrl: '/furniture.png',
+      isSelected : false ,
+      link : '/search?tags=Furniture' ,
       }
     ]), []);
 
@@ -153,11 +152,11 @@ export default function MarketPage(){
           },
           body: JSON.stringify(body)
         });
-  
+
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
-  
+
         const data = await response.json();
         const products = mapDataToProducts(data, loggedInUser? loggedInUser.uuid : "0");
 
@@ -247,21 +246,21 @@ export default function MarketPage(){
                   index={index}
                   tagChip={tag.label}
                   isSelected={currTrendingTag === index}
-                  onSelect={tag.onClick} 
+                  onSelect={tag.onClick}
                 />
               </Box>
               // </Grid>
             ))}
           </Grid>
         </Grid>
-         
+
         </Grid>
 
         {/* PRODUCT LISTINGS */}
 
-        <Grid item xs={8.5} style={{ 
-                height: "75vh", 
-                overflowY: "auto", 
+        <Grid item xs={8.5} style={{
+                height: "75vh",
+                overflowY: "auto",
                 }}>
 
 
@@ -282,11 +281,11 @@ export default function MarketPage(){
                     {/* <Skeleton height={"20%"}/>
                                         <Skeleton width="60%" /> */}
                     </Box>
-                     
+
                 )}
             </Grid>
 
-        {/* vertical margin */}
+        {/* horizontal margin */}
         <div 
           style={{
             width: "100%",

@@ -2,42 +2,31 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Paper from "@mui/material/Paper";
 import {styled} from "@mui/system";
-import {Notifications} from "@/components/settings";
 
-import { useSnackbar } from "@/store/snackbar";
-import { BACKEND_URL, LOGIN_BILKENTEER, LOGIN_MODERATOR } from "@/routes";
-import { useAtom } from "jotai";
+import {Notifications} from "@/components/settings";
 import { useRouter } from "next/router";
-import { flushSync } from "react-dom";
-import { AUTH_TOKEN, authAtom, currentUserAtom } from "@/auth";
 import {
   Box,
   useTheme,
   Button,
-  Checkbox,
-  FormControlLabel,
   Grid,
   TextField,
-  Typography,
-  Switch,
-  FormGroup,
   FormControl,
   Divider,
 } from "@mui/material";
 
-import { FilledInputField } from "@/components/shared";
 import { NotificationPreference } from "@/components/settings/NotificationPreference";
 import { LanguagePreference } from "@/components/settings/LanguagePreference";
 import { PageTitle } from "@/components/shared/PageTitle";
+import ProfilePageLayout from "@/layouts/profile";
 
-const Settings = () => {
-    const router = useRouter();
-    const theme = useTheme();
-//   const { data: session } = useSession();
-//   const names = session.user.name.split(" ");
-//   const firstName = names[0];
-//   const lastName = names.length > 1 ? names[names.length - 1] : "";
-  const [formData, setFormData] = useState({
+
+
+function SettingsPage() {
+  const router = useRouter();
+  const theme = useTheme();
+
+    const [formData, setFormData] = useState({
     firstName: "Mehshid",
     lastName: "Atiq",
     email: "abc@ug.bilkent.edu.tr",
@@ -70,9 +59,6 @@ const Settings = () => {
   const [showAppPreference, setAppPreference] = React.useState(true);
 
   const [showTurkishPreference, setTurkishPreference] = React.useState(true);
-
-  
-  
 
   const handleShowMyProducts = (event : any) => {
     setShowRevenue(event.target.checked);
@@ -108,8 +94,7 @@ const Settings = () => {
   };
   return (
     <>
-      <Box>
-        <Paper sx={{ padding: "1rem 2rem" }}>
+        <Paper>
         <PageTitle pageTitle= "Settings" />
           <Grid container justifyContent="center">
             <Grid item xs={12} sm={8} md={6}>
@@ -252,18 +237,21 @@ const Settings = () => {
             </Box>
             </>
         </Paper>
-      </Box>
     </>
   );
 };
 
-export default Settings;
+SettingsPage.getLayout = (page : React.ReactNode) => {
+  return <ProfilePageLayout>{page}</ProfilePageLayout>
+}
 
-// export async function getStaticProps() {
-//     return {
-//       props : {
-//         protected : true
-//       }
-//     }
-//   }
+export default SettingsPage;
+
+export async function getStaticProps() {
+    return {
+      props : {
+        protected : true
+      }
+    }
+  }
   

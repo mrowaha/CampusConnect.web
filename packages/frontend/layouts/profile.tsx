@@ -4,6 +4,7 @@ import * as React from "react";
 import {
   Stack,
   Divider,
+  Box,
   Button
 } from "@mui/material";
 import {styled} from "@mui/system";
@@ -13,9 +14,9 @@ import { useAtom } from "jotai";
 
 import { InfoContainer, ProfilePictureUploadModal } from "@/components/profile";
 import { PROFILE_PICTURE, BACKEND_URL } from "@/routes";
-import useProfilePicture from "@/hooks/useProfilePicture";
+import { useSnackbar } from "@/store/snackbar";
 
-export type ProfilePictureUploadResponse = {
+type ProfilePictureUploadResponse = {
   contentType : "image/jpg" | "image/jpeg" | "image/png";
   createdTime: string;
   fileSize: number;
@@ -23,20 +24,50 @@ export type ProfilePictureUploadResponse = {
 }
 
 export const ProfilePageContainer = styled(Stack)(({theme}) => ({
-  padding : "2rem",
   inset : 0,
-  position : "absolute"
+  position : "absolute",
+  overflow: "hidden"
 }));
 
-export default function ProfilePage() {
+
+const PageWrapper = styled(Box)(() => ({
+  width : "100%", 
+  overflowY: "scroll", 
+  height : "100%"
+})) as typeof Box;
+
+
+export default function ProfilePageLayout({children} : {children : React.ReactNode}) {
+
 
   const [currentUser] = useAtom(currentUserAtom);
   const [token] = useAtom(authAtom);
 
-  const [profileImgSrc, refetch] = useProfilePicture();
+  const [profileImgSrc, setProfileImgSrc] = React.useState<string>("/blank-profile-picture.webp");
+
   const [showUploadProfilePic, setShowUploadProfilePic] = React.useState<boolean>(false);
+
+  const fetchProfilePicture = async (currentUser : User) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}${PROFILE_PICTURE}?userid=${currentUser.uuid}&role=${currentUser.role}`);
+
+      if (!response.ok) {
+        console.error('Error fetching profile picture:', response.statusText);
+        return;
+      }
+      const blob = await response.blob();
+      if (blob.size == 0) return;
+      const blobUrl = URL.createObjectURL(blob);
+      setProfileImgSrc(blobUrl);
+    } catch (error) {
+      console.error('Error fetching profile picture:', error);
+    }
+  }
+
   const handleProfilePictureUpload = async (imageBlob : Blob) => {
     if (imageBlob) {
+      console.log(token);
+      console.log(imageBlob);
       const formData = new FormData();
       formData.append("file", imageBlob);
       const res = await fetch(`${BACKEND_URL}${PROFILE_PICTURE}`, {
@@ -48,7 +79,7 @@ export default function ProfilePage() {
       })
       const data = await res.json();
       console.log(data);
-      refetch();
+      fetchProfilePicture(currentUser!);
       setShowUploadProfilePic(false);      
     }    
   }
@@ -59,7 +90,7 @@ export default function ProfilePage() {
     }
   }, [currentUser])
 
-
+  
   return (
     <>
       <ProfilePictureUploadModal 
@@ -101,81 +132,10 @@ export default function ProfilePage() {
         <Divider 
           orientation="vertical"
         />
+        <PageWrapper>
+          {children}
+        </PageWrapper>
       </ProfilePageContainer>
     </>
-
   )
 }
-
-export async function getStaticProps() {
-  return {
-    props : {
-      protected : true
-    }
-  }
-}
-
-
-// React.useEffect(() => {
-//   console.log(response);
-//   console.log(error);
-// }, [response, error])
-
-
-// const [resultURL, setResultUrl] = React.useState<string | null>(null);
-
-// const handleGetRequest = () => {
-//   const fetchProfilePicture = async () => {
-//     try {
-//       const token = localStorage.getItem(AUTH_TOKEN);
-//       const response = await fetch(`${BACKEND_URL}/s3/profile-picture`, {
-//         method : "GET",
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-
-//       if (!response.ok) {
-//         // Handle error
-//         console.error('Error fetching profile picture:', response.statusText);
-//         return;
-//       }
-
-//       // Read the response as a blob
-//       const blob = await response.blob();
-
-//       // Create a Blob URL
-//       const blobUrl = URL.createObjectURL(blob);
-//       setResultUrl(blobUrl);
-//     } catch (error) {
-//       console.error('Error fetching profile picture:', error);
-//     }
-//   }
-
-//   fetchProfilePicture();
-// }
-
-// return (
-//   <>
-//     <DomainImageUpload 
-//       imageBlob={imgBlob}
-//       onImageSelect={handleImageSelect}      
-//     />
-//     <Button
-//       color="primary"
-//       onClick={uploadImage}
-//     >
-//       Send
-//     </Button> 
-//     <Button
-//       color="primary"
-//       onClick={handleGetRequest}
-//     >
-//       Get
-//     </Button> 
-//     {
-//       resultURL &&
-//       <img src={resultURL} style={{maxWidth : "100%"}} />
-//     }   
-//   </>
-// )

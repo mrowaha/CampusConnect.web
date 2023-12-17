@@ -17,13 +17,14 @@ export const TagCard = ({  tag }) => {
     const [isSelected, setIsSelected] = React.useState(tag.isSelected);
     
     const handleIsSelected = (event : any) => {
-        // Toggle the added to cart status
+        // implement the handler
         setIsSelected(!isSelected);
         
         };
     
 return (
     <Paper variant='outlined' sx={{border: `1px solid ${theme.palette.primary.main}`}}>
+    <div onClick={handleIsSelected}>
     <Card sx={{
         position : "relative", 
         isolation : "isolate", 
@@ -53,6 +54,7 @@ return (
             
         </CardContent>
     </Card>
+    </div>
     </Paper>
 );
 };

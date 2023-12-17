@@ -19,7 +19,7 @@ export default function ForumPage() {
     const [keywords, setKeywords] = React.useState('');
     const router = useRouter();
     const [forumPosts, setForumPosts] = React.useState([]);
-    
+
     const snackbar = useSnackbar();
     // const { forumType, keywords } = router.query; // Get params from URL
 
@@ -49,24 +49,24 @@ export default function ForumPage() {
             "Content-Type" : "application/json"
           },
         });
-      
+
         //Message Thread Data saved and processed
         const data= await res.json();
         setForumPosts(data)
         console.log(data)
-  
+
         snackbar("success", "Forum Posts Loaded");
-  
+
       } catch (err: unknown) {
         snackbar("error", (err as Error).message);
       }
-    } 
-    
+    }
+
     const theme = useTheme();
     const handleCreatePost = () => {
         setCreateSelected(!isCreateSelected);
-        router.push("/forum/post")
-        
+        router.push("/forum/createpost")
+
       };
     handleCreatePost
     const handleLostForum = () => {
@@ -81,16 +81,14 @@ export default function ForumPage() {
         setForumType("FOUND");
       };
     
-      const handleAddPost = () => {
-        // Implement  Add Post 
-        console.log("Add Post clicked");
-      };
+
   const PostContents = React.useMemo(() => [
     {
       id: 1,
       userName: "Abbey",
       userImageUrl: "/user-avatar.svg",
       productImageUrl: "/product2-img.svg",
+      totalComments : 3 , // never used
       title: "Lost Iphone Lorem ipsum dolor sit amet, consectetur adipiscing eli ullamcorper, eu fringilla quam r",
       body:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
@@ -103,6 +101,7 @@ export default function ForumPage() {
       userName: "Sara",
       userImageUrl: "/user2-avatar.svg",
       productImageUrl: "/product2-img.svg",
+      totalComments : 5 ,
       title: "Lost Iphone Lorem ipsum dolor sit amet, consectetur adipiscing eli ullamcorper, eu fringilla quam r",
       body:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
@@ -116,6 +115,8 @@ export default function ForumPage() {
     <Container>
     {/* Page Title */}
     <PageTitle pageTitle={"Forums"} />
+
+
 
     {/* Forum Buttons and Add Post Button */}
     <Stack direction="row" alignItems="center" justifyContent = "center" marginLeft={2}>
