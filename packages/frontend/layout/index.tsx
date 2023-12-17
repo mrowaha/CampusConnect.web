@@ -109,6 +109,7 @@ export default function Layout(props : LayoutProps) {
             <Button
               size="small"
               startIcon={<StorefrontIcon style={{ fill : theme.palette.primary.main }}/>}
+              onClick={() => router.replace("/market")}
               sx={{textTransform : "none"}}
             >
               Market Place
@@ -116,6 +117,7 @@ export default function Layout(props : LayoutProps) {
             <Button
               size="small"
               startIcon={<LostAndFoundIcon />}
+              onClick={() => router.replace("/forum")}
               sx={{textTransform : "none"}}
             >
               Lost & Found
@@ -126,6 +128,7 @@ export default function Layout(props : LayoutProps) {
               size="small"
               variant="contained"
               startIcon={<SignupIcon stroke="#fff"/>}
+              onClick={() => router.replace("/register")}
               sx={{textTransform : "none"}}
             >
               Sign Up
@@ -134,6 +137,7 @@ export default function Layout(props : LayoutProps) {
               size="small"
               variant="contained"
               startIcon={<LoginIcon style={{ fill : "#fff" }}/>}
+              onClick={() => router.replace("/login")}
               sx={{textTransform : "none"}}
             >
               Login
