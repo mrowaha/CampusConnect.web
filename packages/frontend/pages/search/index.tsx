@@ -327,27 +327,22 @@ export default function Search() {
             <Grid item xs={8.5} style={{ 
                 height: "75vh", 
                 overflowY: "auto", 
-                }}>
-
-
+            }}>
                 {/* Product list Grid */}
                 {productList.length > 0 ? (
-                    <Grid container spacing={3}>
-                    {productList.map((product) => (
-                        <Grid item key={product.id} xs={2} sm={6} md={4} lg={3}>
-                        <ProductCard product={product} />
-                         </Grid> 
-                    ))}
+                    <Grid container spacing={2}>
+                        {productList.map((product) => (
+                            <Grid item key={product.id} xs={12} sm={4} md={4} lg={4}>
+                                <ProductCard product={product} />
+                            </Grid> 
+                        ))}
                     </Grid>
                 ) : (
                     <Box sx={{ pt: 0.5, display: 'flex', justifyContent: 'center', alignItems: 'center', height: '65vh' }}>
-                    <Typography variant="h6" color="text.secondary">
-                        No products found
-                    </Typography>
-                    {/* <Skeleton height={"20%"}/>
-                                        <Skeleton width="60%" /> */}
+                        <Typography variant="h6" color="text.secondary">
+                            No products found
+                        </Typography>
                     </Box>
-                     
                 )}
             </Grid>
 

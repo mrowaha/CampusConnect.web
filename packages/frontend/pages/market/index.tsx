@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Paper, Typography, Button, Grid, Box, Container, useTheme } from '@mui/material';
-import { ProductCard, TagCard, TrendingChip}  from "@/components/market";
+import { ProductCard, ProductCardNew, TrendingChip}  from "@/components/market";
 import { DomainImage } from '@/components/shared';
 import { PageTitle } from '@/components/shared/PageTitle';
 import { PlatformCard } from '@/components/market/PlatformCard';
@@ -130,11 +130,11 @@ export default function MarketPage(){
     const mapDataToProducts = (data, loggedInUserId) => {
       return data.map(item => ({
         id: item.productId,
+        viewCount: item.viewCount,
         name: item.name,
         price: item.price,
         imageUrl: '/product1-img.svg', // Replace with actual image path or logic
         tags: item.tags,
-        viewCount: item.viewCount,
         sellerRating: item.seller.trustScore,
         isFavorite: item.wishListedBy.some(wishlistItem => wishlistItem.userId === loggedInUserId),
         isAdded: true, // Adjust this based on your logic

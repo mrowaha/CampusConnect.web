@@ -3,6 +3,7 @@ import {StarIcon, AddIcon} from "@/icons";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useRouter } from 'next/router';
+import { IconChartBar, IconThumbUp } from "@tabler/icons-react";
 
 import { Card, 
     CardContent, 
@@ -11,30 +12,30 @@ import { Card,
     IconButton, 
     Typography, 
     Button, 
-    Grid, 
-    Chip, 
+    Divider,
+    Grid, Chip,Box,
     Paper,
     useTheme} from '@mui/material';
 import { DomainImage } from '@/components/shared';
     
 
-    export const ProductCard = ({ product }) => {
-        const router = useRouter();
-        const theme = useTheme();
-        const [isFavorite, setIsFavorite] = React.useState(product.isFavorite);
-        const [isAdded, setIsAdded] = React.useState(product.isAdded);
+export const ProductCard = ({ product }) => {
+    const router = useRouter();
+    const theme = useTheme();
+    const [isFavorite, setIsFavorite] = React.useState(product.isFavorite);
+    const [isAdded, setIsAdded] = React.useState(product.isAdded);
 
 
-        const handleViewProduct = () => {
-            router.push(`/product/${product.id}`);
-            // Navigation to product details page
-        };
+    const handleViewProduct = () => {
+        router.push(`/product/${product.id}`);
+        // Navigation to product details page
+    };
 
-        const handleAddToFavorites = (event : any) => {
-          // Toggle the favorite status and imlement add to fav logics
-          setIsFavorite(!isFavorite);
-          
-        };
+    const handleAddToFavorites = (event : any) => {
+        // Toggle the favorite status and imlement add to fav logics
+        setIsFavorite(!isFavorite);
+    };
+
     return (
       <Paper>
         <Card sx={{
@@ -65,31 +66,43 @@ import { DomainImage } from '@/components/shared';
             />
         </CardMedia>
         <CardContent>
-            <div onClick={handleViewProduct} style={{overflow: "hidden", textOverflow: "ellipsis", width: '100%', display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 2}}>
+
+            
+        <div onClick={handleViewProduct} style={{overflow: "hidden", textOverflow: "ellipsis", width: '100%', display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 2}}>
                 <Typography noWrap variant="h6" color="primary" fontWeight="bold" gutterBottom >
                     {product.name}
                 </Typography>
-            </div>  
-            {/* Dynamic rendering of chips based on product tags */}
-            {
-                product.tags?.length > 0 && (
-                    <div>
-                        {
-                        product.tags.map((tag, index) => (
-                            <Chip label={tag} variant="outlined" color="primary" size="small" sx={{marginRight: 0.5}} />
-                        ))
-                        }
-                    </div>
-                )
-            }      
+        </div>  
+   
+        <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
+            <Typography color={'grey'}>
+                13-01-2022
+            </Typography>
+            <Typography color={'grey'}>
+                {product.viewCount} views
+            </Typography>  
+          
+        </Box>
+
         </CardContent>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+        {product.tags?.length > 0 && product.tags.slice(0, 5).map((tag, index) => (
+            <Chip key={index} label={tag} variant="outlined" color="primary" size="small" sx={{ margin: 0.5 }} />
+        ))}
+        {product.tags?.length > 5 && (
+            <Chip label="......." variant="outlined" color="primary" size="small" sx={{ margin: 0.5 }} />
+        )}
+        </Box>
         <CardActions sx={{ display: 'flex', justifyContent: "space-between" }}>
-            <Button variant="contained" color="primary" size="small" onClick={handleViewProduct} fullWidth>
+            <Button variant="contained" color="primary" size="small" onClick={handleViewProduct}>
                 View Product
             </Button>
-            <Button variant="text" disabled size="small" sx={{ fontSize: '1em' }}>
-            ${product.price}
-            </Button>
+            
+            <Typography color={"primary"}>
+            {product.price} TL
+            </Typography>
+
+         
         </CardActions>
     </Card>
     </Paper>
