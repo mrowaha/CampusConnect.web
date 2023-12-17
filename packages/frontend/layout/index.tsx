@@ -1,9 +1,6 @@
 import Link from "next/link";
 import * as React from "react";
-
-
 import { useAtom } from "jotai";
-
 import {
   Snackbar,
   Alert,
@@ -38,8 +35,6 @@ import { useRouter } from 'next/router';
 import { LostAndFoundIcon, SignupIcon } from "@/icons";
 import { currentUserAtom } from "@/auth";
 
-import { BACKEND_URL, PROFILE_PICTURE } from "@/routes";
-import type { User } from "@/auth";
 import useProfilePicture from "@/hooks/useProfilePicture";
 
 interface LayoutProps {
