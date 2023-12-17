@@ -155,22 +155,28 @@ export default function Layout(props : LayoutProps) {
             </Grid>
             :
             <Grid item xs={2} sx={{display : "flex", justifyContent : "right", gap : 1 }}>
-              <Button
-                size="small"
-                variant="contained"
-                startIcon={<SignupIcon stroke="#fff"/>}
-                sx={{textTransform : "none"}}
-              >
-                Sign Up
-              </Button>
-              <Button
-                size="small"
-                variant="contained"
-                startIcon={<LoginIcon style={{ fill : "#fff" }}/>}
-                sx={{textTransform : "none"}}
-              >
-                Login
-              </Button>
+              <Link href={"/register"}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<SignupIcon stroke="#fff"/>}
+                  sx={{textTransform : "none"}}
+                >
+                  Sign Up
+                </Button>
+              </Link>
+              
+              <Link href="/login">
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<LoginIcon style={{ fill : "#fff" }}/>}
+                  sx={{textTransform : "none"}}
+                >
+                  Login
+                </Button>
+              </Link>
+              
             </Grid>
           }
         </Grid>

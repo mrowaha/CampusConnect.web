@@ -10,7 +10,7 @@ import {
 
 export interface ActionButtonProps {
   text: string;
-  onClick: (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+  onClick: (e : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void | Promise<void>;
   icon?: React.ReactNode;
 };
 

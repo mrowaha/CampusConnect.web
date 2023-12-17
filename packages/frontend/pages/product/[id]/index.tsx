@@ -1,6 +1,7 @@
+import {useRouter} from "next/router";
 import dynamic from "next/dynamic";
 import * as React from "react";
-
+import {useAtom} from "jotai";
 import {
   Container,
   Grid,
@@ -8,9 +9,14 @@ import {
   Typography,
   useTheme
 } from "@mui/material";
+import { TagCard } from "@/components/market";
 import MessageIcon from '@mui/icons-material/Message';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 import { ActionButtonProps, InfoContainer as ProductInfo } from "@/components/product";
+import { currentUserAtom, useCurrentUserWithValidation } from "@/auth";
+import { useSnackbar } from "@/store/snackbar";
+import loginRedirectAtom from "@/store/loginredirect";
 const NoSSRDomainImageCaurosel = dynamic(() => import("@/components/shared/DomainImageCaurosel").then((exports) => exports.DomainImageCaurosel)
 , {
   ssr : false
@@ -18,7 +24,31 @@ const NoSSRDomainImageCaurosel = dynamic(() => import("@/components/shared/Domai
 
 export default function ProductPage() {
 
+  const router = useRouter();
   const theme = useTheme();
+  const snackbar = useSnackbar();
+  const currentUser = useCurrentUserWithValidation();
+  const [_, setLoginRedirect] = useAtom(loginRedirectAtom);
+
+  const handlePlaceBid = React.useCallback(() => {
+    if (currentUser) {
+      
+    } else {
+      snackbar("warning", "Login Required");
+      setLoginRedirect(router.asPath);
+      router.push("/login");
+    }
+  }, [currentUser]);
+
+  const handleWishlist = React.useCallback((state : boolean) => {
+    if (currentUser) {
+
+    } else {
+      snackbar("warning", "Login Required");
+      setLoginRedirect(router.asPath);
+      router.push("/login");
+    }
+  }, [currentUser]);
 
   const postActions = React.useMemo(() => {
     const actions : ActionButtonProps[] = [
@@ -29,13 +59,27 @@ export default function ProductPage() {
       },
       {
         text: "Place Bid",
-        icon: <MessageIcon style={{fill: "#fff"}} />,
-        onClick: () => {console.log("hello")}
+        icon: <MonetizationOnIcon style={{fill: "#fff"}} />,
+        onClick: handlePlaceBid
       }
 
     ]
     return actions;
-  }, []);
+  }, [handlePlaceBid]);
+
+  const tags = React.useMemo(() => ([
+    { 
+      id: 1,
+      name: 'Text Books', 
+      imageUrl: '/market-img.svg',  
+      isSelected : true , 
+    },
+      { 
+        name: ' Electronics', 
+        imageUrl: '/forum-img.svg',  
+        isSelected : false , 
+    },
+  ]), []);
 
   return (
     <Container>
@@ -88,8 +132,8 @@ export default function ProductPage() {
               type="renting"
               highestBidPrice={13000}
               tags={["some", "tags"]}
-              onEdit={() => {console.log("editting")}}
               actions={postActions}
+              onWishlist={handleWishlist}
             />
           </Grid>
         </Grid>
@@ -97,6 +141,21 @@ export default function ProductPage() {
         <Typography color="primary" variant="h5">
         Keep Exploring
         </Typography>
+        <Container>
+          <Grid container spacing={2}>
+            {tags.map((tag) => (
+              <Grid item key={tag.id} xs={12} sm={6} md={4} lg={2}>
+                <TagCard tag={tag} />
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+        <div 
+          style={{
+            width: "100%",
+            height: 50
+          }}
+        />
       </Stack>
     </Container>
   )

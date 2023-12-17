@@ -16,6 +16,7 @@ import { User, currentUserAtom } from "@/auth";
 import { StarIcon } from "@/icons";
 import { TrustScore } from "../profile";
 import { ActionButtonProps } from ".";
+import { useEffectAfterMount } from "@/hooks/useEffectAfterMount";
 
 export interface InfoContainerActions extends ActionButtonProps {
 }
@@ -26,9 +27,9 @@ export interface InfoContainerProps {
   startingPrice: number;
   description: string;
   seller: User;
+  onWishlist?: (wishlisted: boolean) => void | Promise<void>;
   tags?: string[];
   highestBidPrice?: number;
-  onEdit: () => void;
   viewsCount? :number;
   wishlistCount?: number;
   bidCount?: number;
@@ -39,8 +40,22 @@ export interface InfoContainerProps {
 export function InfoContainer(props : InfoContainerProps) {
 
   const theme = useTheme();
-  const [isFavourited, setIsFavourited] = React.useState<boolean>(false);
+  const [isFavourited, setIsFavourited] = React.useState<boolean | null>(null);
   const [currentUser] = useAtom(currentUserAtom);
+
+  const debounceRef = React.useRef<number | null>(null);
+  const handleWishlist = React.useCallback((wishlisted: boolean) => 
+   props.onWishlist && props.onWishlist(wishlisted), [props.onWishlist]);
+  
+   React.useEffect(() => {
+    if (isFavourited === null) return;
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = window.setTimeout(handleWishlist,
+      250, isFavourited);
+  }, [isFavourited]);
+
 
   return (
     <Stack direction="column" gap={0.5} display="flex" position="relative" sx={{height : "100%"}}>
@@ -54,7 +69,7 @@ export function InfoContainer(props : InfoContainerProps) {
           <></>
           :
           <IconButton size="small" onClick={() => setIsFavourited(prev => !prev)} sx={{height : "fit-content", alignSelf : "center"}}>
-            <StarIcon filled={isFavourited} />
+            <StarIcon filled={isFavourited as boolean} />
           </IconButton>
         }
       </div>
