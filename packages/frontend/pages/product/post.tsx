@@ -8,12 +8,17 @@ import { Container,
   Radio,
   RadioGroup,
   Divider,
-  Autocomplete,
   useTheme, 
   Grid,
   Button,
-  TextField
+  Modal,
+  Box,
+  IconButton,
+  Typography
 } from "@mui/material";
+import { CloseOutlined } from "@mui/icons-material";
+
+
 import type { ActionButtonProps } from "@/components/product";
 import { PostActionsBar } from "@/components/product";
 import SaveIcon from '@mui/icons-material/Save';
@@ -24,6 +29,8 @@ import { FilledInputField } from "@/components/shared";
 import { useRouter } from "next/router";
 import { DomainImageUpload } from "@/components/shared/DomainImageUpload";
 import { TagAutoComplete } from "@/components/shared/TagAutoComplete";
+import { BACKEND_URL } from "@/routes";
+import { AUTH_TOKEN } from "@/auth";
 
 
 
@@ -75,7 +82,7 @@ export default function ProductPostPage() {
 
   const [assignedTags, setAssignedTags] = React.useState<string[]>([]);
   // @ts-ignore
-    const handleOnChange = (_ , newValues : string[]) => {
+    const handleOnChange = (newValues : string[]) => {
     setAssignedTags(newValues);
   };
 
@@ -87,7 +94,38 @@ export default function ProductPostPage() {
   }
 
 
+  const [requestTagModal, setRequestTagModal] = React.useState<boolean>(false);
+  const [newTagName, setNewTagName] = React.useState<string>("");
+
+  const handleTagRequest = async () => {
+    try {
+      const auth = localStorage.getItem(AUTH_TOKEN);
+      const res = await fetch(`${BACKEND_URL}/product-tags`, {
+        method : "POST",
+        headers: {
+          "Authorization": `Bearer ${auth}`,
+          "Content-Type": "application/json"
+        },
+        body : JSON.stringify({
+          name : newTagName
+        })
+      });
+      if (res.status !== 200) {
+        snackbar("error", "failed to place request");
+        console.log(await res.json());
+      } 
+      const data  =await res.json();
+      console.log(data);
+      snackbar("success", "request placed");
+      setRequestTagModal(false);
+    } catch (err) {
+      console.error(err);
+      snackbar("error", err as string);
+    }
+  }
+
   return (
+    <>
     <Container>
       <PostActionsBar 
         title={edit ? "Edit Item" : "List Item"}
@@ -144,7 +182,7 @@ export default function ProductPostPage() {
         <Grid item xs={6}>
             <TagAutoComplete 
               debounce={0}
-              onTagsUpdate={() => console.log("hello")}
+              onTagsUpdate={handleOnChange}
             />
         </Grid>
         <Grid item xs={2}>
@@ -152,6 +190,7 @@ export default function ProductPostPage() {
               fullWidth
               size="large"
               variant="contained"
+              onClick={() => setRequestTagModal(true)}
             >
               Request A Tag
             </Button>
@@ -175,7 +214,62 @@ export default function ProductPostPage() {
         }}
       />
     </Container>
+    <Modal
+      open={requestTagModal}
+      sx={{
+        display : "flex",
+        alignItems : "center",
+        justifyContent : "center"
+      }}
+    >
+      <Box
+        sx={{
+          backgroundColor : theme.palette.background.default,
+          padding : "2rem",
+          borderRadius : 5,
+          width : "30%",
+          minWidth : 400,
+          position : "relative"
+        }}
+      >
+        <IconButton
+          size="small"
+          sx={{position : "absolute", top : -10, right :-10, backgroundColor: "red"}}
+          onClick={() => {setRequestTagModal(false); setNewTagName("");}}
+        >
+          <CloseOutlined style={{fill : "white"}} />
+        </IconButton>
+        <Grid container gap={2} justifyContent="space-between">
+          <Grid item xs={12}>
+            <Typography variant="h5" textAlign="center" color="primary">
+              Request Tag
+            </Typography>
+            <Divider orientation="horizontal" />
+          </Grid>
 
+          <Grid item xs={12}>
+          <FilledInputField
+            placeholder="Enter a tag that best categorizes your product"
+            label="Tag Name"
+            fullWidth
+            value={newTagName}
+            onChange={(e) => setNewTagName(e.target.value)}
+            multiline={false}
+            size="small"
+            background="white"
+            hoverbackground={theme.palette.secondary.light}
+            focusedbackground={theme.palette.secondary.light}
+          />
+          </Grid>
+          <Grid item xs={12}>
+            <Button fullWidth variant="outlined" onClick={handleTagRequest}>
+              Request
+            </Button>
+          </Grid>
+        </Grid>
+      </Box>
+    </Modal>
+    </>
   )
 }
 
