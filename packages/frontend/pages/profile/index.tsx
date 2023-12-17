@@ -4,7 +4,6 @@ import * as React from "react";
 import {
   Stack,
   Divider,
-  Modal,
   Button
 } from "@mui/material";
 import {styled} from "@mui/system";
@@ -14,9 +13,9 @@ import { useAtom } from "jotai";
 
 import { InfoContainer, ProfilePictureUploadModal } from "@/components/profile";
 import { PROFILE_PICTURE, BACKEND_URL } from "@/routes";
-import { useSnackbar } from "@/store/snackbar";
+import useProfilePicture from "@/hooks/useProfilePicture";
 
-type ProfilePictureUploadResponse = {
+export type ProfilePictureUploadResponse = {
   contentType : "image/jpg" | "image/jpeg" | "image/png";
   createdTime: string;
   fileSize: number;
@@ -31,35 +30,13 @@ export const ProfilePageContainer = styled(Stack)(({theme}) => ({
 
 export default function ProfilePage() {
 
-  const snackbar = useSnackbar();
   const [currentUser] = useAtom(currentUserAtom);
   const [token] = useAtom(authAtom);
 
-  const [profileImgSrc, setProfileImgSrc] = React.useState<string>("/blank-profile-picture.webp");
-
+  const [profileImgSrc, refetch] = useProfilePicture();
   const [showUploadProfilePic, setShowUploadProfilePic] = React.useState<boolean>(false);
-
-  const fetchProfilePicture = async (currentUser : User) => {
-    try {
-      const response = await fetch(`${BACKEND_URL}${PROFILE_PICTURE}?userid=${currentUser.uuid}&role=${currentUser.role}`);
-
-      if (!response.ok) {
-        console.error('Error fetching profile picture:', response.statusText);
-        return;
-      }
-      const blob = await response.blob();
-      if (blob.size == 0) return;
-      const blobUrl = URL.createObjectURL(blob);
-      setProfileImgSrc(blobUrl);
-    } catch (error) {
-      console.error('Error fetching profile picture:', error);
-    }
-  }
-
   const handleProfilePictureUpload = async (imageBlob : Blob) => {
     if (imageBlob) {
-      console.log(token);
-      console.log(imageBlob);
       const formData = new FormData();
       formData.append("file", imageBlob);
       const res = await fetch(`${BACKEND_URL}${PROFILE_PICTURE}`, {
@@ -71,16 +48,10 @@ export default function ProfilePage() {
       })
       const data = await res.json();
       console.log(data);
-      fetchProfilePicture(currentUser!);
+      refetch();
       setShowUploadProfilePic(false);      
     }    
   }
-
-  React.useEffect(() => {
-    if (currentUser) {
-      fetchProfilePicture(currentUser);
-    }
-  }, [currentUser])
 
   
   return (

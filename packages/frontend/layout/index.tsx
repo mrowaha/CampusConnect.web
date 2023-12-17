@@ -1,5 +1,6 @@
-import Image from "next/image";
+import Link from "next/link";
 import * as React from "react";
+
 
 import { useAtom } from "jotai";
 
@@ -8,18 +9,21 @@ import {
   Alert,
   AppBar,
   Grid,
-  Button,
   Fab,
   useTheme,
+  Avatar,
   Tooltip,
-  Box
+  Box,
+  IconButton
 } from "@mui/material";
 import {styled} from "@mui/system";
-import {createPortal} from "react-dom";
+
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import LoginIcon from '@mui/icons-material/Login';
-import { IconBox, IconInbox } from "@tabler/icons-react";
-import ReactDOM from 'react-dom';
+import { IconInbox } from "@tabler/icons-react";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+
 import {
   snackbarAtom,
   snackbarMessage,
@@ -31,6 +35,11 @@ import CategoryNavBar from "@/components/layout/CategoryNavBar";
 import { DomainImage } from "@/components/shared";
 import { useRouter } from 'next/router';
 import { LostAndFoundIcon, SignupIcon } from "@/icons";
+import { currentUserAtom } from "@/auth";
+
+import { BACKEND_URL, PROFILE_PICTURE } from "@/routes";
+import type { User } from "@/auth";
+import useProfilePicture from "@/hooks/useProfilePicture";
 
 interface LayoutProps {
   children : React.ReactNode
@@ -40,15 +49,20 @@ const PageContainer = styled("div")(({theme}) => ({
   backgroundColor : theme.palette.background.default,
   flexGrow : 1,
   position : "relative",
+  paddingTop : 10
 }))
 
 
 export default function Layout(props : LayoutProps) {
   
   const theme = useTheme();
+
+  const [currentUser] = useAtom(currentUserAtom);
+  const [profileImgSrc, refetch] = useProfilePicture();
+
   const [snackbarStatus, setSnackbarStatus] = useAtom(snackbarAtom);
-  const [severity, __] = useAtom(snackbarSeverity);
-  const [message, ___] = useAtom(snackbarMessage);
+  const [severity] = useAtom(snackbarSeverity);
+  const [message] = useAtom(snackbarMessage);
 
   const snackbar = useSnackbar();
 
@@ -138,26 +152,53 @@ export default function Layout(props : LayoutProps) {
               Lost & Found
             </Button>
           </Grid>
-          <Grid item xs={2} sx={{display : "flex", justifyContent : "right", gap : 1 }}>
-            <Button
-              size="small"
-              variant="contained"
-              startIcon={<SignupIcon stroke="#fff"/>}
-              onClick={() => router.replace("/register")}
-              sx={{textTransform : "none"}}
-            >
-              Sign Up
-            </Button>
-            <Button
-              size="small"
-              variant="contained"
-              startIcon={<LoginIcon style={{ fill : "#fff" }}/>}
-              onClick={() => router.replace("/login")}
-              sx={{textTransform : "none"}}
-            >
-              Login
-            </Button>
-          </Grid>
+          {
+            currentUser !== null ?
+            <Grid item xs={2} sx={{display : "flex", justifyContent : "right", alignItems: "center", gap : 1}}>
+              <Link href={'/product/post'}>
+                <Button size="small" variant="contained" sx={{textTransform : "none", height : "fit-content"}}
+                  startIcon={<AddCircleOutlineIcon  style={{fill : "#fff"}}/>}
+                >
+                  List An Item
+                </Button>
+              </Link>
+              
+              <IconButton size="small">
+                <NotificationsIcon style={{fill : theme.palette.primary.main}} />
+              </IconButton>
+              <Link href={"/profile"}>
+                <Avatar 
+                  src={profileImgSrc}
+                />
+              </Link>
+              
+            </Grid>
+            :
+            <Grid item xs={2} sx={{display : "flex", justifyContent : "right", gap : 1 }}>
+              <Link href={"/register"}>
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<SignupIcon stroke="#fff"/>}
+                  sx={{textTransform : "none"}}
+                >
+                  Sign Up
+                </Button>
+              </Link>
+              
+              <Link href="/login">
+                <Button
+                  size="small"
+                  variant="contained"
+                  startIcon={<LoginIcon style={{ fill : "#fff" }}/>}
+                  sx={{textTransform : "none"}}
+                >
+                  Login
+                </Button>
+              </Link>
+              
+            </Grid>
+          }
         </Grid>
       </AppBar>)}
       

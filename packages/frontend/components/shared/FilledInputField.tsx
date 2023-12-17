@@ -47,7 +47,9 @@ export function FilledInputField(props : FilledInputFieldProps) {
       value={props.value}
       onChange={props.onChange}
       multiline={props.multiline}
+      rows={props.rows}
       size={props.size}
+      type={props.type}
       variant="filled"
       background={props.background}
       hoverbackground={props.hoverbackground}
