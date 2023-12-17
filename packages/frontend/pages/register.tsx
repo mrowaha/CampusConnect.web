@@ -21,17 +21,19 @@ import { useAtom } from "jotai";
 import { useRouter } from "next/router";
 import { flushSync } from "react-dom";
 
-const RegisterStack = styled(Stack)(({theme}) => ({
-  background : theme.palette.secondary.main,
-  width : "fit-content",
-  position : "absolute",
-  top : "50%",
-  left : "50%",
-  transform : "translate(-50%, -50%)",
-  padding : "1rem",
-  borderRadius : "5px",
-  alignItems : "center"
-}))
+const RegisterStack = styled(Stack)(({ theme }) => ({
+  background: theme.palette.background.default,
+  width: "90%", // Changed from 'fit-content' to a percentage or fixed width
+  maxWidth: "600px", // Max-width for larger screens
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  padding: "1.5rem", 
+  borderRadius: "15px",
+  alignItems: "center",
+  border: `1px solid ${theme.palette.primary.main}`,
+}));
 
 
 export default function RegisterPage() {

@@ -12,8 +12,6 @@ import {
   Fab,
   useTheme,
   Tooltip,
-  BottomNavigationAction,
-  BottomNavigation,
   Box
 } from "@mui/material";
 import {styled} from "@mui/system";
@@ -55,6 +53,7 @@ export default function Layout(props : LayoutProps) {
   const snackbar = useSnackbar();
 
   const router = useRouter();
+  const currentURL = router.asPath;
   const [searchValue, setSearchValue] = React.useState<string>("");
   const handleOnSearchChange = React.useCallback((e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | undefined) => {
     if (e !== undefined) {
@@ -62,11 +61,17 @@ export default function Layout(props : LayoutProps) {
     }
   }, [])
 
+  const pathsToShowCategoryBar = [
+    '/market',
+    '/search',
+    '/product',
+  ];
 
+  const shouldShowCategoryBar = pathsToShowCategoryBar.some(path => currentURL.includes(path));
 
   return (
     <>
-      {true && (
+      {!currentURL.includes("inbox") &&  currentUser !== null && (
         <Fab 
           color="primary"
           sx={{
@@ -86,10 +91,20 @@ export default function Layout(props : LayoutProps) {
           {message}
         </Alert>
       </Snackbar>
-      <AppBar position="static" color="secondary" sx={{height : "fit-content", padding : "0.25rem 0.5rem"}}>
+      {(!(currentURL.includes("login") || currentURL.includes("register")) && <AppBar position="static" color="secondary" sx={{height : "fit-content", padding : "0.25rem 0.5rem"}}>
         <Grid container sx={{width : "100%"}} alignItems="center">
           <Grid item xs={1} sx={{height : 40 }}>
-            <DomainImage 
+            <Box
+              component="img"
+              sx={{
+                height: '100%',
+                width: 'auto',  
+                maxWidth: '100%',
+                objectFit: 'contain', 
+                display: 'block', 
+                marginLeft: 'auto',  
+                marginRight: 'auto'
+              }}
               alt="campus connect logo"
               src="/app-logo.png"
             />
@@ -144,10 +159,11 @@ export default function Layout(props : LayoutProps) {
             </Button>
           </Grid>
         </Grid>
-      </AppBar>
+      </AppBar>)}
+      
+        {/* Category Bar */}
+        {(shouldShowCategoryBar && <CategoryNavBar />)}
 
-      {/* Category Bar */}
-      <CategoryNavBar />
       <PageContainer>
         {props.children}
       </PageContainer>
