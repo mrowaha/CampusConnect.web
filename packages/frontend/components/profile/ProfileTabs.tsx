@@ -16,18 +16,18 @@ export function TabPanel({ children, value, index }) {
   );
 }
  
-export const TabButtons = () => {
-    const [value, setValue] = useState(0);
+export const TabButtons = ({ activeTabIndex , handleChange}) => {
+    const [value, setValue] = React.useState(activeTabIndex);
   
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
+    const handlerChange = (event, newValue) => {
+      handleChange(newValue);
     };
   
     return (
       <Paper>
         <Tabs
           value={value}
-          onChange={handleChange}
+          onChange={handlerChange}
           indicatorColor="primary"
           textColor="primary"
           centered

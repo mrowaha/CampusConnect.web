@@ -16,6 +16,7 @@ import { InfoContainer, ProfilePictureUploadModal } from "@/components/profile";
 import { PROFILE_PICTURE, BACKEND_URL } from "@/routes";
 import { useSnackbar } from "@/store/snackbar";
 import { TabButtons }from "@/components/profile";
+import { useRouter } from "next/router";
 
 type ProfilePictureUploadResponse = {
   contentType : "image/jpg" | "image/jpeg" | "image/png";
@@ -37,8 +38,67 @@ const PageWrapper = styled(Box)(() => ({
   height : "100%"
 })) as typeof Box;
 
+/// utility function for tabs
+export const getActiveTabIndex = (path) => {
+  if (path.includes('/transactions')) {
+    return 0 ; // Assuming 'Forum Posts' is the third tab
+  } else if (path.includes('/products')) {
+    return 1 /* Index of the other tab */;
+  }
+  else if (path.includes('/forumposts')) {
+    return 2/* Index of the other tab */;
+  }
+  else if (path.includes('/notifications')) {
+    return 3 /* Index of the other tab */;
+  }
+  else if (path.includes('/wishlist')) {
+    return 4/* Index of the other tab */;
+  }
+  else if (path.includes('/subscribedtags')) {
+    return 5/* Index of the other tab */;
+  }
+  else if (path.includes('/inbox')) {
+    return 6/* Index of the other tab */;
+  }
+  return 0; // Default to the first tab
+};
 
 export default function ProfilePageLayout({children} : {children : React.ReactNode}) {
+  // for tabb status
+  const router = useRouter();
+  const activeTabIndex = getActiveTabIndex(router.pathname);
+  const handleChange = (event, newValue) => {
+    // Update the URL based on the selected tab
+    switch (newValue) {
+      case 0:
+        router.push('/transactions');
+        break;
+      case 1:
+        router.push('/products');
+        break;
+      case 2:
+        router.push('/forumposts');
+        break;
+      case 3:
+        router.push('/notifications');
+        break;
+      case 4:
+        router.push('/wishlist');
+        break;
+      case 5:
+        router.push('/subscribedtags');
+        break;
+      case 6:
+        router.push('/inbox');
+        break;
+      default:
+        router.push('/transactions');
+    }
+  };
+
+
+
+
 
 
   const [currentUser] = useAtom(currentUserAtom);
@@ -135,7 +195,7 @@ export default function ProfilePageLayout({children} : {children : React.ReactNo
         />
         <Stack >
         <Stack>
-          <TabButtons />
+        <TabButtons activeTabIndex={activeTabIndex}  handleChange={handleChange} />
         </Stack>
         <Stack> 
         <PageWrapper>

@@ -6,7 +6,9 @@ import {
   Grid,
 } from "@mui/material";
 import { PageTitle } from '@/components/shared';
-import ProfilePageLayout from "@/layouts/profile";
+import ProfilePageLayout, { getActiveTabIndex } from "@/layouts/profile";
+import { PostHero } from '@/components/forum';
+import { useRouter } from "next/router";
 
 
 function ForumPostsPage() {
@@ -23,6 +25,12 @@ function ForumPostsPage() {
   const handleFoundForum = () => {
     setFoundSelected(!isFoundSelected);
     setLostSelected(!isLostSelected);
+  };
+  const handleReportSubmit = (reportData) => {
+    // handle report for user here
+    console.log("Report title is:" , reportData.reportTitle) ;
+    console.log("Report Description is:" , reportData.reportDescription) ;
+
   };
 
  
@@ -59,7 +67,7 @@ function ForumPostsPage() {
   return (
     <Container>
       <div>
-        <PageTitle pageTitle={"Products"} />
+        <PageTitle pageTitle={"Forum Posts"} />
         {/* Forum Buttons and Add Post Button */}
         <Grid container alignItems="center">
           <Grid item xs={1}>
@@ -101,15 +109,15 @@ function ForumPostsPage() {
       />
 
       {/* Post Listings */}
-      {/* <Grid container spacing={3} sx={{ width: "70%", margin: "0 auto" }}>
+      <Grid container spacing={3} sx={{ width: "70%", margin: "0 auto" }}>
         {
         PostContents.map((post) => (
           <Grid item key={post.id} xs={12}>
-            <PostHero post={post} />
+            <PostHero post={post} onSubmit = {handleReportSubmit} />
           </Grid>
         ))
         }
-      </Grid> */}
+      </Grid>
 
       {/* horizontal margin */}
       <div
@@ -123,6 +131,9 @@ function ForumPostsPage() {
 };
 
 ForumPostsPage.getLayout = (page : React.ReactNode) => {
+  const router = useRouter();
+
+  const activeTabIndex = getActiveTabIndex(router.pathname);
   return <ProfilePageLayout>{page}</ProfilePageLayout>
 }
 
