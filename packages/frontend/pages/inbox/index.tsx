@@ -70,7 +70,7 @@ export default function Inbox() {
     // Initially, call the function
     fetchMessageThreads(true);
   
-    const intervalId = setInterval(() => fetchMessageThreads(false), 7000);
+    const intervalId = setInterval(() => fetchMessageThreads(false), 4000);
   
     // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);

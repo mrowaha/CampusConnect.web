@@ -13,6 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.19",
+    "@mui/joy": "^5.0.0-beta.18",
     "@mui/material": "^5.14.18",
     "@tabler/icons": "^2.44.0",
     "@tabler/icons-react": "^2.44.0",

@@ -15,3 +15,11 @@ export const PROFILE_PICTURE = "/s3/profile-picture";
 export const GET_MESSAGE_THREADS_BY_USER_ID = "/messageThread/user/?userId=";
 export const MARK_MESSAGES_AS_SEEN = "/messageThread/markMessagesSeen/?userId=";
 export const SEND_MESSAGE = "/messageThread/sendMessage";
+export const SEARCH_PRODUCT = "/products/search";
+export const NOTIFICATION_COUNT = "/notifications/count/?";
+export const NOTIFICATION_LIST = "/notifications/user/?userId=";
+
+
+
+export const LOST_FORUM_SEARCH = "/forumPosts/lostForum/?search=";
+export const FOUND_FORUM_SEARCH = "/forumPosts/foundForum/?search=";
