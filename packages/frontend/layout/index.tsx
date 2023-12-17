@@ -11,13 +11,16 @@ import {
   Button,
   Fab,
   useTheme,
-  Tooltip
+  Tooltip,
+  BottomNavigationAction,
+  BottomNavigation,
+  Box
 } from "@mui/material";
 import {styled} from "@mui/system";
 import {createPortal} from "react-dom";
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import LoginIcon from '@mui/icons-material/Login';
-import { IconInbox } from "@tabler/icons-react";
+import { IconBox, IconInbox } from "@tabler/icons-react";
 import ReactDOM from 'react-dom';
 import {
   snackbarAtom,
@@ -26,6 +29,7 @@ import {
   useSnackbar
 } from "@/store/snackbar";
 import { Searchbar } from "@/components/layout";
+import CategoryNavBar from "@/components/layout/CategoryNavBar";
 import { DomainImage } from "@/components/shared";
 import { useRouter } from 'next/router';
 import { LostAndFoundIcon, SignupIcon } from "@/icons";
@@ -137,6 +141,9 @@ export default function Layout(props : LayoutProps) {
           </Grid>
         </Grid>
       </AppBar>
+
+      {/* Category Bar */}
+      <CategoryNavBar />
       <PageContainer>
         {props.children}
       </PageContainer>
