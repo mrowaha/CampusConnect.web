@@ -11,7 +11,7 @@ const PostStack = styled(Stack)(({theme}) => ({
     padding: "1rem"
 }))
 
-export const Post = ({post}) => {
+export const PostHero = ({post}) => {
     const theme = useTheme();
 
     const postContent = {

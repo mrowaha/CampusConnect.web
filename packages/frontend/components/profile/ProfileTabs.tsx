@@ -3,21 +3,20 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
-import { PageTitle } from '../shared';
 
-const TabPanel = ({ children, value, index }) => {
-    return (
-      <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`}>
-        {value === index && (
-          <Box p={3}>
-            {children}
-          </Box>
-        )}
-      </div>
-    );
-  };
-  
-  const TabButtons = () => {
+export default function TabPanel({ children, value, index }) {
+  return (
+    <div role="tabpanel" hidden={value !== index} id={`tabpanel-${index}`}>
+      {value === index && (
+        <Box p={3}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+};
+ 
+export const TabButtons = () => {
     const [value, setValue] = useState(0);
   
     const handleChange = (event, newValue) => {
@@ -42,13 +41,6 @@ const TabPanel = ({ children, value, index }) => {
           <Tab label="Subscribed Tags" />
           <Tab label="Inbox" />
         </Tabs>
-  
-        
       </Paper>
     );
-  };
-  
-  export default TabButtons;
-
-
-
+};

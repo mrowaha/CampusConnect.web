@@ -1,5 +1,5 @@
 export * from "./postTextBox"
-export * from "./Post";
+export * from "./PostHero";
 export * from "./CommentBar";
 export * from "./ImageSlider" ;
 export * from "./FullPost";

@@ -1,21 +1,15 @@
 import React from 'react';
 import {
-  FormControl,
   Container,
-} from "@mui/material";
-import TabButtons from '@/components/profile/ProfileTabs';
-import { PageTitle } from '@/components/shared';
-import { Post } from "@/components/forum";
-
-import {
+  useTheme,
   Button,
   Grid,
-  MenuItem,
-  Select,
-  useTheme,
-} from '@mui/material';
+} from "@mui/material";
+import {TabButtons} from '@/components/profile/ProfileTabs';
+import { PageTitle } from '@/components/shared';
+import { PostHero } from "@/components/forum";
 
-export default function forumposts() {
+function ForumPostsPage() {
   const theme = useTheme();
 
   const [isLostSelected, setLostSelected] = React.useState(true); // by default in lost forum
@@ -108,13 +102,15 @@ export default function forumposts() {
       />
 
       {/* Post Listings */}
-      <Grid container spacing={3} sx={{ width: "70%", margin: "0 auto" }}>
-        {PostContents.map((post) => (
+      {/* <Grid container spacing={3} sx={{ width: "70%", margin: "0 auto" }}>
+        {
+        PostContents.map((post) => (
           <Grid item key={post.id} xs={12}>
-            <Post post={post} />
+            <PostHero post={post} />
           </Grid>
-        ))}
-      </Grid>
+        ))
+        }
+      </Grid> */}
 
       {/* horizontal margin */}
       <div
@@ -126,3 +122,6 @@ export default function forumposts() {
     </Container>
   );
 };
+
+
+export default ForumPostsPage;
