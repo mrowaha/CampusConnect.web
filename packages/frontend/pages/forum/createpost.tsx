@@ -4,6 +4,7 @@ import React from "react";
 import { Container, Grid, Stack, Button, useTheme } from "@mui/material";
 import { PageTitle } from "@/components/shared";
 import { CreatePost } from "@/components/forum/CreatePost";
+import TabButtons from "@/components/profile/ProfileTabs";
 
 
 export default function createPost() {
@@ -47,6 +48,8 @@ export default function createPost() {
 
   return (
     <Container>
+          <TabButtons />
+        
       {/* Page Title */}
       <PageTitle pageTitle={"Create Post"} />
 

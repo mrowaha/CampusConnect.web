@@ -15,6 +15,7 @@ import { useAtom } from "jotai";
 import { InfoContainer, ProfilePictureUploadModal } from "@/components/profile";
 import { PROFILE_PICTURE, BACKEND_URL } from "@/routes";
 import { useSnackbar } from "@/store/snackbar";
+import TabButtons from "@/components/profile/ProfileTabs";
 
 type ProfilePictureUploadResponse = {
   contentType : "image/jpg" | "image/jpeg" | "image/png";
@@ -132,9 +133,16 @@ export default function ProfilePageLayout({children} : {children : React.ReactNo
         <Divider 
           orientation="vertical"
         />
+        <Stack >
+        <Stack>
+          <TabButtons />
+        </Stack>
+        <Stack> 
         <PageWrapper>
           {children}
         </PageWrapper>
+        </Stack>
+        </Stack>
       </ProfilePageContainer>
     </>
   )

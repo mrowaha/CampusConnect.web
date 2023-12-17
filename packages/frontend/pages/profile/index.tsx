@@ -3,6 +3,7 @@ import * as React from "react";
 import ProfilePageLayout from "@/layouts/profile";
 
 
+
 function ProfilePage() {
   return (
     <h1>Profile</h1>

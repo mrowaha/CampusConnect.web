@@ -15,7 +15,6 @@ export default function ForumPage() {
         setCreateSelected(!isCreateSelected);
         
       };
-    handleCreatePost
     const handleLostForum = () => {
         setFoundSelected(!isFoundSelected);
         setLostSelected(!isLostSelected);
