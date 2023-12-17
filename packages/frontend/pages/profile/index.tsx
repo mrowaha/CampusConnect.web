@@ -53,11 +53,11 @@ export default function ProfilePage() {
     }    
   }
 
-  React.useEffect(() => {
-    if (currentUser) {
-      fetchProfilePicture(currentUser);
-    }
-  }, [currentUser])
+  // React.useEffect(() => {
+  //   if (currentUser) {
+  //     fetchProfilePicture(currentUser);
+  //   }
+  // }, [currentUser])
 
 
   return (

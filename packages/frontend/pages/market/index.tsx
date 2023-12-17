@@ -94,7 +94,7 @@ export default function MarketPage(){
       },
       { 
         name: ' Electronics', 
-        imageUrl: '/forum-img.svg',  
+        imageUrl: '/electronics.png',  
         isSelected : false , 
         link : '/search?tags=Electronics' ,
       },
