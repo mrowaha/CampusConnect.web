@@ -77,7 +77,7 @@ export default function RegisterPage() {
       })
       
       const data = await res.json();
-      if(data.hasOwnProperty("token")) {
+      if(data.hasOwnProperty("accessToken")) {
         // do not store this accessToken, redirect to login
         snackbar("success", "Account Created");
         router.replace("/login");

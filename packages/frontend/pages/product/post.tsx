@@ -10,7 +10,6 @@ import { Container,
   Divider,
   Autocomplete,
   useTheme, 
-  Paper,
   Grid,
   Button,
   TextField
@@ -24,11 +23,9 @@ import { useSnackbar } from "@/store/snackbar";
 import { FilledInputField } from "@/components/shared";
 import { useRouter } from "next/router";
 import { DomainImageUpload } from "@/components/shared/DomainImageUpload";
+import { TagAutoComplete } from "@/components/shared/TagAutoComplete";
 
-const tags = [
-  "tag one",
-  "tag two"
-]
+
 
 export default function ProductPostPage() {
   
@@ -145,23 +142,10 @@ export default function ProductPostPage() {
 
       <Grid container  justifyContent="space-between">
         <Grid item xs={6}>
-          <Paper>
-            <Autocomplete 
-                size="small"
-                options={tags}
-                value={assignedTags}
-                onChange={handleOnChange}          
-                multiple
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Tags"
-                    placeholder="Categorize your art piece"
-                    variant="standard"
-                  />
-                )}
-              />
-          </Paper>
+            <TagAutoComplete 
+              debounce={0}
+              onTagsUpdate={() => {}}
+            />
         </Grid>
         <Grid item xs={2}>
             <Button 

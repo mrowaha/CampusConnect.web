@@ -1,7 +1,12 @@
 import React from 'react';
 import { Typography } from '@mui/material';
 
-export const PageTitle = ({ pageTitle, disableUppercase }) => {
+interface PageTitleProps {
+  pageTitle: string;
+  disableUppercase? : boolean;
+}
+
+export const PageTitle = ({ pageTitle, disableUppercase } : PageTitleProps) => {
   return (
     <Typography variant="h4" color="primary" 
       sx={{
