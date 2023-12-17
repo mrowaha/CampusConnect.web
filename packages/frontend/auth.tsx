@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
+import {flushSync} from "react-dom";
 import { atom, useAtom } from "jotai";
 import { useSnackbar } from "./store/snackbar";
 import { BACKEND_URL, VALIDATE_TOKEN } from "./routes";
@@ -90,6 +91,8 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute(props: ProtectedRouteProps) {
 
+  console.log("authing");
+
   const snackbar = useSnackbar();
   const [authorized, setAuthorized] = React.useState<boolean>(false);
 
@@ -100,10 +103,11 @@ export default function ProtectedRoute(props: ProtectedRouteProps) {
   const router = useRouter();
 
   React.useLayoutEffect(() => {
+    flushSync(() => setAuthorized(false));
     let storedToken = localStorage.getItem(AUTH_TOKEN);
     if (!storedToken) {
       snackbar("error", "Login Required");
-      setLoginRedirect(router.pathname);
+      setLoginRedirect(router.asPath);
       router.replace('/login');
       setAuthorized(false);
       return;

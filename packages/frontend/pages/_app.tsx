@@ -10,7 +10,6 @@ import { BACKEND_URL } from '@/routes';
 
 export default function App({ Component, pageProps }: AppProps) {
 
-  console.log(BACKEND_URL);
 
   return (
     <StoreProvider> 

@@ -16,7 +16,6 @@ import { User, currentUserAtom } from "@/auth";
 import { StarIcon } from "@/icons";
 import { TrustScore } from "../profile";
 import { ActionButtonProps } from ".";
-import { useEffectAfterMount } from "@/hooks/useEffectAfterMount";
 
 export interface InfoContainerActions extends ActionButtonProps {
 }
@@ -65,7 +64,7 @@ export function InfoContainer(props : InfoContainerProps) {
           <Chip  label={<Typography sx={{color : "white", textTransform: "uppercase"}}>{props.type}</Typography>} color="primary" sx={{marginLeft : 1}}/>
         </Typography>
         {
-          currentUser && props.seller.uuid === currentUser.uuid ?
+          currentUser && props.seller && props.seller.uuid === currentUser.uuid ?
           <></>
           :
           <IconButton size="small" onClick={() => setIsFavourited(prev => !prev)} sx={{height : "fit-content", alignSelf : "center"}}>
@@ -110,7 +109,7 @@ export function InfoContainer(props : InfoContainerProps) {
       
       <div style={{position: "absolute", left : 0, right: 0, bottom: 0, backgroundColor: "#fff", paddingTop: "1rem"}}>
         {
-          currentUser && props.seller.uuid === currentUser.uuid ?
+          currentUser && props.seller?.uuid === currentUser.uuid ?
           <></>
           : <>
           <Typography color="primary" variant="h6">Seller</Typography>
@@ -118,7 +117,7 @@ export function InfoContainer(props : InfoContainerProps) {
             <Avatar 
               src="/blank-profile-picture.webp"
             />
-            <Typography variant="body1" component="span" color="primary">{props.seller.firstName} {props.seller.lastName}</Typography>
+            <Typography variant="body1" component="span" color="primary">{props.seller?.firstName} {props.seller?.lastName}</Typography>
           </div>
           {
             props.seller &&

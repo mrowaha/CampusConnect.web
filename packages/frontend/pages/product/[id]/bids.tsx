@@ -1,7 +1,8 @@
 import {useRouter} from "next/router";
-import dynamic from "next/dynamic";
 import * as React from "react";
+import dynamic from "next/dynamic";
 import {useAtom} from "jotai";
+
 import {
   Container,
   Grid,
@@ -9,83 +10,86 @@ import {
   Typography,
   useTheme
 } from "@mui/material";
-import { TagCard } from "@/components/market";
-import MessageIcon from '@mui/icons-material/Message';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-
+import EditIcon from '@mui/icons-material/Edit';
 import { ActionButtonProps, InfoContainer as ProductInfo } from "@/components/product";
-import { useCurrentUserWithValidation } from "@/auth";
-import { useSnackbar } from "@/store/snackbar";
-import loginRedirectAtom from "@/store/loginredirect";
+import { currentUserAtom } from "@/auth";
+import { Bid, BidsListProps } from "@/components/product";
+
+
 const NoSSRDomainImageCaurosel = dynamic(() => import("@/components/shared/DomainImageCaurosel").then((exports) => exports.DomainImageCaurosel)
 , {
   ssr : false
 })
 
-export default function ProductPage() {
+export default function ProductOwnerPage() {
+
+  const [currentUser] = useAtom(currentUserAtom);
 
   const router = useRouter();
+  console.log(router);
+  const {id} = router.query;
   const theme = useTheme();
-  const snackbar = useSnackbar();
-  const currentUser = useCurrentUserWithValidation();
-  const [_, setLoginRedirect] = useAtom(loginRedirectAtom);
 
-  const handlePlaceBid = React.useCallback(() => {
-    if (currentUser) {
-      
-    } else {
-      snackbar("warning", "Login Required");
-      setLoginRedirect(router.asPath);
-      router.push("/login");
-    }
-  }, [currentUser]);
-
-  const handleWishlist = React.useCallback((state : boolean) => {
-    if (currentUser) {
-
-    } else {
-      snackbar("warning", "Login Required");
-      setLoginRedirect(router.asPath);
-      router.push("/login");
-    }
-  }, [currentUser]);
+  const handleEditPost = React.useCallback(() => {
+    router.push(`/product/post?edit=true&product=${id}`)    
+  }, [id]);
 
   const postActions = React.useMemo(() => {
     const actions : ActionButtonProps[] = [
       {
-        text: "Contact Seller",
-        icon: <MessageIcon style={{fill: "#fff"}} />,
-        onClick: () => {console.log("hello")}
-      },
-      {
-        text: "Place Bid",
-        icon: <MonetizationOnIcon style={{fill: "#fff"}} />,
-        onClick: handlePlaceBid
+        text: "Manage Post",
+        onClick: handleEditPost,
+        icon: <EditIcon style={{fill : "#fff"}} />
       }
-
     ]
     return actions;
-  }, [handlePlaceBid]);
+  }, []);
 
-  const tags = React.useMemo(() => ([
-    { 
-      id: 1,
-      name: 'Text Books', 
-      imageUrl: '/market-img.svg',  
-      isSelected : true , 
-    },
-      { 
-        name: ' Electronics', 
-        imageUrl: '/forum-img.svg',  
-        isSelected : false , 
-    },
-  ]), []);
-
+  const bids : BidsListProps[] = React.useMemo(() => (
+    [
+      {
+        userId: "1",
+        bidId: "1",
+        bidPrice: 20,
+        onAccept: () => {console.log("hello")},
+        onCancel: () => console.log("hello")
+      },
+      {
+        userId: "1",
+        bidId: "1",
+        bidPrice: 20,
+        onAccept: () => {console.log("hello")},
+        onCancel: () => console.log("hello")
+      },
+      {
+        userId: "1",
+        bidId: "1",
+        bidPrice: 20,
+        onAccept: () => {console.log("hello")},
+        onCancel: () => console.log("hello")
+      },
+      {
+        userId: "1",
+        bidId: "1",
+        bidPrice: 20,
+        onAccept: () => {console.log("hello")},
+        onCancel: () => console.log("hello")
+      },
+      {
+        userId: "1",
+        bidId: "1",
+        bidPrice: 20,
+        onAccept: () => {console.log("hello")},
+        onCancel: () => console.log("hello")
+      }
+    ]
+  ), []);
+  
   return (
     <Container>
       <Stack direction="column" gap={2}>
         <Grid container gap={1}>
-          <Grid item xs={5} sx={{padding : "1rem", backgroundColor: theme.palette.secondary.light}}>
+        <Grid item xs={5} sx={{padding : "1rem", backgroundColor: theme.palette.secondary.light}}>
             <NoSSRDomainImageCaurosel 
               sources={
                 ["/blank-profile-picture.webp",
@@ -99,14 +103,7 @@ export default function ProductPage() {
           <Grid item xs={6}>
             <ProductInfo 
               name="Some Product"
-              seller={{
-                firstName: "Muhammad",
-                lastName: "Rowaha",
-                email: "hello",
-                trustScore : 3,
-                uuid: "hello",
-                role: "BILKENTEER"
-              }}
+              seller={currentUser!}
               description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
               molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
               numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
@@ -133,23 +130,19 @@ export default function ProductPage() {
               highestBidPrice={13000}
               tags={["some", "tags"]}
               actions={postActions}
-              onWishlist={handleWishlist}
             />
           </Grid>
         </Grid>
-        
+
         <Typography color="primary" variant="h5">
-        Keep Exploring
+        Current Bids
         </Typography>
-        <Container>
-          <Grid container spacing={2}>
-            {tags.map((tag) => (
-              <Grid item key={tag.id} xs={12} sm={6} md={4} lg={2}>
-                <TagCard tag={tag} />
-              </Grid>
-            ))}
-          </Grid>
-        </Container>
+        
+        {
+          bids.map(bid => (
+            <Bid {...bid} />
+          ))
+        }
         <div 
           style={{
             width: "100%",
@@ -161,18 +154,18 @@ export default function ProductPage() {
   )
 }
 
-export async function getStaticPaths() {
+// export async function getStaticPaths() {
 
-  return {
-    paths: [], /* no static generation for routes */
-    fallback : true
-  }
-}
+//   return {
+//     paths: [], /* no static generation for routes */
+//     fallback : true
+//   }
+// }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   return {
     props : {
-      protected : false
+      protected : true
     }
   }
 }
