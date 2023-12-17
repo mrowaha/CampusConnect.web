@@ -22,13 +22,23 @@ export default function useProfilePicture() {
       if (blob.size == 0) return;
       const blobUrl = URL.createObjectURL(blob);
       setProfileImgSrc(blobUrl);
+      window.dispatchEvent(new CustomEvent("update-profile", {
+        detail : {
+          src: blobUrl
+        }
+      }));
     } catch (error) {
       console.error('Error fetching profile picture:', error);
     }
   }, [currentUser]);
 
   React.useEffect(() => {
+    const onUpdatePictureEvent = (e : Event) => {
+      setProfileImgSrc((e as CustomEvent).detail.src);
+    }
+    window.addEventListener("update-profile", onUpdatePictureEvent);
     fetchProfilePicture();
+    return () => window.removeEventListener("update-profile", onUpdatePictureEvent);
   }, [currentUser]);
 
   return [profileImgSrc, fetchProfilePicture] as const;
