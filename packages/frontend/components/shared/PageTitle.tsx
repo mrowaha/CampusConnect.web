@@ -16,7 +16,7 @@ export const PageTitle = ({ pageTitle, disableUppercase }) => {
         textAlign: 'center',
         fontFamily: '"Roboto", sans-serif', // or "Montserrat"
         textTransform: disableUppercase ? 'none' : 'uppercase',
-        letterSpacing: 1, // or you can try specific values like -1 or -0.5
+        letterSpacing: 1, 
       }}
     >
       {pageTitle}

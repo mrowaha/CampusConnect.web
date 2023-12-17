@@ -22,7 +22,16 @@ export default function MarketPage(){
     <Container>
       <PageTitle pageTitle = "Search Results for 'smth' " disableUppercase />
       {/* Platform LISTINGS */}
-      <Grid container spacing={2} justifyContent="space-evenly" alignItems="center">
+      <Grid container spacing={2} style={{ marginTop: "5px"}}>
+
+        {/* Right MessageThreads Grid */}
+        <Grid item xs={4} style={{ 
+            height: "75vh", 
+            overflowY: "auto", 
+            borderRight: `2px solid ${theme.palette.primary.light}`
+        }}>
+            {/* <MessageThreadComponent users={messageThreadList} onSelectThread={onSelectThread }/> */}
+        </Grid>
 
       </Grid>
     </Container>

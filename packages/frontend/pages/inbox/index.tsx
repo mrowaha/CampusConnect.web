@@ -53,8 +53,9 @@ export default function Inbox() {
   const [chatWithUser, setChatWithUser] = useState(undefined); // State to hold the messageThreadList
   // const [chatWithUser, setChatWithUser] = useState({uuid : "77ad7db6-bdf0-40bb-a459-0f46caf56dd2", name: "Ege"}); // State to hold the messageThreadList
   // const [chatWithUser, setChatWithUser] = useState({uuid : "12363402-04ab-4819-8619-20ea0556507f", name: "Deniz"}); // State to hold the messageThreadList
-  const [currentMessageThread, setCurrentMessageThread] = useState({avatar : "/blank-profile-picture.webp", name: "No Existing Chat Found", id: "1", otherUserId:"2", message: [] });
+  const [currentMessageThread, setCurrentMessageThread] = useState({avatar : "/blank-profile-picture.webp", name: "", id: "1", otherUserId:"2", message: [] });
 
+  const noChatThread = {avatar : "/blank-profile-picture.webp", name: "No Existing Chat Found", id: "1", otherUserId:"2", message: [] }
   // State to hold the new message text
   const [newMessage, setNewMessage] = React.useState("");
   
@@ -101,7 +102,7 @@ export default function Inbox() {
             }
           }
           else{
-            const current = messageThreadList.find(messageThread => messageThread.id === currentMessageThread.id || messageThread.name === currentMessageThread.name);
+            const current = messageThreadList.find(messageThread => messageThread.id === currentMessageThread.id);
 
             if (current == undefined && currentMessageThread.id == "2"){
               const currentAgain = messageThreadList.find(messageThread => messageThread.name.includes(currentMessageThread.name));
@@ -115,10 +116,18 @@ export default function Inbox() {
               }
             }
             else{
+
+              if (current.message.length > currentMessageThread.message.length){
+                markAsSeen(current.message)
+              }
+
               setCurrentMessageThread(current) 
             }
           }
 
+      }
+      else{
+        setCurrentMessageThread(noChatThread)
       }
   }, [messageThreadList]);
 
@@ -186,7 +195,6 @@ export default function Inbox() {
   const handleSendMessage = async () => {
 
     if (newMessage !== ""){
-
       try {
         const res = await fetch(`${BACKEND_URL}${SEND_MESSAGE}`, {
           method : "POST",
@@ -200,10 +208,12 @@ export default function Inbox() {
           })
         })
 
+        getMessageThreads(loggedInUser.uuid, false)
+
         setNewMessage('');
         snackbar("success", "Message Sent Successfully");
 
-        getMessageThreads(loggedInUser.uuid, false)
+        
 
       } catch (err: unknown) {
         snackbar("error", (err as Error).message);
