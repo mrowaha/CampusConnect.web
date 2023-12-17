@@ -1,9 +1,5 @@
 import Link from "next/link";
-import * as React from "react";
-
-
-import { useAtom } from "jotai";
-
+import React, {useEffect, useState} from "react";
 import {
   Snackbar,
   Alert,
@@ -15,7 +11,7 @@ import {
   Tooltip,
   Box,
   Button,
-  IconButton
+  IconButton, Badge, Drawer, List, ListItem, Typography, ListItemText
 } from "@mui/material";
 import {styled} from "@mui/system";
 
@@ -24,6 +20,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import { IconInbox } from "@tabler/icons-react";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { useAtom } from "jotai";
 
 import {
   snackbarAtom,
@@ -38,7 +35,7 @@ import { useRouter } from 'next/router';
 import { LostAndFoundIcon, SignupIcon } from "@/icons";
 import { currentUserAtom } from "@/auth";
 
-import { BACKEND_URL, PROFILE_PICTURE } from "@/routes";
+import { BACKEND_URL, NOTIFICATION_COUNT, NOTIFICATION_LIST } from "@/routes";
 import type { User } from "@/auth";
 import useProfilePicture from "@/hooks/useProfilePicture";
 
@@ -60,6 +57,71 @@ export default function Layout(props : LayoutProps) {
 
   const [currentUser] = useAtom(currentUserAtom);
   const [profileImgSrc, refetch] = useProfilePicture();
+  const [notificationCount, setNotificationCount] = React.useState(0);
+  const [notifications, setNotifications] = React.useState([]);
+
+  useEffect(() => {
+
+      // Define a function to fetch message threads
+      const fetchNotificationCount = () => {
+        console.log("currentUser", currentUser)
+        if (currentUser != null){
+          getNotifiCount(currentUser.uuid);
+        }
+      }
+  
+    // Initially, call the function
+    fetchNotificationCount();
+  
+    const intervalId = setInterval(() => fetchNotificationCount(), 2000);
+  
+    // Clean up the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const getNotifiCount = async (userId: string) => {
+
+    try {
+      const res = await fetch(`${BACKEND_URL}${NOTIFICATION_COUNT}${userId}`, {
+        method : "GET",
+        headers : {
+          "Content-Type" : "application/json"
+        },
+      });
+    
+      //Message Thread Data saved and processed
+      const data = await res.json();
+      console.log("Notification Count", data)
+      setNotificationCount(data)
+
+    } catch (err: unknown) {
+    }
+  } 
+
+  const getNotifitionsList = async () => {
+
+    try {
+      const res = await fetch(`${BACKEND_URL}${NOTIFICATION_LIST}${currentUser.uuid}`, {
+        method : "GET",
+        headers : {
+          "Content-Type" : "application/json"
+        },
+      });
+    
+      //Notifications Data saved and processed
+      const data = await res.json();
+      console.log("data")
+      setNotifications([...data].reverse());
+
+      snackbar("success", "Fetched message threads successfully");
+
+      handleDrawerOpen()
+  
+    } catch (err: unknown) {
+      snackbar("error", (err as Error).message);
+    }
+  } 
+
 
   const [snackbarStatus, setSnackbarStatus] = useAtom(snackbarAtom);
   const [severity] = useAtom(snackbarSeverity);
@@ -75,15 +137,18 @@ export default function Layout(props : LayoutProps) {
     setSearchValue(e.target.value);
   }, []);
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const handleDrawerOpen = () => {
+    setDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+  };
+
   const handleSearch = () => {
-    // Perform the search logic here. For example, redirect to a search page with the query
-    // if (searchValue.trim()) {
-      console.log(searchValue)
       router.replace(`/search?keywords=${searchValue}`);
-      // router.replace(`/inbox`);
-    // } else {
-    //   snackbar("warning", "Please enter a search query");
-    // }
   };
 
   const pathsToShowCategoryBar = [
@@ -173,12 +238,18 @@ export default function Layout(props : LayoutProps) {
                   List An Item
                 </Button>
               </Link>
-              
-              <IconButton size="small">
-                <NotificationsIcon style={{fill : theme.palette.primary.main}} />
+              <Box style={{marginRight:"10px", marginLeft:"10px"}} >
+
+              <IconButton size="small" onClick={getNotifitionsList}>
+                  <Badge badgeContent={notificationCount} color="warning">
+                    <NotificationsIcon style={{fill : theme.palette.primary.main}} />
+                  </Badge>
               </IconButton>
+           
+              </Box>
               <Link href={"/profile"}>
                 <Avatar 
+                  style={{marginRight:"20px"}}
                   src={profileImgSrc}
                 />
               </Link>
@@ -212,6 +283,27 @@ export default function Layout(props : LayoutProps) {
           }
         </Grid>
       </AppBar>)}
+
+      {(notifications.length > 0 && (<Drawer 
+        anchor="right" 
+        open={drawerOpen} 
+        onClose={handleDrawerClose}
+        sx={{ width: '20vw', '& .MuiDrawer-paper': { width: '20vw' } }} // Set the width here
+      >
+        <List>
+          {notifications.map(notification => (
+            <ListItem key={notification.id}>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" style={{ fontWeight: notification.seen ? 'normal' : 'bold' }}>
+                    {notification.content}
+                  </Typography>
+                }
+              />
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>))}
       
         {/* Category Bar */}
         {(shouldShowCategoryBar && <CategoryNavBar />)}
@@ -222,4 +314,11 @@ export default function Layout(props : LayoutProps) {
     </>
   )
 
+}
+export async function getStaticProps() {
+  return {
+    props : {
+      protected : true
+    }
+  }
 }

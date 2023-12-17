@@ -26,7 +26,6 @@ export default function Search() {
 
     useEffect(() => {
         if (sellerRating!= '') {
-  
             handleSearch({sellerRating:sellerRating})
         }
       }, [sellerRating]);
@@ -225,7 +224,7 @@ export default function Search() {
                     defaultValue=""
                     displayEmpty
                     onChange={sortChanged}
-                    sx={{ minWidth: 120 }}
+                    sx={{ minWidth: 150 }}
                 >
                     <MenuItem value="" disabled>Sort By</MenuItem>
                     <MenuItem value="LATEST">Latest</MenuItem>

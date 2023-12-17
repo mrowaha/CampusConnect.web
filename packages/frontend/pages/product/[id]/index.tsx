@@ -7,7 +7,7 @@ import {
   Grid,
   Stack,
   Typography,
-  useTheme
+  useTheme, Paper, Box
 } from "@mui/material";
 import { TagCard } from "@/components/market";
 import MessageIcon from '@mui/icons-material/Message';
@@ -70,15 +70,45 @@ export default function ProductPage() {
   const tags = React.useMemo(() => ([
     { 
       id: 1,
-      name: 'Text Books', 
-      imageUrl: '/market-img.svg',  
+      name: 'Kitchenware', 
+      imageUrl: '/kitchenware.png',  
       isSelected : true , 
+      link : '/search?tags=Kitchenware' , 
     },
-      { 
-        name: ' Electronics', 
-        imageUrl: '/forum-img.svg',  
-        isSelected : false , 
+    { 
+      id: 1,
+      name: 'Electronics', 
+      imageUrl: '/electronics.png',  
+      isSelected : false , 
+      link : '/search?tags=Electronics' , 
     },
+    { 
+    id: 1,
+    name: 'TextBooks', 
+    imageUrl: '/textbook.png',  
+    isSelected : true , 
+    link : '/search?tags=TextBooks' , 
+    },
+    { 
+      id: 1,
+    name: 'Instruments', 
+    imageUrl: '/instruments.png',  
+    isSelected : false , 
+    link : '/search?tags=Instruments' , 
+    },{ 
+    id: 1,
+    name: 'Games', 
+    imageUrl: '/games.png',  
+    isSelected : true ,  
+    link : '/search?tags=Games' , 
+    },
+    { 
+      id: 1,
+    name: 'Furniture', 
+    imageUrl: '/furniture.png',  
+    isSelected : false , 
+    link : '/search?tags=Furniture' , 
+    }
   ]), []);
 
   return (
@@ -138,15 +168,41 @@ export default function ProductPage() {
           </Grid>
         </Grid>
         
-        <Typography color="primary" variant="h5">
+        <Typography style={{margin:"10px"}} color="primary" variant="h5">
         Keep Exploring
         </Typography>
         <Container>
-          <Grid container spacing={2}>
+        <Grid container spacing={2}>
             {tags.map((tag) => (
               <Grid item key={tag.id} xs={12} sm={6} md={4} lg={2}>
-                <TagCard tag={tag} />
-              </Grid>
+            <Paper
+              elevation={0} // Normal state elevation
+              sx={{
+                ':hover': {
+                  elevation: 5, // Elevation on hover
+                  cursor: 'pointer', // Change cursor to indicate clickability
+                  transform: 'translateY(-9px)', // Optional: Slight rise effect on hover
+                  transition: 'transform 0.3s ease-in-out' // Smooth transition for the rise effect
+                }
+              }}
+              onClick={() => router.replace(tag.link)}
+            >
+              <Box
+                component="img"
+                sx={{
+                  height: '100%',
+                  width: 'auto',
+                  maxWidth: '100%',
+                  objectFit: 'contain',
+                  display: 'block',
+                  marginLeft: 'auto',
+                  marginRight: 'auto'
+                }}
+                alt="campus connect logo"
+                src={tag.imageUrl}
+              />
+            </Paper>
+          </Grid>
             ))}
           </Grid>
         </Container>

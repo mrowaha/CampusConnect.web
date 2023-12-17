@@ -10,6 +10,7 @@ export const PlatformCard = ({ platform }) => {
 
   const handlePlatformSelect = () => {
     setPlatformSelected(!isPlatformSelected);
+    router.push(platform.link)
   };
 
   return (
