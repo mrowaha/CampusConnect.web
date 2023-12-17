@@ -71,10 +71,20 @@ export default function Layout(props : LayoutProps) {
   const currentURL = router.asPath;
   const [searchValue, setSearchValue] = React.useState<string>("");
 
-  const handleOnSearchChange = React.useCallback((e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | undefined) => {
-      
-              // onClick={() => router.replace(`/search?tags=${category.name}`)}
-  }, [])
+  const handleOnSearchChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  }, []);
+
+  const handleSearch = () => {
+    // Perform the search logic here. For example, redirect to a search page with the query
+    // if (searchValue.trim()) {
+      console.log(searchValue)
+      router.replace(`/search?keywords=${searchValue}`);
+      // router.replace(`/inbox`);
+    // } else {
+    //   snackbar("warning", "Please enter a search query");
+    // }
+  };
 
   const pathsToShowCategoryBar = [
     '/market',
@@ -126,16 +136,16 @@ export default function Layout(props : LayoutProps) {
           </Grid>
           <Grid item xs={1}/>
           <Grid item flexGrow={1} sx={{display : "flex", gap : 1, justifyContent : "center" }}>
-            <Searchbar 
-              input={{
-                value : searchValue,
-                onChange : handleOnSearchChange,
-                fullWidth : true
-              }}
-              action={{
-                onClick : () => snackbar("warning", "Search Not Implemented")
-              }}
-            />
+              <Searchbar 
+                input={{
+                  value: searchValue,
+                  onChange: handleOnSearchChange,
+                  fullWidth: true
+                }}
+                action={{
+                  onClick: handleSearch
+                }}
+              />
             <Button
               size="small"
               startIcon={<StorefrontIcon style={{ fill : theme.palette.primary.main }}/>}
