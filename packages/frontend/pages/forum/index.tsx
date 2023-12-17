@@ -65,6 +65,7 @@ export default function ForumPage() {
     const theme = useTheme();
     const handleCreatePost = () => {
         setCreateSelected(!isCreateSelected);
+        router.push("/forum/post")
         
       };
     handleCreatePost

@@ -1,6 +1,5 @@
 import Link from "next/link";
 import React, {useEffect, useState} from "react";
-import * as React from "react";
 import { useAtom } from "jotai";
 import {
   Snackbar,
@@ -22,7 +21,6 @@ import LoginIcon from '@mui/icons-material/Login';
 import { IconInbox } from "@tabler/icons-react";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { useAtom } from "jotai";
 
 import {
   snackbarAtom,
