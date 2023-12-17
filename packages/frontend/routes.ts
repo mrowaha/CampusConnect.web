@@ -16,6 +16,7 @@ export const GET_MESSAGE_THREADS_BY_USER_ID = "/messageThread/user/?userId=";
 export const MARK_MESSAGES_AS_SEEN = "/messageThread/markMessagesSeen/?userId=";
 export const SEND_MESSAGE = "/messageThread/sendMessage";
 
-export const GET_TAGS = "/productTags";
-export const GET_APPROVED_TAGS = "/productTags/approved";
-export const APPROVE_TAG = "/productTags/approve/?tagName=";
+export const GET_TAGS = "/product-tags";
+export const GET_APPROVED_TAGS = "/product-tags/approved";
+export const GET_REQUESTED_TAGS = "/product-tags/requested";
+export const APPROVE_TAG = "/product-tags/approve/?tagName=";

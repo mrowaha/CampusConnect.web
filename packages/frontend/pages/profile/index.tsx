@@ -6,7 +6,7 @@ import {
   Divider,
   Button
 } from "@mui/material";
-import {styled} from "@mui/system";
+import { styled } from "@mui/system";
 
 import { authAtom, currentUserAtom, User } from "@/auth";
 import { useAtom } from "jotai";
@@ -16,16 +16,16 @@ import { PROFILE_PICTURE, BACKEND_URL } from "@/routes";
 import useProfilePicture from "@/hooks/useProfilePicture";
 
 export type ProfilePictureUploadResponse = {
-  contentType : "image/jpg" | "image/jpeg" | "image/png";
+  contentType: "image/jpg" | "image/jpeg" | "image/png";
   createdTime: string;
   fileSize: number;
-  fileName : string;
+  fileName: string;
 }
 
-export const ProfilePageContainer = styled(Stack)(({theme}) => ({
-  padding : "2rem",
-  inset : 0,
-  position : "absolute"
+export const ProfilePageContainer = styled(Stack)(({ theme }) => ({
+  padding: "2rem",
+  inset: 0,
+  position: "absolute"
 }));
 
 export default function ProfilePage() {
@@ -35,28 +35,28 @@ export default function ProfilePage() {
 
   const [profileImgSrc, refetch] = useProfilePicture();
   const [showUploadProfilePic, setShowUploadProfilePic] = React.useState<boolean>(false);
-  const handleProfilePictureUpload = async (imageBlob : Blob) => {
+  const handleProfilePictureUpload = async (imageBlob: Blob) => {
     if (imageBlob) {
       const formData = new FormData();
       formData.append("file", imageBlob);
       const res = await fetch(`${BACKEND_URL}${PROFILE_PICTURE}`, {
         method: "POST",
-        headers : {
-          "Authorization" : `Bearer ${token}`
+        headers: {
+          "Authorization": `Bearer ${token}`
         },
         body: formData,
       })
       const data = await res.json();
       console.log(data);
       refetch();
-      setShowUploadProfilePic(false);      
-    }    
+      setShowUploadProfilePic(false);
+    }
   }
 
-  
+
   return (
     <>
-      <ProfilePictureUploadModal 
+      <ProfilePictureUploadModal
         title="Select Your Profile Picture"
         open={showUploadProfilePic}
         closeModal={() => setShowUploadProfilePic(false)}
@@ -65,34 +65,47 @@ export default function ProfilePage() {
       <ProfilePageContainer direction="row">
         {
           currentUser &&
-            <InfoContainer
-              imgAlt="logged in user profile picture"
-              imgSrc={profileImgSrc}
-              pictureStyles={{width : "70%"}}
-              updatable={true}
-              onProfilePictureUpdate={() => setShowUploadProfilePic(true)}
-              uuid={currentUser.uuid}
-              firstName={currentUser.firstName}
-              lastName={currentUser.lastName}
-              role={currentUser.role}
-              email={currentUser.email}
-              trustScore={currentUser.trustScore}
+          <InfoContainer
+            imgAlt="logged in user profile picture"
+            imgSrc={profileImgSrc}
+            pictureStyles={{ width: "70%" }}
+            updatable={true}
+            onProfilePictureUpdate={() => setShowUploadProfilePic(true)}
+            uuid={currentUser.uuid}
+            firstName={currentUser.firstName}
+            lastName={currentUser.lastName}
+            role={currentUser.role}
+            email={currentUser.email}
+            trustScore={currentUser.trustScore}
+          >
+            <Link
+              href={`/profile/settings`}
             >
-              <Link
-                href={`/profile/settings`}
-              >
-                <Button
+              <Button
                 variant="outlined"
                 sx={{
-                  textTransform : "none"
+                  textTransform: "none"
                 }}
+              >
+                Profile Settings
+              </Button>
+            </Link>
+            {currentUser.role === 'MODERATOR' &&
+              <Link
+                href={`/moderator/`}>
+                <Button
+                  variant="outlined"
+                  sx={{
+                    textTransform: "none"
+                  }}
                 >
-                  Profile Settings
+                  Moderator Dashboard
                 </Button>
-              </Link>        
-            </InfoContainer>
+              </Link>
+            }
+          </InfoContainer>
         }
-        <Divider 
+        <Divider
           orientation="vertical"
         />
       </ProfilePageContainer>
@@ -103,8 +116,8 @@ export default function ProfilePage() {
 
 export async function getStaticProps() {
   return {
-    props : {
-      protected : true
+    props: {
+      protected: true
     }
   }
 }
