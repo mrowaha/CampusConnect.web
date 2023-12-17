@@ -31,6 +31,7 @@ import {
   useSnackbar
 } from "@/store/snackbar";
 import { Searchbar } from "@/components/layout";
+import CategoryNavBar from "@/components/layout/CategoryNavBar";
 import { DomainImage } from "@/components/shared";
 import { useRouter } from 'next/router';
 import { LostAndFoundIcon, SignupIcon } from "@/icons";
@@ -120,6 +121,7 @@ export default function Layout(props : LayoutProps) {
             <Button
               size="small"
               startIcon={<StorefrontIcon style={{ fill : theme.palette.primary.main }}/>}
+              onClick={() => router.replace("/market")}
               sx={{textTransform : "none"}}
             >
               Market Place
@@ -127,6 +129,7 @@ export default function Layout(props : LayoutProps) {
             <Button
               size="small"
               startIcon={<LostAndFoundIcon />}
+              onClick={() => router.replace("/forum")}
               sx={{textTransform : "none"}}
             >
               Lost & Found
@@ -181,6 +184,9 @@ export default function Layout(props : LayoutProps) {
           }
         </Grid>
       </AppBar>
+
+      {/* Category Bar */}
+      <CategoryNavBar />
       <PageContainer>
         {props.children}
       </PageContainer>

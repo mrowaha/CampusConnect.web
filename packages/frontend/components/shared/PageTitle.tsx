@@ -13,7 +13,7 @@ export const PageTitle = ({  pageTitle }) => {
             fontStyle: 'normal',
             fontWeight: 700,
             lineHeight: '1.375rem',
-            paddingTop: 2,
+            paddingTop: 4,
             paddingBottom: 5,
             textAlign: 'center',
             textTransform : "uppercase",
