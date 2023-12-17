@@ -90,11 +90,23 @@ const FullPost = ({post}) => {
                 <Grid item xs={12} sx={{marginTop : 1}}>
                     {/* User Comments */}
                     <Grid container marginTop={1} spacing={2} sx={{ width: "100%"  }}>
-                        {postContent.comments.map((commentObj , index) => (
-                            <Grid item key={index} xs={12}>
-                                <UserComment commentObj={commentObj} />
-                            </Grid>
-                        ))}
+                    {postContent && postContent.comments ? (
+                        postContent.comments.map((commentObj, index) => (
+                        <Grid item key={index} xs={12}>
+                            <UserComment commentObj={commentObj} />
+                        </Grid>
+                        ))
+                        ) : (
+                        <Grid item  xs={12}>
+                            <Typography 
+                            variant="body2"
+                            color={theme.palette.secondary.dark}
+                            >
+                                No comments available...
+                            </Typography>
+                        </Grid>   
+                        
+                    )}
                     </Grid>
 
                 </Grid>
