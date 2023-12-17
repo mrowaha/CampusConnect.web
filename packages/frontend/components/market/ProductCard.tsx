@@ -25,11 +25,12 @@ import { DomainImage } from '@/components/shared';
         const [isAdded, setIsAdded] = React.useState(product.isAdded);
         
         
-        const handleAddToCart = (event : any) => {
-            // Toggle the added to cart status
-            setIsAdded(!isAdded);
-            
-          };
+
+        const handleViewProduct = () => {
+            router.push(`/product/${product.id}`);
+            // Navigation to product details page
+        };
+      
         const handleAddToFavorites = (event : any) => {
           // Toggle the favorite status
           setIsFavorite(!isFavorite);
@@ -81,7 +82,7 @@ import { DomainImage } from '@/components/shared';
             }      
         </CardContent>
         <CardActions sx={{ display: 'flex', justifyContent: "space-between" }}>
-            <Button variant="contained" color="primary" size="small" onClick={handleAddToCart} fullWidth>
+            <Button variant="contained" color="primary" size="small" onClick={handleViewProduct} fullWidth>
                 View Product
             </Button>
             <Button variant="text" disabled size="small" sx={{ fontSize: '1em' }}>

@@ -70,10 +70,10 @@ export default function Layout(props : LayoutProps) {
   const router = useRouter();
   const currentURL = router.asPath;
   const [searchValue, setSearchValue] = React.useState<string>("");
+
   const handleOnSearchChange = React.useCallback((e : React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | undefined) => {
-    if (e !== undefined) {
-      setSearchValue(e.target.value);
-    }
+      
+              // onClick={() => router.replace(`/search?tags=${category.name}`)}
   }, [])
 
   const pathsToShowCategoryBar = [

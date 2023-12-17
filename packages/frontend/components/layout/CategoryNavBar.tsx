@@ -40,7 +40,7 @@ export default function CategoryNavBar() {
               key={category.name}
               size="small"
               startIcon={category.icon}
-              onClick={() => router.replace("/search")}
+              onClick={() => router.replace(`/search?tags=${category.name}`)}
               sx={{
                 width:"200px",
                 // padding:"10px",
