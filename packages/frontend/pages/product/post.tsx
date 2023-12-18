@@ -92,7 +92,7 @@ export default function ProductPostPage() {
       })
       const fileResponse = await uploadRes.json();
       console.log(fileResponse);
-      router.replace("/profile/settings");
+      router.replace("/market");
     } catch (err) {
       console.log(err);
     }
