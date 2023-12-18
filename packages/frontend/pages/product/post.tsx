@@ -31,7 +31,6 @@ import { DomainImageUpload } from "@/components/shared/DomainImageUpload";
 import { TagAutoComplete } from "@/components/shared/TagAutoComplete";
 import { BACKEND_URL } from "@/routes";
 import { AUTH_TOKEN, currentUserAtom } from "@/auth";
-
 import { DomainImageMultipleUpload } from "@/components/shared/DomainImageMultipleUpload";
 import { useAtom } from "jotai";
 import { blob } from "stream/consumers";
@@ -185,7 +184,7 @@ export default function ProductPostPage() {
     <>
     <Container>
       <PostActionsBar 
-        title={edit ? "Edit Item" : "List Item"}
+        title={edit ? "Edit Item" : "Post Product"}
         actions={actionButtons}
       />  
       <Stack direction="column" sx={{border : `2px solid ${theme.palette.primary.main}`, padding: "1rem"}} gap={1.5}>
@@ -270,16 +269,6 @@ export default function ProductPostPage() {
       />
 
       </Stack>
-      <PostActionsBar 
-        title={edit ? "Edit Item" : "List Item"}
-        actions={actionButtons}
-      />  
-      <div 
-        style={{
-          width : "100%",
-          height : "25px"
-        }}
-      />
     </Container>
     <Modal
       open={requestTagModal}

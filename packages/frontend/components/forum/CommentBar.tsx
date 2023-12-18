@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import{
     Box,
     TextField,
@@ -11,10 +11,15 @@ import ChatBubbleIcon from '@mui/icons-material/ChatBubble';
 import { CommentIcon, EnterCommentIcon, ReportIcon, ShareIcon } from "@/icons";
 
 
-export const CommentBar = ({}) => {
+export const CommentBar = ({onComment}) => {
   const theme = useTheme();
+  const [comment, setComment] = useState(""); // State to store the comment
+
   const handleComment = () => {
-      // Implement comment functionality
+    // Use the comment state here
+    console.log("Comment:", comment);
+    setComment("");
+    onComment(comment); 
   };
 
   const handleShare = () => {
@@ -38,6 +43,8 @@ export const CommentBar = ({}) => {
               fullWidth
               margin="dense"
               size="small"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
               InputProps={{
               endAdornment: (
                   <IconButton edge="end" onClick={handleComment} sx={{ color: theme.palette.primary.main }}>

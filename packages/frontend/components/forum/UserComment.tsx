@@ -1,6 +1,6 @@
 import React from "react" ;
 
-import { Box,  Grid,  Typography,IconButton, useTheme } from "@mui/material"
+import { Box,  Grid,  Typography,IconButton, useTheme, Tooltip } from "@mui/material"
 import { DomainImage } from "../shared";
 import { ReportIcon } from "@/icons";
 
@@ -23,7 +23,7 @@ export const UserComment = ({commentObj}) => {
                         onClick={handleUserSelect}
                         role="button"
                     >
-                        <DomainImage src={commentObj.imageUrl} alt={commentObj.usersName} />
+                        <DomainImage src={"/user-avatar.svg"} alt={commentObj.usersName} />
                     </div>   
                 </Grid>
         
@@ -41,18 +41,18 @@ export const UserComment = ({commentObj}) => {
                     onClick={handleUserSelect}
                     style={{ cursor: 'pointer', textDecoration: 'none' }}
                     >
-                        {commentObj.name}
+                        {commentObj.commenter.firstName} {commentObj.commenter.lastName}
                     </div>
                     {/*comment body*/} 
                     <Typography variant="body2" fontWeight="light" >
-                    {commentObj.commentText}
+                    {commentObj.content}
                     </Typography>
                 </Typography>
                 </Grid>
                 <Grid item xs={0.5}>
-                    <IconButton onClick={handleReport} sx={{ color: theme.palette.primary.main }}>
-                        <ReportIcon filled={ true} />
-                    </IconButton>
+                        <IconButton onClick={handleReport} sx={{ color: theme.palette.primary.main }}>
+                            <ReportIcon filled={ true} />
+                        </IconButton>
                 </Grid>
                 
             </Grid>

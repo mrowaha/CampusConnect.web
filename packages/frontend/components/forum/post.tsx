@@ -17,13 +17,13 @@ export const Post = ({post}) => {
     const theme = useTheme();
 
     const postContent = {
-        userName: "Berkay Alp",
+        userName: `${post.postingUser.firstName} ${post.postingUser.lastName}`,
         title: post.title,
         description: post.description,
       };
 
     const click = () => {
-        router.push("/forum/post")
+        router.replace(`/forum/post?postId=${post.forumPostId}`)
     }
     return (
 
@@ -48,12 +48,12 @@ export const Post = ({post}) => {
                     sx={{ cursor: 'pointer'}} // Use relative sizing
                 >
                     {/* {post.userName} */}
-                    Berkay Alp
+                    {post.postingUser.firstName} {post.postingUser.lastName}
                 </Typography>
                 </Grid>
                 <Grid item xs={12} sx={{marginTop : 1}}>
                     <Divider />
-                    <PostTextBox content={postContent} />
+                    <PostTextBox content={post} />
                     <Divider />
                 </Grid>
             </Grid>

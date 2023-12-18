@@ -16,10 +16,10 @@ import { Card,
     IconButton, 
     Typography, 
     Button, 
-    Divider,
+    Badge,
     Grid, Chip,Box,
     Paper,
-    CircularProgress,
+    CircularProgress,Tooltip,
     useTheme} from '@mui/material';
 import { DomainImage } from '@/components/shared';
 import Link from 'next/link';
@@ -64,10 +64,23 @@ export const ProductCard = ({ product }) => {
         <IconButton 
             size="small" 
             onClick={handleAddToFavorites}
-            sx={{ fontSize: '1em', position : "absolute", right : 2, top : 2, zIndex: 999, backgroundColor: theme.palette.secondary.light }}
+            sx={{ fontSize: '1em', position : "absolute", right : 4, top : 6, zIndex: 999, backgroundColor: theme.palette.secondary.light }}
         >
             {isFavorite ? <FavoriteIcon style={{fill: theme.palette.primary.main}}/> : <FavoriteBorderIcon style={{fill: theme.palette.secondary.main}} />}
         </IconButton>
+
+        {(typeof product.viewCount === 'number' && (
+            <IconButton 
+                size="small" 
+                sx={{ fontSize: '1em', position: "absolute", left: 4, top: 6, zIndex: 999, backgroundColor: theme.palette.secondary.light }}
+            >
+                <Tooltip title="Views" arrow>
+                    <Badge badgeContent={product.viewCount} color="primary">
+                        <IconChartBar color={theme.palette.primary.main} />
+                    </Badge>
+                </Tooltip>
+            </IconButton>
+        ))}
 
         <CardMedia component="div"
             onClick={handleViewProduct} // Replace with your actual click handler
@@ -92,7 +105,7 @@ export const ProductCard = ({ product }) => {
    
         <Box sx={{ display: 'flex', justifyContent: "space-between" }}>
             <Typography color={'grey'}>
-                13-01-2022
+                18-12-2023
             </Typography>
             
             {/* Display seller rating as stars */}
@@ -108,7 +121,7 @@ export const ProductCard = ({ product }) => {
         {product.tags?.length > 0 && product.tags.slice(0, 5).map((tag, index) => (
             <Chip key={index} label={tag} variant="outlined" color="primary" size="small" sx={{ margin: 0.5 }} />
         ))}
-        {product.tags?.length > 5 && (
+        {product.tags?.length > 4 && (
             <Chip label="......." variant="outlined" color="primary" size="small" sx={{ margin: 0.5 }} />
         )}
         </Box>

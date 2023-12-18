@@ -22,7 +22,7 @@ export default function CategoryNavBar() {
   const mainColor = theme.palette.primary.main;
   
   const categories = [
-    { name: "TextBooks", icon: <IconBooks size={20} color={`${mainColor}`}/> },
+    { name: "Textbooks", icon: <IconBooks size={20} color={`${mainColor}`}/> },
     { name: "Electronics", icon: <IconDeviceDesktopAnalytics size={20} color={`${mainColor}`}/> },
     { name: "Kitchenware", icon: <IconToolsKitchen size={20} color={`${mainColor}`}/> },
     { name: "Instruments", icon: <IconMusic size={20} color={`${mainColor}`}/> },

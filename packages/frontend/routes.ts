@@ -24,3 +24,5 @@ export const NOTIFICATION_LIST = "/notifications/user/?userId=";
 export const LOST_FORUM_SEARCH = "/forumPosts/lostForum/?search=";
 export const FOUND_FORUM_SEARCH = "/forumPosts/foundForum/?search=";
 export const GET_PRODUCT_BY_ID = "/products/?productId=";
+export const GET_FORUM_POST_BY_ID = "/forumPosts/?forumPostId=";
+export const CREATE_COMMENT = "/forumPosts/comment/?userId=";

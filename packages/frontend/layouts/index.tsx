@@ -50,7 +50,7 @@ const PageContainer = styled("div")(({theme}) => ({
   position : "relative",
   paddingTop : 10
 }))
-
+// console.log('currentUser:', currentUser);
 
 export default function Layout(props : LayoutProps) {
   
@@ -62,11 +62,19 @@ export default function Layout(props : LayoutProps) {
   const [notificationCount, setNotificationCount] = React.useState(0);
   const [notifications, setNotifications] = React.useState([]);
 
-  useEffect(() => {
+  const [snackbarStatus, setSnackbarStatus] = useAtom(snackbarAtom);
+  const [severity] = useAtom(snackbarSeverity);
+  const [message] = useAtom(snackbarMessage);
 
+  const snackbar = useSnackbar();
+
+  const router = useRouter();
+  const currentURL = router.asPath;
+  const [searchValue, setSearchValue] = React.useState<string>("");
+
+  useEffect(() => {
       // Define a function to fetch message threads
       const fetchNotificationCount = () => {
-        // console.log("currentUser", currentUser)
         if (currentUser != null){
           getNotifiCount(currentUser.uuid);
         }
@@ -75,11 +83,13 @@ export default function Layout(props : LayoutProps) {
     // Initially, call the function
     fetchNotificationCount();
 
-    const intervalId = setInterval(() => fetchNotificationCount(), 2000);
+    const intervalId = setInterval(() => fetchNotificationCount(), 4000);
 
+    console.log("intervalId", intervalId)
     // Clean up the interval when the component unmounts
     return () => clearInterval(intervalId);
-  }, []);
+
+  }, [router.path]);
 
   const getNotifiCount = async (userId: string) => {
 
@@ -125,16 +135,6 @@ export default function Layout(props : LayoutProps) {
   }
 
 
-  const [snackbarStatus, setSnackbarStatus] = useAtom(snackbarAtom);
-  const [severity] = useAtom(snackbarSeverity);
-  const [message] = useAtom(snackbarMessage);
-
-  const snackbar = useSnackbar();
-
-  const router = useRouter();
-  const currentURL = router.asPath;
-  const [searchValue, setSearchValue] = React.useState<string>("");
-
   const handleOnSearchChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   }, []);
@@ -151,7 +151,12 @@ export default function Layout(props : LayoutProps) {
 
   const handleSearch = () => {
     if (router.asPath.includes("forum")){
-      router.replace(`/forum?keywords=${searchValue}`);
+      if (router.asPath.includes("LOST")){
+        router.replace(`/forum?forumType=LOST&keywords=${searchValue}`);
+      }
+      else{
+        router.replace(`/forum?forumType=FOUND&keywords=${searchValue}`);
+      }
     }
     else{
       router.replace(`/search?keywords=${searchValue}`);
@@ -253,7 +258,7 @@ export default function Layout(props : LayoutProps) {
             <Button
               size="small"
               startIcon={<LostAndFoundIcon />}
-              onClick={() => router.replace("/forum")}
+              onClick={() => router.replace(`/forum?forumType=LOST&keywords=`)}
               sx={{textTransform : "none"}}
             >
               Lost & Found
@@ -278,7 +283,7 @@ export default function Layout(props : LayoutProps) {
               </IconButton>
 
               </Box>
-              <Link href={"/profile"}>
+              <Link href={"/profile/settings"}>
                 <Avatar 
                   style={{marginRight:"20px"}}
                   src={profileImgSrc}

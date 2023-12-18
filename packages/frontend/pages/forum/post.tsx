@@ -1,80 +1,64 @@
 import dynamic from "next/dynamic";
-import React from "react";
+import React, {useEffect} from "react";
 
 import { Container, Grid, Stack, Button, useTheme } from "@mui/material";
 import { PageTitle } from "@/components/shared";
-
-const NoSSRFullPost = dynamic(() => import("@/components/forum/FullPost"), 
-{ssr: false});
+import { useRouter } from "next/router";
+import {BACKEND_URL, GET_FORUM_POST_BY_ID} from "@/routes";
+import { useSnackbar } from "@/store/snackbar";
+import FullPost  from "@/components/forum/FullPost";
 
 
 export default function post() {
     const [isLostSelected, setLostSelected] = React.useState<boolean>(true); // by default in lost forum
     const [isFoundSelected, setFoundSelected] = React.useState(false);
     const [isEditSelected, setEditSelected] = React.useState(false);
+    const router = useRouter();
+    const [forumPost, setForumPost] = React.useState(null);
+    const snackbar = useSnackbar();
+
+    useEffect(() => {
+      if (router.isReady) {
+        fetchForumPost(router.query.postId)
+        // setForumPost(router.query.postId);
+      }
+    }, [router.query, router.isReady]);
+
+    const fetchForumPost = async (postId) => {
+
+      try {
+        const res = await fetch(`${BACKEND_URL}${GET_FORUM_POST_BY_ID}${postId}`, {
+          method : "GET",
+          headers : {
+            "Content-Type" : "application/json"
+          },
+        });
+      
+        //ForumPost Data saved and processed
+        const data= await res.json();
+        setForumPost(data)
+  
+      } catch (err: unknown) {
+        snackbar("error", (err as Error).message);
+      }
+    } 
     
     const theme = useTheme();
-    const handleEditPost = () => {
-      setEditSelected(!isEditSelected);
-        
-      };
+    const reloadData = () => {
+      fetchForumPost(router.query.postId)
+    };
     
     const handleLostForum = () => {
         setFoundSelected(!isFoundSelected);
         setLostSelected(!isLostSelected);
+        router.replace("/forum?forumType=LOST")
       };
     
-      const handleFoundForum = () => {
-        setFoundSelected(!isFoundSelected);
-        setLostSelected(!isLostSelected);
-      };
+    const handleFoundForum = () => {
+      router.replace("/forum?forumType=FOUND")
+      setLostSelected(!isLostSelected);
+    };
     
-      const postImages = [
-        "/product1-img.svg",
-        "/product2-img.svg", 
-        "/product1-img.svg",
-        "/user2-avatar.svg",
-      
-      ];
-      
-      const commentsArray = [
-        {
-          name: 'John Doe',
-          imageUrl: "/user-avatar.svg",
-          commentText: 'This is the first comment. Lorem ipsum dolor sit amet.',
-        },
-        {
-          name: 'Jane Smith',
-          imageUrl: "/user2-avatar.svg",
-          commentText: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-          "Pellentesque vestibulum ligula in risus ullamcorper, eu fringilla quam rhoncus. " +
-          "Aenean cursus euismod nisi, a dignissim urna tincidunt id. " +
-          "Fusce scelerisque justo non nunc laoreet, nec finibus nulla euismod.",
-      
-        },
-        {
-          name: 'Alice Johnson',
-          imageUrl: "/user-avatar.svg",
-          commentText: 'I love the content you share. Amazing!',
-        },
-      ];
-      
-      const PostContents = {
-        id: 1,
-        ownPost: true, // will enable to edit post only if user owns post
-        userName: "Abbey",
-        userImageUrl: "/user-avatar.svg",
-        productImageUrl: "/product2-img.svg",
-        totalComments: 3, // never used 
-        title: "Lost Iphone Lorem ipsum dolor sit amet, consectetur adipiscing eli ullamcorper, eu fringilla quam r",
-        body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-          "Pellentesque vestibulum ligula in risus ullamcorper, eu fringilla quam rhoncus. " +
-          "Aenean cursus euismod nisi, a dignissim urna tincidunt id. " +
-          "Fusce scelerisque justo non nunc laoreet, nec finibus nulla euismod.",
-        comments: commentsArray,
-        imageUrls: postImages, // Adding the imageUrls array
-      };
-
   return (
     <Container>
       {/* Page Title */}
@@ -128,12 +112,12 @@ export default function post() {
       </Stack>
 
       {/* Post Listing -- image, name, text, comment bar, usercomments */}
-      <Grid container spacing={3} sx={{ width: "70%", margin: "0 auto" }}>
-        <Grid item key={PostContents.id} xs={12}>
+      {(forumPost!= null && ( <Grid container spacing={3} sx={{ width: "70%", margin: "0 auto" }}>
+        <Grid item key={forumPost.forumPostId} xs={12}>
           {/* <FullPost post={PostContents} /> */}
-          <NoSSRFullPost post={PostContents} />
+          <FullPost post={forumPost} reloadData={reloadData}/>
         </Grid>
-      </Grid>
+      </Grid>))}
 
       {/* horizontal margin */}
       <div 

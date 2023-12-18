@@ -18,10 +18,10 @@ export function Searchbar(props: SearchbarProps) {
   const theme = useTheme();
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault(); // Prevent form submission
+    // if (event.key === 'Enter') {
+    //   event.preventDefault(); // Prevent form submission
       props.action.onClick?.(event); // Call the onClick handler
-    }
+    // }
   };
 
   return (
@@ -35,7 +35,8 @@ export function Searchbar(props: SearchbarProps) {
         placeholder="Search Marketplace"
         inputProps={{ 'aria-label': 'search marketplace' }}
         {...props.input}
-        onKeyDown={handleKeyDown}
+        // onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyDown}
       />
       <Divider sx={{ height: 20, m: 0.5 }} orientation="vertical" />
       <IconButton size='small' aria-label="search" {...props.action}>

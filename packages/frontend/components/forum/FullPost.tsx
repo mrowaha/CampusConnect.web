@@ -4,6 +4,11 @@ import { Divider, Grid, Stack, Typography, useTheme } from "@mui/material";
 import {  CommentBar, ImageSlider } from ".";
 import {styled} from "@mui/system";
 import { UserComment } from "./UserComment";
+import { useAtom } from "jotai";
+import {currentUserAtom} from "@/auth";
+import { BACKEND_URL, CREATE_COMMENT } from "@/routes";
+import { useSnackbar } from "@/store/snackbar";
+import { useRouter } from 'next/router';
 
 const PostStack = styled(Stack)(({theme}) => ({
     border: `2px solid ${theme.palette.primary.main}`,
@@ -12,18 +17,55 @@ const PostStack = styled(Stack)(({theme}) => ({
     padding: "1rem"
 }))
 
-const FullPost = ({post}) => {
+const FullPost = ({post, reloadData}) => {
+    const router = useRouter();
     const theme = useTheme();
+    const [loggedInUser, setLoggedInUser] = useAtom(currentUserAtom);
+    const snackbar = useSnackbar();
     
     const handleUserSelect = () => {
         // implement user select
         
     };
     
+    const onComment = (comment) => {
+
+        if (loggedInUser != null){
+            sendComment(loggedInUser.uuid, comment )
+        }
+        else{
+            snackbar("error", "Login to Comment");
+        }
+    };
+
+    const sendComment = async (userId: string, comment: any,) => {
+
+        let newComment= {
+            content:comment,
+            forumPostId:post.forumPostId
+        }
+
+        try {
+          const res = await fetch(`${BACKEND_URL}${CREATE_COMMENT}${userId}`, {
+            method : "POST",
+            headers : {
+              "Content-Type" : "application/json"
+            },
+            body:JSON.stringify(newComment)
+          });
+
+            snackbar("success", "Comment made successfully");
+            reloadData()
+
+        } catch (err: unknown) {
+          snackbar("error", (err as Error).message);
+        }
+      } 
+    
     const postContent = {
-        userName: post.userName,
+        userName: "",//`${post.postingUser.firstName} ${post.postingUser.lastName}`,
         title: post.title,
-        body: post.body,
+        body: post.description,
         comments: post.comments ,
     };
     
@@ -31,14 +73,14 @@ const FullPost = ({post}) => {
 
         <PostStack direction="column">
             
-            <Grid container>
+            {(post != null && (<Grid container>
                 {/* User Image */}
                 <Grid item xs={1}>
                     <div style={{ height: 50, cursor: 'pointer' }}
                         onClick={handleUserSelect}
                         role="button"
                     >
-                    <DomainImage src={post.userImageUrl} alt={post.usersName} />
+                    <DomainImage src={"/user-avatar.svg"} alt={`image`} />
                     </div>   
                 </Grid>
 
@@ -54,14 +96,14 @@ const FullPost = ({post}) => {
                             marginLeft={1}
                             color={theme.palette.primary.main}
                         >
-                            {post.userName}
+                            {post.postingUser.firstName} {post.postingUser.lastName}
                         </Typography>
                     </div>
                 </Grid>
 
                 {/** Post images/ carousel */}
                 <Grid item xs={12} sx={{marginTop : 1}}>
-                    <ImageSlider images={post.imageUrls} />
+                    <ImageSlider images={["/product2-img.svg"]} />
                 </Grid>
 
                 {/* post Content */}
@@ -84,7 +126,7 @@ const FullPost = ({post}) => {
 
                 {/* CommentBar */}
                 <Grid item xs={12} sx={{marginTop : 1}}>
-                    <CommentBar  />
+                    <CommentBar  onComment={onComment}/>
                 </Grid>
 
                 <Grid item xs={12} sx={{marginTop : 1}}>
@@ -99,7 +141,7 @@ const FullPost = ({post}) => {
 
                 </Grid>
 
-            </Grid>
+            </Grid> ))}
         </PostStack>
 
       );

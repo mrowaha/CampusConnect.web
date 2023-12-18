@@ -7,24 +7,19 @@ import { PlatformCard } from '@/components/market/PlatformCard';
 import { useRouter } from 'next/router';
 import { BACKEND_URL, SEARCH_PRODUCT } from "@/routes";
 import { useAtom } from "jotai";
-import {currentUserAtom} from "@/auth";
+import {currentUserAtom, useCurrentUserWithValidation} from "@/auth";
 
 
 export default function MarketPage(){
   // platform name -> MarketPlace and lost and found Forum
   const theme = useTheme();
-
+  const currentUser = useCurrentUserWithValidation();
   const [productList, setProductList] = useState([])
 
   const router = useRouter();
   const [loggedInUser, setLoggedInUser] = useAtom(currentUserAtom);
 
   const [currTrendingTag, setCurrTrendingTag] = React.useState(0);
-
-
-  // const handleTrendingTagSwitch = (index : number) => {
-  //   setCurrTrendingTag(index);
-  // }
 
   const displayRecent = (index) => {
     fetchData({sortBy: "LATEST"})
