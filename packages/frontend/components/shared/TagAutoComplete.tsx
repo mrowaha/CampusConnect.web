@@ -10,6 +10,7 @@ import { useSnackbar } from "@/store/snackbar";
 interface TagAutoCompleteProps {
   onTagsUpdate : (selected : string[]) => void | Promise<void>;
   debounce: number;
+  intialTags: string[]
 }
 
 
@@ -39,6 +40,8 @@ export function TagAutoComplete(props : TagAutoCompleteProps) {
       }
     }
     fetchAvailableTags();
+    setAssignedTags(props.intialTags)
+
   }, []);
 
   const debounceRef = React.useRef<number | null>(null);
@@ -64,8 +67,8 @@ export function TagAutoComplete(props : TagAutoCompleteProps) {
         <TextField
           {...params}
           label="Tags"
-          placeholder="Categorize your art piece"
-          variant="standard"
+          placeholder="Search Tags"
+          // variant="standard"
         />
       )}
     />

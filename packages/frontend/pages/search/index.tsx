@@ -11,6 +11,7 @@ import Option from '@mui/joy/Option';
 import { ProductCard, TagCard, TrendingChip}  from "@/components/market";
 import { useAtom } from "jotai";
 import {currentUserAtom} from "@/auth";
+import { TagAutoComplete } from "@/components/shared/TagAutoComplete";
 
 export default function Search() {
     const theme = useTheme();
@@ -168,16 +169,17 @@ export default function Search() {
             newSearchParams.maxPrice= parseFloat(maxPrice) 
         };
     
-        setSearchParams(newSearchParams);
+        // setSearchParams(newSearchParams);
         handleSearch(newSearchParams);
     };
 
-    const onTagRemove = (tag) => {
-        let newTags = searchParams.tags.filter(t => t !== tag);
+    const onTagRemove = (tags) => {
+        console.log("tag", tags)
+        // let newTags = searchParams.tags.filter(t => t !== tag);
         // setSearchParams({...searchParams, tags: newTags });
         
         // handleSearch(newTags.split(','));
-        handleSearch({tags:newTags});
+        handleSearch({tags:tags});
     };
 
     const handleCheckboxClick = (event, tag) => {
@@ -185,7 +187,7 @@ export default function Search() {
 
         if (searchParams.tags.length === 0) {
             // List of all tags
-            const allTags = ["Purchase", "Borrowable", "Rentable", "Donation"];
+            const allTags = ["Purchase", "Borrowable", "Rentable", "Donations"];
     
             // Add all other tags except the one clicked
             newTags = allTags.filter(t => t !== tag);
@@ -246,41 +248,20 @@ export default function Search() {
                 borderRadius: "20px",
                 border: `2px solid ${theme.palette.primary.light}`
                 }}>
-                <Typography color="primary" variant="h6" style={{ marginBottom: theme.spacing(2) }}>Filter</Typography>
-
-                <FormControlLabel 
-                    control={<Checkbox defaultChecked onClick={(e) => handleCheckboxClick(e, "Rentable")} />} 
-                    label="Rentable" 
-                />
-                <FormControlLabel 
-                    control={<Checkbox defaultChecked onClick={(e) => handleCheckboxClick(e, "Borrowable")} />} 
-                    label="Borrowable" 
-                />
-                <FormControlLabel 
-                    control={<Checkbox defaultChecked onClick={(e) => handleCheckboxClick(e, "Donations")} />} 
-                    label="Donations" 
-                />
-                <FormControlLabel 
-                    control={<Checkbox defaultChecked onClick={(e) => handleCheckboxClick(e, "Purchase")} />} 
-                    label="Purchase" 
-                />
-
-                <Divider style={{ margin: theme.spacing(2, 0) }} />
+                <Typography color="primary" variant="h6" style={{ marginBottom: theme.spacing(2) }}>Select Tags</Typography>
 
                 {(searchParams.tags != null && (<div>
 
-                
-                {searchParams.tags.map(tag => (
-                    <div key={tag} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', margin: theme.spacing(1, 0) }}>
-                    <Typography variant="body1">{tag}</Typography>
-                    <Button onClick={() => onTagRemove(tag)}>X</Button>
-                    </div>
-                ))}
-
+                <Box sx={{marginRight:"10px"}}>
+                    <TagAutoComplete 
+                        debounce={0}
+                        onTagsUpdate={onTagRemove}
+                        intialTags={searchParams.tags}
+                    />
+                </Box>
                 </div>))}
                 <Divider style={{ margin: theme.spacing(2, 0) }} />
-
-                <Typography color="primary" variant="body1" style={{ marginBottom: theme.spacing(3) }}>Price Range</Typography>
+                <Typography color="primary" variant="h6" style={{ marginBottom: theme.spacing(2) }}>Price Range</Typography>
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <TextField 
                         label="Min Price"
@@ -314,12 +295,11 @@ export default function Search() {
                 </div>
 
                 <Divider style={{ margin: theme.spacing(2, 0) }} />
-
-                <Typography color="primary" variant="body1" style={{ marginBottom: theme.spacing(1) }}>Minimum Seller Trust Score</Typography>
+                <Typography color="primary" variant="h6" style={{ marginBottom: theme.spacing(2) }}>Minimum Seller Trust Score</Typography>
                 <RadioGroup value={sellerRating} 
                         onChange={(e) => setSellerRating(e.target.value)}>
                 {[5, 4, 3, 2, 1].map(score => (
-                            <FormControlLabel key={score} value={score} control={<Radio />} label={<Rating readOnly value={score} />} />
+                            <FormControlLabel key={score} value={score} control={<Radio />} label={<Rating color='red' readOnly value={score} />} />
                             ))}
                 </RadioGroup>
             </Grid>

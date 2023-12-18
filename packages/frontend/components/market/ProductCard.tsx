@@ -4,6 +4,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useRouter } from 'next/router';
 import { IconChartBar, IconThumbUp } from "@tabler/icons-react";
+import { IconStar } from "@tabler/icons-react";
 
 import { Card, 
     CardContent, 
@@ -78,10 +79,13 @@ export const ProductCard = ({ product }) => {
             <Typography color={'grey'}>
                 13-01-2022
             </Typography>
-            <Typography color={'grey'}>
-                {product.viewCount} views
-            </Typography>  
-          
+            
+            {/* Display seller rating as stars */}
+            <Box sx={{ display: 'flex' }}>
+                {Array.from({ length: product.sellerRating }, (_, index) => (
+                    <IconStar key={index} size={20} color= {theme.palette.primary.light} />
+                ))}
+            </Box>
         </Box>
 
         </CardContent>
