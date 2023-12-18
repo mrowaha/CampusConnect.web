@@ -23,8 +23,6 @@ import ProfilePageLayout from "@/layouts/profile";
 
 
 function SettingsPage() {
-  const router = useRouter();
-  const theme = useTheme();
 
     const [formData, setFormData] = useState({
     firstName: "Mehshid",

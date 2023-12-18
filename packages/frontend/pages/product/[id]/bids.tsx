@@ -15,12 +15,6 @@ import { ActionButtonProps, InfoContainer as ProductInfo } from "@/components/pr
 import { currentUserAtom } from "@/auth";
 import { Bid, BidsListProps } from "@/components/product";
 
-
-const NoSSRDomainImageCaurosel = dynamic(() => import("@/components/shared/DomainImageCaurosel").then((exports) => exports.DomainImageCaurosel)
-, {
-  ssr : false
-})
-
 export default function ProductOwnerPage() {
 
   const [currentUser] = useAtom(currentUserAtom);
@@ -90,15 +84,7 @@ export default function ProductOwnerPage() {
       <Stack direction="column" gap={2}>
         <Grid container gap={1}>
         <Grid item xs={5} sx={{padding : "1rem", backgroundColor: theme.palette.secondary.light}}>
-            <NoSSRDomainImageCaurosel 
-              sources={
-                ["/blank-profile-picture.webp",
-                "/blank-profile-picture.webp",
-                "/blank-profile-picture.webp",
-                "/blank-profile-picture.webp",
-                "/blank-profile-picture.webp"]
-              }
-            />
+            
           </Grid>
           <Grid item xs={6}>
             <ProductInfo 

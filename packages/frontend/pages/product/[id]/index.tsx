@@ -108,7 +108,8 @@ export default function ProductPage() {
 
 
   React.useEffect(() => {
-    fetchImages("1ea6c6d0-1442-423a-b037-da09f3cb0f35");
+    const productId = router.asPath.split("/").at(-1);
+    fetchImages(productId as string);
   }, []);
 
   return (
@@ -124,7 +125,7 @@ export default function ProductPage() {
               }[status]
             }
           </Grid>
-          {/* <Grid item xs={6}>
+          <Grid item xs={6}>
             <ProductInfo 
               name="Some Product"
               seller={{
@@ -163,10 +164,10 @@ export default function ProductPage() {
               actions={postActions}
               onWishlist={handleWishlist}
             />
-          </Grid> */}
+          </Grid>
         </Grid>
         
-        {/* <Typography style={{margin:"10px"}} color="primary" variant="h5">
+        <Typography style={{margin:"10px"}} color="primary" variant="h5">
         Keep Exploring
         </Typography>
         <Container>
@@ -202,8 +203,8 @@ export default function ProductPage() {
             </Paper>
           </Grid>
             ))}
-          </Grid> */}
-        {/* </Container> */}
+          </Grid>
+        </Container>
         <div 
           style={{
             width: "100%",

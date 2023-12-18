@@ -6,6 +6,9 @@ import { useRouter } from 'next/router';
 import { IconChartBar, IconThumbUp } from "@tabler/icons-react";
 import { IconStar } from "@tabler/icons-react";
 
+import useProductPictures from "@/hooks/useProductPictures";
+
+
 import { Card, 
     CardContent, 
     CardMedia,
@@ -16,8 +19,10 @@ import { Card,
     Divider,
     Grid, Chip,Box,
     Paper,
+    CircularProgress,
     useTheme} from '@mui/material';
 import { DomainImage } from '@/components/shared';
+import Link from 'next/link';
     
 
 export const ProductCard = ({ product }) => {
@@ -25,6 +30,11 @@ export const ProductCard = ({ product }) => {
     const theme = useTheme();
     const [isFavorite, setIsFavorite] = React.useState(product.isFavorite);
     const [isAdded, setIsAdded] = React.useState(product.isAdded);
+
+    const [imgUrls, status, fetchImages] = useProductPictures();
+    React.useEffect(() => {
+      fetchImages(product.id);
+    }, []);
 
 
     const handleViewProduct = () => {
@@ -47,7 +57,9 @@ export const ProductCard = ({ product }) => {
                 backgroundColor: theme.palette.secondary.light,
                 cursor: "pointer"
             }
-            }}
+            }
+          
+          }
         >
         <IconButton 
             size="small" 
@@ -59,12 +71,15 @@ export const ProductCard = ({ product }) => {
 
         <CardMedia component="div"
             onClick={handleViewProduct} // Replace with your actual click handler
-            sx={{ height: 200 }}
+            sx={{ width: "95%", padding : "1rem", aspectRatio : "1/1" }}
         >
-            <DomainImage 
-                src={product.imageUrl}
-                alt={product.name}
-            />
+          {
+              {
+                "loading": <CircularProgress />,
+                "success": <DomainImage src={imgUrls[0]} alt="image"  />,
+                "error":  <Typography>Failed To Load Images</Typography>
+              }[status]
+          }
         </CardMedia>
         <CardContent>
 
@@ -98,9 +113,12 @@ export const ProductCard = ({ product }) => {
         )}
         </Box>
         <CardActions sx={{ display: 'flex', justifyContent: "space-between" }}>
-            <Button variant="contained" color="primary" size="small" onClick={handleViewProduct}>
-                View Product
-            </Button>
+            <Link href={`/product/${product.id}`}>
+              <Button variant="contained" color="primary" size="small" onClick={handleViewProduct}>
+                  View Product
+              </Button>
+              
+            </Link>
             
             <Typography color={"primary"}>
             {product.price} TL

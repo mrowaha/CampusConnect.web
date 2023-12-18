@@ -91,8 +91,6 @@ interface ProtectedRouteProps {
 
 export default function ProtectedRoute(props: ProtectedRouteProps) {
 
-  console.log("authing");
-
   const snackbar = useSnackbar();
   const [authorized, setAuthorized] = React.useState<boolean>(false);
 
@@ -103,7 +101,6 @@ export default function ProtectedRoute(props: ProtectedRouteProps) {
   const router = useRouter();
 
   React.useLayoutEffect(() => {
-    flushSync(() => setAuthorized(false));
     let storedToken = localStorage.getItem(AUTH_TOKEN);
     if (!storedToken) {
       snackbar("error", "Login Required");

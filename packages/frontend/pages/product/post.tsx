@@ -30,8 +30,11 @@ import { useRouter } from "next/router";
 import { DomainImageUpload } from "@/components/shared/DomainImageUpload";
 import { TagAutoComplete } from "@/components/shared/TagAutoComplete";
 import { BACKEND_URL } from "@/routes";
-import { AUTH_TOKEN } from "@/auth";
+import { AUTH_TOKEN, currentUserAtom } from "@/auth";
 
+import { DomainImageMultipleUpload } from "@/components/shared/DomainImageMultipleUpload";
+import { useAtom } from "jotai";
+import { blob } from "stream/consumers";
 
 
 export default function ProductPostPage() {
@@ -39,15 +42,69 @@ export default function ProductPostPage() {
   const router = useRouter();
   const {edit} = router.query;
 
+
+  const [currentUser ]= useAtom(currentUserAtom);
   const theme = useTheme();
   const snackbar = useSnackbar();
-  const handleOnSave = React.useCallback(() => snackbar("success", "saved"), []);
+  const handleOnSave = async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/products`, {
+        method : "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }, 
+        body : JSON.stringify({
+          sellerId : currentUser?.uuid,
+          name: name,
+          description : description,
+          price: +price,
+          type: type,
+          tagNames: assignedTags
+        })
+      })
+      if (!res.ok) {
+        snackbar("error", "product creation failed");
+        console.error(res);
+        return;
+      }
+
+      const data = await res.json();
+      const productId = data.body.split(":").at(-1);
+
+      const imgBlobsPromises = imgSrcs.map(url => 
+        fetch(url).then(res => res.blob())  
+      );
+      const blobsAwaits = await Promise.allSettled(imgBlobsPromises);
+      const blobs = blobsAwaits.filter(({status}) => status === "fulfilled").map(({value}) => value);
+      console.log(blobs);  
+
+      const formData = new FormData();
+      for (let i = 0; i < blobs.length; i++) {
+        formData.append(`file${i+1}`, blobs[i])
+      }
+      formData.append("productId", JSON.stringify({id : productId}));
+      const uploadRes = await fetch(`${BACKEND_URL}/s3/product-picture`, {
+        method : "POST",
+        headers: {
+          "Authorization" : `Bearer ${localStorage.getItem(AUTH_TOKEN)}`
+        },
+        body : formData
+      })
+      const fileResponse = await uploadRes.json();
+      console.log(fileResponse);
+      router.replace("/profile/settings");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleOnCancel = React.useCallback(() => {
     snackbar("warning", "cancelled");
     router.back(); 
   }, []);
   
   const handleOnDelete = React.useCallback(() => snackbar("error", "deleted"), []);
+  
   const actionButtons = React.useMemo(() => {
     const buttons : ActionButtonProps[] = [];
     buttons.push(
@@ -57,13 +114,14 @@ export default function ProductPostPage() {
         icon : <SaveIcon style={{fill : "white"}} />
       }
     );
-    buttons.unshift(
-      {
-        text: "Delete",
-        onClick: handleOnDelete,
-        icon: <DeleteIcon style={{fill : "white"}} />
-      }
-    );
+    if (edit) 
+      buttons.unshift(
+        {
+          text: "Delete",
+          onClick: handleOnDelete,
+          icon: <DeleteIcon style={{fill : "white"}} />
+        }
+      );
     buttons.unshift(
       {
         text: "Cancel",
@@ -72,12 +130,12 @@ export default function ProductPostPage() {
       }
     )
     return buttons;
-  }, [handleOnSave])
+  }, [handleOnSave, edit])
   
   const [name, setName] = React.useState<string>("");
   const [description, setDescription] = React.useState<string>("");
-  const [type, setType] = React.useState<"rent" | "purchase">("rent");
-  const [status, setStatus] = React.useState<"visible" | "hidden">("hidden");
+  const [type, setType] = React.useState<"RENT" | "PURCHASE">("RENT");
+  const [status, setStatus] = React.useState<"AVAILABLE" | "DELETED">("AVAILABLE");
   const [price, setPrice] = React.useState<string>("");
 
   const [assignedTags, setAssignedTags] = React.useState<string[]>([]);
@@ -87,10 +145,9 @@ export default function ProductPostPage() {
   };
 
   const [imgBlob, setImgBlob] = React.useState<Blob | null>(null); 
-  const [imgSrc, setImgSrc] = React.useState<string | null>(null);
-  const handleImageFinal = (imgSrc : string, imgBlob : Blob) => {
-    setImgSrc(`${imgSrc}`);
-    setImgBlob(imgBlob);
+  const [imgSrcs, setImgSrcs] = React.useState<string[]>([]);
+  const handleImageFinal = (imgSrcs : string[]) => {
+    setImgSrcs(imgSrcs);
   }
 
 
@@ -132,24 +189,28 @@ export default function ProductPostPage() {
         actions={actionButtons}
       />  
       <Stack direction="column" sx={{border : `2px solid ${theme.palette.primary.main}`, padding: "1rem"}} gap={1.5}>
-      <FormControl>
-        <FormLabel id="product-visibility">Product Visibility</FormLabel>
-        <RadioGroup
-          value={status}
-          onChange={(e) => setStatus(e.target.value as typeof status)}
-        >
-          <FormControlLabel value="visible" control={<Radio color="primary" />} label="Visible" />
-          <FormControlLabel value="hidden" control={<Radio color="primary" />} label="Hidden" />
-        </RadioGroup>
-      </FormControl> 
+      {
+        
+        edit &&
+        <FormControl>
+          <FormLabel id="product-visibility">Product Visibility</FormLabel>
+          <RadioGroup
+            value={status}
+            onChange={(e) => setStatus(e.target.value as typeof status)}
+          >
+            <FormControlLabel value="AVAILABLE" control={<Radio color="primary" />} label="Visible" />
+            <FormControlLabel value="DELETED" control={<Radio color="primary" />} label="Hidden" />
+          </RadioGroup>
+        </FormControl> 
+      }
       <FormControl>
         <FormLabel id="product-type">Product Type</FormLabel>
         <RadioGroup
           value={type}
           onChange={(e) => setType(e.target.value as typeof type)}
         >
-          <FormControlLabel value="rent" control={<Radio color="primary" />} label="Rent" />
-          <FormControlLabel value="purchase" control={<Radio color="primary" />} label="Purchase" />
+          <FormControlLabel value="RENT" control={<Radio color="primary" />} label="Rent" />
+          <FormControlLabel value="PURCHASE" control={<Radio color="primary" />} label="Purchase" />
         </RadioGroup>
       </FormControl> 
       <Divider orientation="horizontal"/> 
@@ -170,8 +231,8 @@ export default function ProductPostPage() {
         size="small"
       />
       <FilledInputField 
-        label={type === "rent" ? "Product Rate Per Day (TL per day)" : "Product Starting Price (TL)"}
-        placeholder={type === "rent" ? "Enter daily rate in tl" : "Enter starting price in tl"}
+        label={type === "RENT" ? "Product Rate Per Day (TL per day)" : "Product Starting Price (TL)"}
+        placeholder={type === "RENT" ? "Enter daily rate in tl" : "Enter starting price in tl"}
         value={price}
         onChange={(e) => setPrice(e.target.value)}
         type="number"
@@ -197,7 +258,13 @@ export default function ProductPostPage() {
         </Grid>
       </Grid>
 
-      <DomainImageUpload 
+      {/* <DomainImageUpload 
+        onImageFinal={handleImageFinal}
+        justifyContent="left"
+      /> */}
+
+      <DomainImageMultipleUpload
+        count={2} 
         onImageFinal={handleImageFinal}
         justifyContent="left"
       />

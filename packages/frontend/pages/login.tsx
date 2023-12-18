@@ -86,7 +86,7 @@ export default function LoginPage() {
         if (loginRedirect) {
           router.replace(loginRedirect);
         } else {
-          router.replace("/profile");
+          router.replace("/market");
         }
         return;
       } else if ("errors" in data) {

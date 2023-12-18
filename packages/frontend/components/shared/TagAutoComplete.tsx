@@ -10,7 +10,7 @@ import { useSnackbar } from "@/store/snackbar";
 interface TagAutoCompleteProps {
   onTagsUpdate : (selected : string[]) => void | Promise<void>;
   debounce: number;
-  intialTags: string[]
+  intialTags?: string[]
 }
 
 
