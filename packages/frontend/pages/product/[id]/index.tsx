@@ -19,6 +19,7 @@ import { useSnackbar } from "@/store/snackbar";
 import loginRedirectAtom from "@/store/loginredirect";
 import useProductPictures from "@/hooks/useProductPictures";
 import { ImageSlider } from "@/components/forum";
+import { BACKEND_URL, GET_PRODUCT_BY_ID } from "@/routes";
 
 export default function ProductPage() {
 
@@ -29,6 +30,7 @@ export default function ProductPage() {
   const currentUser = useCurrentUserWithValidation();
   const [imgUrls, status, fetchImages] = useProductPictures();
   const [_, setLoginRedirect] = useAtom(loginRedirectAtom);
+  const [product, setProduct] = React.useState(null);
 
   const handlePlaceBid = React.useCallback(() => {
     if (currentUser) {
@@ -55,7 +57,7 @@ export default function ProductPage() {
       {
         text: "Contact Seller",
         icon: <MessageIcon style={{fill: "#fff"}} />,
-        onClick: () => {console.log("hello")}
+        onClick: () => {router.replace(`/inbox?uuid=${product.seller.userId}&name=${product.seller.firstName} ${product.seller.lastName}`)}
       },
       {
         text: "Place Bid",
@@ -106,15 +108,40 @@ export default function ProductPage() {
     }
   ]), []);
 
+  const fetchProduct = async (productId) => {
+    try {
+
+      const response = await fetch(`${BACKEND_URL}${GET_PRODUCT_BY_ID}${productId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      // console.log("products", products)
+      setProduct(data);
+
+      snackbar("success", "Search Completed Successfully");
+    } catch (err) {
+      snackbar("error", err.message || 'An error occurred');
+    }
+  };
+
 
   React.useEffect(() => {
     const productId = router.asPath.split("/").at(-1);
+    fetchProduct(productId);
     fetchImages(productId as string);
   }, []);
 
   return (
     <Container>
-      <Stack direction="column" gap={2}>
+      {(product != null && (<Stack direction="column" gap={2}>
         <Grid container gap={1}>
           <Grid item xs={5} sx={{padding : "1rem", backgroundColor: theme.palette.secondary.light}}>
             {
@@ -127,40 +154,20 @@ export default function ProductPage() {
           </Grid>
           <Grid item xs={6}>
             <ProductInfo 
-              name="Some Product"
+              name={product.name}
               seller={{
-                firstName: "Muhammad",
-                lastName: "Rowaha",
-                email: "hello",
-                trustScore : 3,
-                uuid: "hello",
+                firstName: product.seller.firstName,
+                lastName: product.seller.lastName,
+                email: product.seller.email,
+                trustScore : product.seller.trustScore,
+                uuid: product.seller.userId,
                 role: "BILKENTEER"
               }}
-              description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,
-              molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum
-              numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium
-              optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis
-              obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam
-              nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit,
-              tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit,
-              quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos 
-              sapiente officiis modi at sunt excepturi expedita sint? Sed quibusdam
-              recusandae alias error harum maxime adipisci amet laborum. Perspiciatis 
-              minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit 
-              quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur 
-              fugiat, temporibus enim commodi iusto libero magni deleniti quod quam 
-              consequuntur! Commodi minima excepturi repudiandae velit hic maxime
-              doloremque. Quaerat provident commodi consectetur veniam similique ad 
-              earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo 
-              fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore 
-              suscipit quas? Nulla, placeat. Voluptatem quaerat non architecto ab laudantium
-              modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam 
-              totam ratione voluptas quod exercitationem fuga. Possimus quis earum veniam 
-              quasi aliquam eligendi, placeat qui corporis!"
-              startingPrice={12000}
-              type="renting"
-              highestBidPrice={13000}
-              tags={["some", "tags"]}
+              description={product.description}
+              startingPrice={product.price}
+              type={product.type}
+              highestBidPrice={product.highestBid ==0 ? null: product.highestBid}
+              tags={product.tags}
               actions={postActions}
               onWishlist={handleWishlist}
             />
@@ -211,7 +218,7 @@ export default function ProductPage() {
             height: 50
           }}
         />
-      </Stack>
+      </Stack>))}
     </Container>
   )
 }
