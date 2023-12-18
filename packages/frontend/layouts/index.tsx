@@ -21,6 +21,7 @@ import LoginIcon from '@mui/icons-material/Login';
 import { IconInbox } from "@tabler/icons-react";
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import {
   snackbarAtom,
@@ -33,7 +34,7 @@ import CategoryNavBar from "@/components/layout/CategoryNavBar";
 import { DomainImage } from "@/components/shared";
 import { useRouter } from 'next/router';
 import { LostAndFoundIcon, SignupIcon } from "@/icons";
-import { currentUserAtom } from "@/auth";
+import { AUTH_TOKEN, authAtom, currentUserAtom } from "@/auth";
 
 import { BACKEND_URL, NOTIFICATION_COUNT, NOTIFICATION_LIST } from "@/routes";
 import type { User } from "@/auth";
@@ -55,7 +56,8 @@ export default function Layout(props : LayoutProps) {
   
   const theme = useTheme();
 
-  const [currentUser] = useAtom(currentUserAtom);
+  const [_ ,setAuthToken] = useAtom(authAtom);
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
   const [profileImgSrc, refetch] = useProfilePicture();
   const [notificationCount, setNotificationCount] = React.useState(0);
   const [notifications, setNotifications] = React.useState([]);
@@ -164,9 +166,18 @@ export default function Layout(props : LayoutProps) {
 
   const shouldShowCategoryBar = pathsToShowCategoryBar.some(path => currentURL.includes(path));
 
+  const handleLogout = () => {
+    localStorage.removeItem(AUTH_TOKEN);
+    setAuthToken(null);
+    setCurrentUser(null);
+    router.replace("/market");
+    snackbar("success", "logged out");
+  }
+
   return (
     <>
       {!currentURL.includes("inbox") &&  currentUser !== null && (
+        <>
         <Fab 
           color="primary"
           sx={{
@@ -180,6 +191,21 @@ export default function Layout(props : LayoutProps) {
             <IconInbox color='white'/>
           </Tooltip>
         </Fab>
+        <Fab 
+          color="error"
+          sx={{
+            position: "absolute",
+            left: 25,
+            bottom: 25
+          }}
+          onClick={handleLogout}
+        >
+          <Tooltip title="Logout" arrow>
+            <LogoutIcon sx={{fill : "white"}} />
+          </Tooltip>
+        </Fab>
+
+        </>
       )}
       <Snackbar open={snackbarStatus} autoHideDuration={6000} onClose={() => setSnackbarStatus(false)}>
         <Alert onClose={() => setSnackbarStatus(false)} severity={severity} sx={{ width: '100%' }}>

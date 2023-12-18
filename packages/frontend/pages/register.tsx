@@ -10,6 +10,7 @@ import {
   ButtonGroup,
   Typography,
   CircularProgress,
+  TextField,
 } from "@mui/material";
 import {styled} from "@mui/system";
 
@@ -50,6 +51,8 @@ export default function RegisterPage() {
   const [password, setPassword]  = React.useState<string>("");
   const [registering, setRegistering] = React.useState<boolean>(false);
 
+  const [otp ,setOtp] = React.useState<string>("");
+
   const snackbar = useSnackbar();
 
   React.useEffect(() => {
@@ -72,7 +75,8 @@ export default function RegisterPage() {
           firstName : firstname,
           lastName : lastname,
           email : email,
-          password : password
+          password : password,
+          otp: otp
         })
       })
       
@@ -92,6 +96,29 @@ export default function RegisterPage() {
       setRegistering(false);
     }
   } 
+
+  const handleOTPSend = async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/auth/otp`, {
+        method : "POST",
+        headers: {
+          "Content-Type" : "application/json"
+        },
+        body : JSON.stringify({
+          email : email          
+        })
+      })
+
+      if (res.ok) {
+        snackbar("success", "otp was sent");
+      } else {
+        throw new Error();
+      }
+    } catch (err) {
+      console.error(err);
+      snackbar("error", "An unknown error occured");
+    }
+  }
 
   return (
     <>
@@ -180,15 +207,35 @@ export default function RegisterPage() {
           hoverbackground={theme.palette.secondary.light}
           focusedbackground={theme.palette.secondary.light}
         />
+        <div style={{display : "flex", justifyContent : "space-between", alignItems : "center", width : "100%"}}>
+          <div style={{display : "flex", gap :2}}>
+            <TextField 
+              label="OTP"
+              placeholder="Enter OTP"
+              size="small"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+            />
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={handleOTPSend}
+              sx={{
+                textTransform : "none"
+              }}>
+              Send OTP
+            </Button>
+          </div>
 
-        <Button
-          variant="contained"
-          onClick={handleRegister}
-          sx={{
-            textTransform : "none"
-          }}>
-          Register As Bilkenteer
-        </Button>
+          <Button
+            variant="contained"
+            onClick={handleRegister}
+            sx={{
+              textTransform : "none"
+            }}>
+            Register As Bilkenteer
+          </Button>
+        </div>
         <div style={{width : "100%", height : "1px", backgroundColor : theme.palette.background.default}} />
         <Typography variant="h6" color="primary">
           Already have an account?
