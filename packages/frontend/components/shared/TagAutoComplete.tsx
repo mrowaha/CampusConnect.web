@@ -40,7 +40,9 @@ export function TagAutoComplete(props : TagAutoCompleteProps) {
       }
     }
     fetchAvailableTags();
-    setAssignedTags(props.intialTags)
+    if (props.intialTags){
+      setAssignedTags(props.intialTags)
+    }
 
   }, []);
 
