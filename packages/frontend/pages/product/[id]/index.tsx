@@ -67,7 +67,7 @@ export default function ProductPage() {
 
     ]
     return actions;
-  }, [handlePlaceBid]);
+  }, [handlePlaceBid, product]);
 
   const tags = React.useMemo(() => ([
     { 

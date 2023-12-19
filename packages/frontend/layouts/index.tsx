@@ -12,7 +12,7 @@ import {
   Tooltip,
   Box,
   Button,
-  IconButton, Badge, Drawer, List, ListItem, Typography, ListItemText
+  IconButton, Badge, Drawer, List, ListItem, Typography, ListItemText, ListItemIcon, Divider 
 } from "@mui/material";
 import {styled} from "@mui/system";
 
@@ -320,26 +320,42 @@ export default function Layout(props : LayoutProps) {
         </Grid>
       </AppBar>)}
 
-      {(notifications.length > 0 && (<Drawer
-        anchor="right"
-        open={drawerOpen}
-        onClose={handleDrawerClose}
-        sx={{ width: '20vw', '& .MuiDrawer-paper': { width: '20vw' } }} // Set the width here
-      >
-        <List>
-          {notifications.map(notification => (
-            <ListItem key={notification.id}>
-              <ListItemText
-                primary={
-                  <Typography variant="body1" style={{ fontWeight: notification.seen ? 'normal' : 'bold' }}>
+      {(notifications.length > 0 && (
+  <Drawer
+    anchor="right"
+    open={drawerOpen}
+    onClose={handleDrawerClose}
+    sx={{ width: '20vw', '& .MuiDrawer-paper': { width: '20vw' } }}
+  >
+    <List>
+      {notifications.map((notification, index) => (
+        <React.Fragment key={notification.id}>
+          <ListItem alignItems="flex-start">
+            <ListItemIcon>
+              <NotificationsIcon /> {/* Replace with an icon based on notification type */}
+            </ListItemIcon>
+            <ListItemText
+              primary={<Typography variant="subtitle1" sx={{ fontWeight: notification.seen ? 'normal' : 'bold' }}>{notification.type}</Typography>}
+              secondary={
+                <React.Fragment>
+                  <Typography
+                    sx={{ display: 'block' }}
+                    component="span"
+                    variant="body2"
+                    color="text.primary"
+                  >
                     {notification.content}
                   </Typography>
-                }
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>))}
+                </React.Fragment>
+              }
+            />
+          </ListItem>
+          {index < notifications.length - 1 && <Divider variant="inset" component="li" />}
+        </React.Fragment>
+      ))}
+    </List>
+  </Drawer>
+))}
 
         {/* Category Bar */}
         {(shouldShowCategoryBar && <CategoryNavBar />)}

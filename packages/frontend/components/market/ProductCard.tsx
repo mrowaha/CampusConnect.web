@@ -38,7 +38,7 @@ export const ProductCard = ({ product }) => {
 
 
     const handleViewProduct = () => {
-        router.push(`/product/${product.id}`);
+        router.replace(`/product/${product.id}`);
         // Navigation to product details page
     };
 
